@@ -12,6 +12,8 @@ public class Board extends JPanel {
 	/**Les attributs graphiques et les fonctions d'affichage */
 	private BoardGraphism boardGraphism;
 
+	private int maxX = 1600;
+	private int maxY = 1000;
 
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying = false;
@@ -26,15 +28,18 @@ public class Board extends JPanel {
 	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
 	public void initGame() {
 
-		// Creation de la classe qui contient les attributs et les methodes graphiques
+		// Creation de la classe contenant les attributs et les methodes d'affichage. (les attributs sont initialises au premier appel de paintComponent())
 		boardGraphism = new BoardGraphism();
+
+		// Initialise les coordonnees reelles des objets
+		boardGraphism.initRealCoordsAttributes();
 
 		// On charge les objets (sans image) tout doit etre fonctionnel
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
-		
-		characterRed = new Character(boardGraphism.getPrimaryXcoordLeft(), boardGraphism.getGroundLevelYcoord() - boardGraphism.getCharacterHeight(), Color.red);
-		characterBlue = new Character(boardGraphism.getPrimaryXcoordRight(), boardGraphism.getGroundLevelYcoord() - boardGraphism.getCharacterHeight(), Color.red);
-		
+		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord() - boardGraphism.getReal().getCharacterHeight(), Color.red);
+		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord() - boardGraphism.getReal().getCharacterHeight(), Color.blue);
+
+
 		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
 		loadAndSetAllImages();
 	}
@@ -72,11 +77,11 @@ public class Board extends JPanel {
 	 * Lesfonctions displayTruc sont pour les objets fixes
 	 */
 	public void paintComponent(Graphics g) {
-		// Initialisation des attributs graphiques, elle n'est effectuee qu'une seule fois
-		boardGraphism.initGraphicFields(this, this.getWidth(), this.getHeight());
+		// Initialisation des attributs graphiques, effectuees a chaque redimensionnement de la fenetre
+		boardGraphism.updateGraphicCoordsAttributes(this.maxX, this.maxY, this.getWidth(), this.getHeight());
 
 		boardGraphism.displayPlatforms(g);
-		boardGraphism.drawCharacters(g);
+		boardGraphism.drawCharacters(g, characterRed, characterBlue);
 	}
 
 
@@ -88,6 +93,11 @@ public class Board extends JPanel {
 			Thread.currentThread().interrupt();
 			e.printStackTrace();
 		}
+	}
+
+
+	public BoardGraphism getBoardGraphism() {
+		return boardGraphism;
 	}
 
 }

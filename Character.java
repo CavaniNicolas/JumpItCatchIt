@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Image;
+
 import java.awt.Graphics;
 
 public class Character {
@@ -38,10 +39,13 @@ public class Character {
 
 
 	/**Dessine le personnage */
-	public void drawCharacter(Graphics g) {
+	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {
 		g.setColor(colorCharacter);
-		g.fillRect(x, y - 600, 150, 250);
-		System.out.println(g);
+		int x = (int)((double)(this.x) * boardGraphism.getGraphic().getOneUnityWidth());
+		int y = (int)((double)(this.y) * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = (int)((double)(boardGraphism.getReal().getCharacterWidth()) * boardGraphism.getGraphic().getOneUnityWidth());
+		int height = (int)((double)(boardGraphism.getReal().getCharacterHeight()) * boardGraphism.getGraphic().getOneUnityHeight());
+		g.fillRect(x, y, width, height);
 	}
 
 }

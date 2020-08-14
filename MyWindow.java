@@ -1,3 +1,5 @@
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -28,7 +30,7 @@ public class MyWindow extends JFrame {
 		// Pour le moment on lance juste le jeu
 		
 		board.initGame();
-		board.startGame();
+		//board.startGame();
 	}
 
 
@@ -49,6 +51,15 @@ public class MyWindow extends JFrame {
 		this.setLocation( (int)(screenSize.getWidth() * 0.1), (int)(screenSize.getHeight() * 0.05) );
 		
 		// this.setResizable(false);
+
+		// Permet ensuite d'actualiser les valeurs des coordonnees et dimensions graphiques lors du prochain appel de paintComponent()
+		this.addComponentListener(new ComponentAdapter() {
+			// Si la fenetre est redimensionnee
+			public void componentResized(ComponentEvent componentEvent) {
+				board.getBoardGraphism().setIsGraphicUpdateDone(false);
+			}
+		});
+
 
 		// Plein ecran
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
