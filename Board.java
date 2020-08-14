@@ -48,12 +48,12 @@ public class Board extends JPanel {
 
 		displayPlatforms(g);
 
-		drawPlayers(g);
+		drawCharacters(g);
 	}
 
 
 	/**Dessine les deux personnages */
-	public void drawPlayers(Graphics g) {
+	public void drawCharacters(Graphics g) {
 		g.setColor(Color.red);
 		g.fillRect(primaryXcoordLeft, groundLevelYcoord - characterHeight, characterWidth, characterHeight);
 		g.fillRect(secondaryXcoordLeft, groundLevelYcoord - characterHeight, characterWidth, characterHeight);
@@ -105,5 +105,27 @@ public class Board extends JPanel {
 			this.isGraphicInitDone = true;
 		}
 	}
+
+
+	/* ======= */
+	/* Getters */
+	/* ======= */
+
+	public int getCharacterHeight() {
+		return characterHeight;
+	}
+
+	public int getPrimaryXcoordLeft() {
+		return primaryXcoordLeft;
+	}
+
+	public int getPrimaryXcoordRight() {
+		return primaryXcoordRight;
+	}
+
+	public int getGroundLevelYcoord() {
+		return groundLevelYcoord;
+	}
+
 
 }

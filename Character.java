@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Graphics;
 
 public class Character {
 
@@ -20,11 +21,27 @@ public class Character {
 	private boolean canPush;
 
 
-	private Image imageCharacter;
 	private Color colorCharacter;
+	private Image imageCharacter = null;
 
 
-	public Character() {
+	public Character(int x, int y, Color colorCharacter, Image imageCharacter) {
+		this.x = x;
+		this.y = y;
+		this.colorCharacter = colorCharacter;
+		this.imageCharacter = imageCharacter;
+	}
+
+	public Character(int x, int y, Color colorCharacter) {
+		this(x, y, colorCharacter, null);
+	}
+
+
+	/**Dessine le personnage */
+	public void drawCharacter(Graphics g) {
+		g.setColor(colorCharacter);
+		g.fillRect(x, y - 600, 150, 250);
+		System.out.println(g);
 	}
 
 }
