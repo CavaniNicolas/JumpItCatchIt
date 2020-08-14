@@ -1,9 +1,12 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
-import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-public class Board extends JLabel {
+/**class Board extends JPanel<p>
+ * Gere l'affichage
+ */
+public class Board extends JPanel {
 	private static final long serialVersionUID = 2L;
 
 	/**true une fois que les valeurs graphiques fixes ont ete initialisees */

@@ -1,17 +1,24 @@
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
+
+/**class MyWindow extends JFrame<p>
+ * Gere la fenetre et les saisies clavier
+ * et tout le jeu en soit
+*/
 public class MyWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
+
+	private Board board = new Board();
 
 
 	public MyWindow() {
 		createWindow();
 
-		Board board = new Board();
 		this.setContentPane(board);
 	}
 
@@ -41,4 +48,23 @@ public class MyWindow extends JFrame {
 		this.setVisible(true);
 	}
 
+
+	/**class PlayerKeyListener implements KeyListener<p>
+	 * Gere les saisies clavier
+	 */
+	public class PlayerKeyListener implements KeyListener {
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+		}
+		
+	}
 }
