@@ -3,16 +3,12 @@ import java.awt.Image;
 
 import java.awt.Graphics;
 
-public class Character {
+public class Character extends Entity {
 
 	KeyBindings keyBindings;
 
 	/**Nombre de vies (en moities de coeur) */
 	private int lives = 6;
-
-	// Coordonnees
-	private int x;
-	private int y;
 
 	// Booleens d'autorisation d'actions
 	private boolean canJump;
@@ -21,14 +17,12 @@ public class Character {
 	private boolean canShoot;
 	private boolean canPush;
 
-
 	private Color colorCharacter;
 	private Image imageCharacter = null;
 
 
 	public Character(int x, int y, Color colorCharacter, Image imageCharacter) {
-		this.x = x;
-		this.y = y;
+    super(x, y, 0, 0, 0, 0);
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
 	}
@@ -47,5 +41,4 @@ public class Character {
 		int height = (int)((double)(boardGraphism.getReal().getCharacterHeight()) * boardGraphism.getGraphic().getOneUnityHeight());
 		g.fillRect(x, y, width, height);
 	}
-
 }
