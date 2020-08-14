@@ -4,36 +4,64 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 /**class Board extends JPanel<p>
- * Gere l'affichage
+ * Gere le jeu
  */
 public class Board extends JPanel {
 	private static final long serialVersionUID = 2L;
 
-	/**true une fois que les valeurs graphiques fixes ont ete initialisees */
-	private boolean isGraphicInitDone = false;
+	/**Les attributs graphiques et les fonctions d'affichage */
+	private BoardGraphism boardGraphism;
 
-	/**Largeur des plateformes */
-	private int platformWidth;
-	/**Hauteur des plateformes*/
-	private int platformHeight;
 
-	/**Largeur des personnages */
-	private int characterWidth;
-	/**Hauteur des personnages*/
-	private int characterHeight;
+	/**Booleen, true si le jeu est en cours */
+	private boolean isPlaying = false;
 
-	/**Coordonnee principale en X du personnage a gauche (position sur la plateforme) */
-	private int primaryXcoordLeft;
-	/**Coordonnee secondaire en X du personnage a gauche (position a l'atterrissage d'un changement de plateforme) */
-	private int secondaryXcoordLeft;
+	/**Personnage rouge (initialement a gauche) */
+	private Character characterRed;
+	/**Personnage bleu (initialement a droite) */
+	private Character characterBlue;
 
-	/**Coordonnee principale en X du personnage a droite (position sur la plateforme) */
-	private int primaryXcoordRight;
-	/**Coordonnee secondaire en X du personnage a droite (position a l'atterrissage d'un changement de plateforme) */
-	private int secondaryXcoordRight;
 
-	/**Coordonnee en Y du niveau du sol */
-	private int groundLevelYcoord;
+
+	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
+	public void initGame() {
+
+		// Creation de la classe qui contient les attributs et les methodes graphiques
+		boardGraphism = new BoardGraphism();
+
+		// On charge les objets (sans image) tout doit etre fonctionnel
+		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
+		
+		characterRed = new Character(boardGraphism.getPrimaryXcoordLeft(), boardGraphism.getGroundLevelYcoord() - boardGraphism.getCharacterHeight(), Color.red);
+		characterBlue = new Character(boardGraphism.getPrimaryXcoordRight(), boardGraphism.getGroundLevelYcoord() - boardGraphism.getCharacterHeight(), Color.red);
+		
+		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
+		loadAndSetAllImages();
+	}
+
+
+	/**Le jeu lui meme (la boucle while true) */
+	public void startGame() {
+		this.isPlaying = true;
+
+		while (this.isPlaying) {
+
+			updateWindow();
+
+			sleep(200);
+		}
+	}
+
+
+	/**Charge toutes les images du jeu et les ajoute aux objets */
+	public void loadAndSetAllImages() {
+
+	}
+
+
+	public void updateWindow() {
+		repaint();
+	}
 
 
 	/**Fonction d'affichage principale
@@ -44,88 +72,22 @@ public class Board extends JPanel {
 	 * Lesfonctions displayTruc sont pour les objets fixes
 	 */
 	public void paintComponent(Graphics g) {
-		initGraphicFields();
+		// Initialisation des attributs graphiques, elle n'est effectuee qu'une seule fois
+		boardGraphism.initGraphicFields(this, this.getWidth(), this.getHeight());
 
-		displayPlatforms(g);
-
-		drawCharacters(g);
+		boardGraphism.displayPlatforms(g);
+		boardGraphism.drawCharacters(g);
 	}
 
 
-	/**Dessine les deux personnages */
-	public void drawCharacters(Graphics g) {
-		g.setColor(Color.red);
-		g.fillRect(primaryXcoordLeft, groundLevelYcoord - characterHeight, characterWidth, characterHeight);
-		g.fillRect(secondaryXcoordLeft, groundLevelYcoord - characterHeight, characterWidth, characterHeight);
-
-		g.setColor(Color.blue);
-		g.fillRect(primaryXcoordRight, groundLevelYcoord - characterHeight, characterWidth, characterHeight);
-		g.fillRect(secondaryXcoordRight, groundLevelYcoord - characterHeight, characterWidth, characterHeight);
-	}
-
-
-	/**Affiche les plateformes des deux joueurs */
-	public void displayPlatforms(Graphics g) {
-		Color darkRed = new Color(92, 30, 31);
-		g.setColor(darkRed);
-		g.fillRect(0, groundLevelYcoord, platformWidth, platformHeight);
-
-		Color darkBlue = new Color(20, 45, 93);
-		g.setColor(darkBlue);
-		g.fillRect(this.getWidth() - platformWidth, groundLevelYcoord, platformWidth, platformHeight);
-	}
-
-
-	/**Initialise les attributs graphiques fixes. <p>
-	 * Cette methode n'est appelee qu'une seule fois
-	 */
-	public void initGraphicFields() {
-		if (!isGraphicInitDone) {
-			// dimensions des plateformes
-			this.platformWidth = this.getWidth() * 32 / 100;
-			this.platformHeight = this.getHeight() * 15 / 100;
-
-			// dimensions des personnages
-			this.characterWidth = this.getWidth() * 10 / 100;
-			this.characterHeight = this.getHeight() * 20 / 100;
-
-			// positions des personnages en X sur les plateforme
-			int platformPrimaryPercentage = platformWidth * 60 / 100;
-			int platformSecondaryPercentage = platformWidth * 10 / 100;
-
-			this.primaryXcoordLeft = platformPrimaryPercentage;
-			this.primaryXcoordRight = this.getWidth() - platformPrimaryPercentage - characterWidth;
-			this.secondaryXcoordLeft = platformSecondaryPercentage;
-			this.secondaryXcoordRight = this.getWidth() - platformSecondaryPercentage - characterWidth;
-
-			// position au sol en Y
-			this.groundLevelYcoord = this.getHeight()-this.platformHeight;
-
-			// Initialisation terminee
-			this.isGraphicInitDone = true;
+	/**Delay */
+	public void sleep(int time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			e.printStackTrace();
 		}
 	}
-
-
-	/* ======= */
-	/* Getters */
-	/* ======= */
-
-	public int getCharacterHeight() {
-		return characterHeight;
-	}
-
-	public int getPrimaryXcoordLeft() {
-		return primaryXcoordLeft;
-	}
-
-	public int getPrimaryXcoordRight() {
-		return primaryXcoordRight;
-	}
-
-	public int getGroundLevelYcoord() {
-		return groundLevelYcoord;
-	}
-
 
 }
