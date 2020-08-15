@@ -17,8 +17,11 @@ public class Character extends Entity {
 	// Booleens de positions
 	private boolean isOnLeftSide;
 
+	// Couleur et image du personnage
 	private Color colorCharacter;
 	private Image imageCharacter = null;
+
+
 
 	public Character(int x, int y, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings) {
 		super(x, y, 0, 0, 0, 0);
@@ -27,24 +30,34 @@ public class Character extends Entity {
 		this.keyBindings = keyBindings;
 	}
 
+
 	public Character(int x, int y, Color colorCharacter, Image imageCharacter) {
 		this(x, y, colorCharacter, imageCharacter, null);
 	}
+
 
 	public Character(int x, int y, Color colorCharacter, KeyBindings keyBindings) {
 		this(x, y, colorCharacter, null, keyBindings);
 	}
 
-	/** gives initial speed and acceleration to the character when jumping */
+
+	/** Applique une vitesse et une acceleration initiales au personnage pour sauter */
 	public void jump() {
 		if (actionBooleans.canJump) {
-			setSpeed(0, -10);//initial jump speed
-			setAcceleration(0, 10);//gravity
-			actionBooleans.canJump = false; //can't jump if already in the air
+			// Vitesse initiale du saut
+			setSpeed(0, 10);
+			// Gravite
+			setAcceleration(0, -10);
+
+			// On ne peut pas resauter en l'air
+			actionBooleans.canJump = false;
+			// On peut switch uniquement en l'air
+			actionBooleans.canSwitch = true;
 		}
 	}
 
-	/** creates an entity projectile */
+
+	/** Creer une entite Projectile */
 	public void shoot() {
 		if (actionBooleans.canShoot) {
 			Entity shot;
@@ -55,6 +68,7 @@ public class Character extends Entity {
 			}
 		}	
 	}
+
 
 	/**Dessine le personnage */
 	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {

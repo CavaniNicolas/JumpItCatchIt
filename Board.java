@@ -10,7 +10,7 @@ public class Board extends JPanel {
 	private static final long serialVersionUID = 2L;
 
 	/**Les attributs graphiques et les fonctions d'affichage (les attributs sont initialises au premier appel de paintComponent() */
-	private BoardGraphism boardGraphism = new BoardGraphism();;
+	private BoardGraphism boardGraphism = new BoardGraphism();
 
 
 	/**Booleen, true si le jeu est en cours */

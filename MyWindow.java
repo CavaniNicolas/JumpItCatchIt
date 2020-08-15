@@ -20,14 +20,14 @@ public class MyWindow extends JFrame {
 
 	public MyWindow() {
 		createWindow();
-		
-		
+
+
 		// ICI a faire plus tard: 
 		// On lance le menu, avec 3 boutons : Play Options Quit
 		// Dans les Options on peut modifier les touches claviers des deux joueurs
 		// Le bouton Play appel les fonctions initGame() et startGame();
 		// Pour le moment on lance juste le jeu
-		
+
 		board.initGame();
 
 		Thread thread = new Thread(new StartGame());
@@ -37,8 +37,8 @@ public class MyWindow extends JFrame {
 		this.addKeyListener(new PlayerKeyListener());
 
 	}
-	
-	
+
+
 	/**Cree la fenetre principale
 	 * <p>
 	 * La fenetre ne sera pas resizable par l'utilisateur (meme si le code y est adapte),
