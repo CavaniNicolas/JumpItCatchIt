@@ -1,4 +1,5 @@
 public class Entity {
+    /** coordinates, speed and acceleration variables */
     protected int x;
     protected int y;
     protected int speedX;
@@ -15,6 +16,7 @@ public class Entity {
         this.accelY = accelY;
     }
 
+    /** creates the next moment coordinates */
     public void move() {
         speedX += accelX;
         speedY += accelY;
@@ -22,8 +24,15 @@ public class Entity {
         y += speedY;
     }
 
+    /** set x and y acceleration */
     public void setAcceleration(int accelX, int accelY) {
         this.accelX = accelX;
         this.accelY = accelY;
+    }
+
+    /** set x and y speed */
+    public void setSpeed(int speedX, int speedY) {
+        this.speedX = speedX;
+        this.speedY = speedY;
     }
 }

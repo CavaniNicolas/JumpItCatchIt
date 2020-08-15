@@ -31,6 +31,14 @@ public class Character extends Entity {
 		this(x, y, colorCharacter, null);
 	}
 
+	/** gives initial speed and acceleration to the character when jumping */
+	public void jump() {
+		if (canJump) {
+			setSpeed(0, -10);//initial jump speed
+			setAcceleration(0, 10);//gravity
+			canJump = false; //can't jump if already in the air
+		}
+	}
 
 	/**Dessine le personnage */
 	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {
