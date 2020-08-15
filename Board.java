@@ -23,23 +23,6 @@ public class Board extends JPanel {
 
 
 
-	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
-	public void initGame() {
-
-		// Initialise les coordonnees reelles des objets
-		boardGraphism.initRealCoordsAttributes();
-
-		// On charge les objets (sans image) tout doit etre fonctionnel
-		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
-		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red);
-		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord(), Color.blue);
-
-
-		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
-		loadAndSetAllImages();
-	}
-
-
 	/**Le jeu lui meme (la boucle while true) */
 	public void startGame() {
 		this.isPlaying = true;
@@ -50,6 +33,32 @@ public class Board extends JPanel {
 
 			sleep(200);
 		}
+	}
+
+
+	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
+	public void initGame() {
+
+		// Initialise les coordonnees reelles des objets
+		boardGraphism.initRealCoordsAttributes();
+
+		// On charge les objets (sans image) tout doit etre fonctionnel
+		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
+
+		// Touches joueur rouge
+		int a=97, z=122, e=101, s=115, d=100, f=102;
+		KeyBindings redKeyBindings = new KeyBindings(a, e, z, s, d, f);
+		// Touches joueur bleu
+		int u=117, i=105, o=111, k=107, l=108, m=109;
+		KeyBindings blueKeyBindings = new KeyBindings(u, o, i, k, l, m);
+
+		// Creation des deux persos
+		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings);
+		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings);
+
+
+		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
+		loadAndSetAllImages();
 	}
 
 
@@ -94,6 +103,18 @@ public class Board extends JPanel {
 
 	public BoardGraphism getBoardGraphism() {
 		return boardGraphism;
+	}
+
+	public boolean getIsPlaying() {
+		return isPlaying;
+	}
+
+	public Character getCharacterRed() {
+		return characterRed;
+	}
+
+	public Character getCharacterBlue() {
+		return characterBlue;
 	}
 
 }
