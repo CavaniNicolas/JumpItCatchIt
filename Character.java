@@ -14,6 +14,9 @@ public class Character extends Entity {
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
 
+	// Booleens de positions
+	private boolean isOnLeftSide;
+
 	private Color colorCharacter;
 	private Image imageCharacter = null;
 
@@ -32,6 +35,26 @@ public class Character extends Entity {
 		this(x, y, colorCharacter, null, keyBindings);
 	}
 
+	/** gives initial speed and acceleration to the character when jumping */
+	public void jump() {
+		if (canJump) {
+			setSpeed(0, -10);//initial jump speed
+			setAcceleration(0, 10);//gravity
+			canJump = false; //can't jump if already in the air
+		}
+	}
+
+	/** creates an entity projectile */
+	public void shoot() {
+		if (canShoot) {
+			Entity shot;
+			if (isOnLeftSide) {
+				shot = new Entity(x, y, 10, 0, 0, 0);
+			} else {
+				shot = new Entity(x, y, -10, 0, 0, 0);
+			}
+		}	
+	}
 
 	/**Dessine le personnage */
 	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {
