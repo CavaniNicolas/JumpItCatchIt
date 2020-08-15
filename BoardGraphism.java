@@ -100,6 +100,9 @@ public class BoardGraphism {
 
 	/**Affiche les plateformes des deux joueurs */
 	public void displayPlatforms(Graphics g) {
+		g.setColor(Color.lightGray);
+		g.fillRect(0, 0, boardWidth, boardHeight);
+
 		Color darkRed = new Color(92, 30, 31);
 		g.setColor(darkRed);
 		g.fillRect(0, graphic.groundLevelYCoord, graphic.platformWidth, graphic.platformHeight);

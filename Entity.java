@@ -4,13 +4,21 @@
  */
 public class Entity {
 
-	// Coordonnees du l'entite
+	/**Gravite */
+	protected final int GRAVITY = -2;
+
+	// Coordonnees de collisions minimales et maximales
+	protected int minX = 0; // Init a enlever
+	protected int maxX = 1600;
+	protected int minY = 0;
+
+	// Coordonnees de l'entite
 	protected int x;
 	protected int y;
-	// Vitesses du l'entite
+	// Vitesses de l'entite
 	protected int speedX;
 	protected int speedY;
-	// Accelerations du l'entite
+	// Accelerations de l'entite
 	protected int accelX;
 	protected int accelY;
 
@@ -29,8 +37,27 @@ public class Entity {
 	public void move() {
 		speedX += accelX;
 		speedY += accelY;
-		x += speedX;
-		y += speedY;
+
+		if (minX > x + speedX) {
+			x = minX;
+		} else {
+			x = x + speedX;
+		}
+
+		if (maxX < x) {
+			x = maxX;
+		}
+
+
+		if (minY > y + speedY) {
+			y = minY;
+			speedY = 0;
+			accelY = 0;
+
+		} else {
+			y = y + speedY;
+		}
+
 	}
 
 

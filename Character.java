@@ -10,16 +10,22 @@ public class Character extends Entity {
 	/**Nombre de vies (en moities de coeur) */
 	private int lives = 6;
 
-	// Booleens d'actions
+	/** Booleens d'actions */
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
 
-	// Booleens de positions
+	/** Booleens de positions */
 	private boolean isOnLeftSide;
 
 	// Couleur et image du personnage
 	private Color colorCharacter;
 	private Image imageCharacter = null;
+
+
+	/** Vitesse Laterale Constante */
+	protected int speedLateral = 4; //temporaire, a mettre dans Entity plus tard
+	/** Vitesse Horizontale Constante */
+	protected int speedVertical = 50;
 
 
 
@@ -41,19 +47,63 @@ public class Character extends Entity {
 	}
 
 
-	/** Applique une vitesse et une acceleration initiales au personnage pour sauter */
-	public void jump() {
-		if (actionBooleans.canJump) {
+	public void updateCollisionBorders(BoardGraphism boardGraphism) {
+
+	}
+
+
+	public void updateActionBooleans() {
+		
+		// On peut resauter une fois quon a atterit, et on ne peut plus switch
+		if (y == minY) {
+			actionBooleans.canJump = true;
+			actionBooleans.canSwitch = false;
+		}
+	}
+
+
+
+	/**Actualise la position du personnage (selon X et Y) */
+	public void updatePosition() {
+		updateXPosition();
+		updateYPosition();
+		// switch();
+
+		move();
+	}
+	/**Actualise la position du personnage (selon X) quand on est sur la plateforme */
+	private void updateXPosition() {
+
+		// Applique une vitesse initiale au personnage pour se deplacer lateralement
+		if (actionBooleans.leftPressed && actionBooleans.canLeft) {
+			this.speedX = - this.speedLateral;
+
+		} else if (actionBooleans.rightPressed && actionBooleans.canRight) {
+			this.speedX = this.speedLateral;
+
+		} else {
+			this.speedX = 0;
+		}
+	}
+	/**Actualise la position du personnage (selon Y) */
+	private void updateYPosition() {
+
+		// Applique une vitesse et une acceleration initiales au personnage pour sauter
+		if (actionBooleans.jumpPressed && actionBooleans.canJump) {
 			// Vitesse initiale du saut
-			setSpeed(0, 10);
+			this.speedY = this.speedVertical;
 			// Gravite
-			setAcceleration(0, -10);
+			this.accelY = GRAVITY;
 
 			// On ne peut pas resauter en l'air
 			actionBooleans.canJump = false;
 			// On peut switch uniquement en l'air
 			actionBooleans.canSwitch = true;
 		}
+
+	}
+	public void jumpCollision() {
+
 	}
 
 
@@ -106,9 +156,9 @@ public class Character extends Entity {
 
 
 		// Booleens d'autorisation d'actions
-		private boolean canJump;
-		private boolean canLeft;
-		private boolean canRight;
+		private boolean canJump = true;
+		private boolean canLeft = true;
+		private boolean canRight = true;
 		private boolean canGrab;
 		private boolean canShield;
 		private boolean canShoot;

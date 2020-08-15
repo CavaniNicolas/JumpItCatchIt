@@ -31,8 +31,40 @@ public class Board extends JPanel {
 
 			updateWindow();
 
-			sleep(200);
+			updateActionBooleans();
+
+			//updateAllCollisionBorders();
+			checkCollisionsAndMoveAll();
+
+			sleep(12);
 		}
+	}
+
+
+	/** Actualise les coordonnees de collision minimale et maximale de tous les objets */
+	public void updateAllCollisionBorders() {
+
+		// Les personnages
+		characterRed.updateCollisionBorders(boardGraphism);
+		characterBlue.updateCollisionBorders(boardGraphism);
+
+	}
+
+
+	/** Actualise les booleens d'actions de personnages */
+	public void updateActionBooleans() {
+		// Les personnages
+		characterRed.updateActionBooleans();
+		characterBlue.updateActionBooleans();
+	}
+
+
+	/**Actualise la position de tous les objets, (verifie les collisions et deplace les objets)*/
+	public void checkCollisionsAndMoveAll() {
+
+		// Les personnages
+		characterRed.updatePosition();
+		characterBlue.updatePosition();
 	}
 
 
