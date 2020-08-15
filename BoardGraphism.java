@@ -16,11 +16,16 @@ public class BoardGraphism {
 	private GraphicalAttributes graphic = new GraphicalAttributes();
 
 
+	/**Largeur reelle max du board */
+	private int maxX = 1600;
+	/**Hauteur reelle max du board */
+	private int maxY = 1000;
+
+
 	/**Largeur du JPanel (Board) */
 	private int boardWidth;
 	/**Hauteur du JPanel (Board) */
 	private int boardHeight;
-
 
 
 	/**Initialise les attributs graphiques fixes. <p>
@@ -40,13 +45,13 @@ public class BoardGraphism {
 			real.characterHeight = 200;
 
 			// positions des personnages en X sur les plateforme
-			real.primaryXcoordLeft = 300;
-			real.primaryXcoordRight = 1140;
-			real.secondaryXcoordLeft = 100;
-			real.secondaryXcoordRight = 1340;
+			real.primaryXcoordLeft = 380;
+			real.primaryXcoordRight = 1220;
+			real.secondaryXcoordLeft = 180;
+			real.secondaryXcoordRight = 1420;
 
 			// position au sol en Y
-			real.groundLevelYCoord = 850;
+			real.groundLevelYCoord = 150;
 
 	}
 
@@ -78,7 +83,7 @@ public class BoardGraphism {
 			graphic.secondaryXcoordRight = (int)(real.secondaryXcoordRight * graphic.oneUnityHeight);
 
 			// position au sol en Y
-			graphic.groundLevelYCoord = (int)(real.groundLevelYCoord * graphic.oneUnityHeight);
+			graphic.groundLevelYCoord = (int)((maxY - real.groundLevelYCoord) * graphic.oneUnityHeight);
 
 			// Initialisation terminee
 			this.isGraphicUpdateDone = true;
@@ -123,6 +128,14 @@ public class BoardGraphism {
 
 	public GraphicalAttributes getGraphic() {
 		return graphic;
+	}
+
+	public int getMaxX() {
+		return maxX;
+	}
+
+	public int getMaxY() {
+		return maxY;
 	}
 
 

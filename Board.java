@@ -12,8 +12,6 @@ public class Board extends JPanel {
 	/**Les attributs graphiques et les fonctions d'affichage */
 	private BoardGraphism boardGraphism;
 
-	private int maxX = 1600;
-	private int maxY = 1000;
 
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying = false;
@@ -36,8 +34,8 @@ public class Board extends JPanel {
 
 		// On charge les objets (sans image) tout doit etre fonctionnel
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
-		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord() - boardGraphism.getReal().getCharacterHeight(), Color.red);
-		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord() - boardGraphism.getReal().getCharacterHeight(), Color.blue);
+		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red);
+		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord(), Color.blue);
 
 
 		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
@@ -64,6 +62,7 @@ public class Board extends JPanel {
 	}
 
 
+	/**Actualise l'affichage graphique */
 	public void updateWindow() {
 		repaint();
 	}
@@ -78,7 +77,7 @@ public class Board extends JPanel {
 	 */
 	public void paintComponent(Graphics g) {
 		// Initialisation des attributs graphiques, effectuees a chaque redimensionnement de la fenetre
-		boardGraphism.updateGraphicCoordsAttributes(this.maxX, this.maxY, this.getWidth(), this.getHeight());
+		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(), this.getHeight());
 
 		boardGraphism.displayPlatforms(g);
 		boardGraphism.drawCharacters(g, characterRed, characterBlue);

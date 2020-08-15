@@ -35,8 +35,8 @@ public class Character extends Entity {
 	/**Dessine le personnage */
 	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {
 		g.setColor(colorCharacter);
-		int x = (int)((double)(this.x) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double)(this.y) * boardGraphism.getGraphic().getOneUnityHeight());
+		int x = (int)((double)(this.x - boardGraphism.getReal().getCharacterWidth() / 2) * boardGraphism.getGraphic().getOneUnityWidth());
+		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + boardGraphism.getReal().getCharacterHeight())) * boardGraphism.getGraphic().getOneUnityHeight());
 		int width = (int)((double)(boardGraphism.getReal().getCharacterWidth()) * boardGraphism.getGraphic().getOneUnityWidth());
 		int height = (int)((double)(boardGraphism.getReal().getCharacterHeight()) * boardGraphism.getGraphic().getOneUnityHeight());
 		g.fillRect(x, y, width, height);
