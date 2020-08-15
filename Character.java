@@ -37,16 +37,16 @@ public class Character extends Entity {
 
 	/** gives initial speed and acceleration to the character when jumping */
 	public void jump() {
-		if (canJump) {
+		if (actionBooleans.canJump) {
 			setSpeed(0, -10);//initial jump speed
 			setAcceleration(0, 10);//gravity
-			canJump = false; //can't jump if already in the air
+			actionBooleans.canJump = false; //can't jump if already in the air
 		}
 	}
 
 	/** creates an entity projectile */
 	public void shoot() {
-		if (canShoot) {
+		if (actionBooleans.canShoot) {
 			Entity shot;
 			if (isOnLeftSide) {
 				shot = new Entity(x, y, 10, 0, 0, 0);
@@ -103,7 +103,6 @@ public class Character extends Entity {
 
 
 		// Booleens d'actions en cours
-
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)

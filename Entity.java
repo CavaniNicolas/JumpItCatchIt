@@ -5,14 +5,14 @@
 public class Entity {
 
 	// Coordonnees du l'entite
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 	// Vitesses du l'entite
-	private int speedX;
-	private int speedY;
+	protected int speedX;
+	protected int speedY;
 	// Accelerations du l'entite
-	private int accelX;
-	private int accelY;
+	protected int accelX;
+	protected int accelY;
 
 
 	public Entity(int x, int y, int speedX, int speedY, int accelX, int accelY) {
