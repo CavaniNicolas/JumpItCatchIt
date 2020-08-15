@@ -53,7 +53,16 @@ public class Character extends Entity {
 
 
 	public void updateActionBooleans() {
-		
+
+		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
+		if (actionBooleans.leftPressed && actionBooleans.rightPressed) {
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
+		} else {
+			actionBooleans.canLeft = true;
+			actionBooleans.canRight = true;
+		}
+
 		// On peut resauter une fois quon a atterit, et on ne peut plus switch
 		if (y == minY) {
 			actionBooleans.canJump = true;
