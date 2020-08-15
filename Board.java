@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 public class Board extends JPanel {
 	private static final long serialVersionUID = 2L;
 
-	/**Les attributs graphiques et les fonctions d'affichage */
-	private BoardGraphism boardGraphism;
+	/**Les attributs graphiques et les fonctions d'affichage (les attributs sont initialises au premier appel de paintComponent() */
+	private BoardGraphism boardGraphism = new BoardGraphism();;
 
 
 	/**Booleen, true si le jeu est en cours */
@@ -25,9 +25,6 @@ public class Board extends JPanel {
 
 	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
 	public void initGame() {
-
-		// Creation de la classe contenant les attributs et les methodes d'affichage. (les attributs sont initialises au premier appel de paintComponent())
-		boardGraphism = new BoardGraphism();
 
 		// Initialise les coordonnees reelles des objets
 		boardGraphism.initRealCoordsAttributes();
