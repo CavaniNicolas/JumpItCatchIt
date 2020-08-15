@@ -9,11 +9,9 @@ import javax.swing.JPanel;
 public class Board extends JPanel {
 	private static final long serialVersionUID = 2L;
 
-	/**Les attributs graphiques et les fonctions d'affichage */
-	private BoardGraphism boardGraphism;
+	/**Les attributs graphiques et les fonctions d'affichage (les attributs sont initialises au premier appel de paintComponent() */
+	private BoardGraphism boardGraphism = new BoardGraphism();;
 
-	private int maxX = 1600;
-	private int maxY = 1000;
 
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying = false;
@@ -23,26 +21,6 @@ public class Board extends JPanel {
 	/**Personnage bleu (initialement a droite) */
 	private Character characterBlue;
 
-
-
-	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
-	public void initGame() {
-
-		// Creation de la classe contenant les attributs et les methodes d'affichage. (les attributs sont initialises au premier appel de paintComponent())
-		boardGraphism = new BoardGraphism();
-
-		// Initialise les coordonnees reelles des objets
-		boardGraphism.initRealCoordsAttributes();
-
-		// On charge les objets (sans image) tout doit etre fonctionnel
-		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
-		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord() - boardGraphism.getReal().getCharacterHeight(), Color.red);
-		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord() - boardGraphism.getReal().getCharacterHeight(), Color.blue);
-
-
-		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
-		loadAndSetAllImages();
-	}
 
 
 	/**Le jeu lui meme (la boucle while true) */
@@ -58,12 +36,39 @@ public class Board extends JPanel {
 	}
 
 
+	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
+	public void initGame() {
+
+		// Initialise les coordonnees reelles des objets
+		boardGraphism.initRealCoordsAttributes();
+
+		// On charge les objets (sans image) tout doit etre fonctionnel
+		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
+
+		// Touches joueur rouge
+		int a=97, z=122, e=101, s=115, d=100, f=102;
+		KeyBindings redKeyBindings = new KeyBindings(a, e, z, s, d, f);
+		// Touches joueur bleu
+		int u=117, i=105, o=111, k=107, l=108, m=109;
+		KeyBindings blueKeyBindings = new KeyBindings(u, o, i, k, l, m);
+
+		// Creation des deux persos
+		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings);
+		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings);
+
+
+		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
+		loadAndSetAllImages();
+	}
+
+
 	/**Charge toutes les images du jeu et les ajoute aux objets */
 	public void loadAndSetAllImages() {
 
 	}
 
 
+	/**Actualise l'affichage graphique */
 	public void updateWindow() {
 		repaint();
 	}
@@ -78,7 +83,7 @@ public class Board extends JPanel {
 	 */
 	public void paintComponent(Graphics g) {
 		// Initialisation des attributs graphiques, effectuees a chaque redimensionnement de la fenetre
-		boardGraphism.updateGraphicCoordsAttributes(this.maxX, this.maxY, this.getWidth(), this.getHeight());
+		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(), this.getHeight());
 
 		boardGraphism.displayPlatforms(g);
 		boardGraphism.drawCharacters(g, characterRed, characterBlue);
@@ -98,6 +103,18 @@ public class Board extends JPanel {
 
 	public BoardGraphism getBoardGraphism() {
 		return boardGraphism;
+	}
+
+	public boolean getIsPlaying() {
+		return isPlaying;
+	}
+
+	public Character getCharacterRed() {
+		return characterRed;
+	}
+
+	public Character getCharacterBlue() {
+		return characterBlue;
 	}
 
 }

@@ -20,4 +20,51 @@ public class KeyBindings implements Serializable {
 		this.shootPushKey = shootPushKey;
 	}
 
+	/* ======= */
+	/* Getters */
+	/* ======= */
+
+	public int getLeftKey() {
+		return leftKey;
+	}
+	public int getRightKey() {
+		return rightKey;
+	}
+	public int getJumpKey() {
+		return jumpKey;
+	}
+	public int getGrabKey() {
+		return grabKey;
+	}
+	public int getShieldKey() {
+		return shieldKey;
+	}
+	public int getShootPushKey() {
+		return shootPushKey;
+	}
+
+
+	/* ======= */
+	/* Setters */
+	/* ======= */
+
+	public void setLeftKey(int leftKey) {
+		this.leftKey = leftKey;
+	}
+	public void setRightKey(int rightKey) {
+		this.rightKey = rightKey;
+	}
+	public void setJumpKey(int jumpKey) {
+		this.jumpKey = jumpKey;
+	}
+	public void setGrabKey(int grabKey) {
+		this.grabKey = grabKey;
+	}
+	public void setShieldKey(int shieldKey) {
+		this.shieldKey = shieldKey;
+	}
+	public void setShootPushKey(int shootPushKey) {
+		this.shootPushKey = shootPushKey;
+	}
+
 }

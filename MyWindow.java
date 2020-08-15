@@ -20,9 +20,8 @@ public class MyWindow extends JFrame {
 
 	public MyWindow() {
 		createWindow();
-
-		this.setContentPane(board);
-
+		
+		
 		// ICI a faire plus tard: 
 		// On lance le menu, avec 3 boutons : Play Options Quit
 		// Dans les Options on peut modifier les touches claviers des deux joueurs
@@ -30,10 +29,16 @@ public class MyWindow extends JFrame {
 		// Pour le moment on lance juste le jeu
 		
 		board.initGame();
+
+		Thread thread = new Thread(new StartGame());
+		thread.start();
 		//board.startGame();
+
+		this.addKeyListener(new PlayerKeyListener());
+
 	}
-
-
+	
+	
 	/**Cree la fenetre principale
 	 * <p>
 	 * La fenetre ne sera pas resizable par l'utilisateur (meme si le code y est adapte),
@@ -42,7 +47,7 @@ public class MyWindow extends JFrame {
 	public void createWindow() {
 		this.setTitle("Jump It Catch It");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		// Fenetre hors plein ecran : width = 80% et height = 90% (les proportions sont a peu pres conservees)
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)(screenSize.getWidth()*0.8);
@@ -50,8 +55,11 @@ public class MyWindow extends JFrame {
 		this.setSize(width, height);
 		this.setLocation( (int)(screenSize.getWidth() * 0.1), (int)(screenSize.getHeight() * 0.05) );
 		
-		// this.setResizable(false);
+		this.setContentPane(board);
 
+
+		// this.setResizable(false);
+		
 		// Permet ensuite d'actualiser les valeurs des coordonnees et dimensions graphiques lors du prochain appel de paintComponent()
 		this.addComponentListener(new ComponentAdapter() {
 			// Si la fenetre est redimensionnee
@@ -59,7 +67,7 @@ public class MyWindow extends JFrame {
 				board.getBoardGraphism().setIsGraphicUpdateDone(false);
 			}
 		});
-
+		
 
 		// Plein ecran
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -75,16 +83,150 @@ public class MyWindow extends JFrame {
 	public class PlayerKeyListener implements KeyListener {
 
 		@Override
-		public void keyTyped(KeyEvent e) {
+		public void keyPressed(KeyEvent event) {
+
+			int code = event.getKeyChar();
+			//System.out.print("Code clavier "+ code + "\n ");
+
+			Character characterRed = board.getCharacterRed();
+			Character characterBlue = board.getCharacterBlue();
+
+			KeyBindings charaRedKeys = board.getCharacterRed().getKeyBindings();
+			KeyBindings charaBlueKeys = board.getCharacterBlue().getKeyBindings();
+
+
+			/* Pour le personnage rouge */
+			// Sauter
+			if (code == charaRedKeys.getJumpKey()) {
+				characterRed.getActionBooleans().setJumpPressed(true);
+			}
+			// Gauche
+			if (code == charaRedKeys.getLeftKey()) {
+				characterRed.getActionBooleans().setLeftPressed(true);
+			}
+			// Droite
+			if (code == charaRedKeys.getRightKey()) {
+				characterRed.getActionBooleans().setRightPressed(true);
+			}
+			// Grab
+			if (code == charaRedKeys.getGrabKey()) {
+				characterRed.getActionBooleans().setGrabPressed(true);
+			}
+			// Shield
+			if (code == charaRedKeys.getShieldKey()) {
+				characterRed.getActionBooleans().setShieldPressed(true);
+			}
+			// Shoot Push
+			if (code == charaRedKeys.getShootPushKey()) {
+				characterRed.getActionBooleans().setShootPushPressed(true);
+			}
+			
+			// Pour le personnage bleu
+			// Sauter
+			if (code == charaBlueKeys.getJumpKey()) {
+				characterBlue.getActionBooleans().setJumpPressed(true);
+			}
+			// Gauche
+			if (code == charaBlueKeys.getLeftKey()) {
+				characterBlue.getActionBooleans().setLeftPressed(true);
+			}
+			// Droite
+			if (code == charaBlueKeys.getRightKey()) {
+				characterBlue.getActionBooleans().setRightPressed(true);
+			}
+			// Grab
+			if (code == charaBlueKeys.getGrabKey()) {
+				characterBlue.getActionBooleans().setGrabPressed(true);
+			}
+			// Shield
+			if (code == charaBlueKeys.getShieldKey()) {
+				characterBlue.getActionBooleans().setShieldPressed(true);
+			}
+			// Shoot Push
+			if (code == charaBlueKeys.getShootPushKey()) {
+				characterBlue.getActionBooleans().setShootPushPressed(true);
+			}
+
 		}
 
 		@Override
-		public void keyPressed(KeyEvent e) {
+		public void keyReleased(KeyEvent event) {
+			int code = event.getKeyChar();
+			//System.out.print("Code clavier "+ code + "\n ");
+
+			Character characterRed = board.getCharacterRed();
+			Character characterBlue = board.getCharacterBlue();
+
+			KeyBindings charaRedKeys = board.getCharacterRed().getKeyBindings();
+			KeyBindings charaBlueKeys = board.getCharacterBlue().getKeyBindings();
+
+
+			/* Pour le personnage rouge */
+			// Sauter
+			if (code == charaRedKeys.getJumpKey()) {
+				characterRed.getActionBooleans().setJumpPressed(false);
+			}
+			// Gauche
+			if (code == charaRedKeys.getLeftKey()) {
+				characterRed.getActionBooleans().setLeftPressed(false);
+			}
+			// Droite
+			if (code == charaRedKeys.getRightKey()) {
+				characterRed.getActionBooleans().setRightPressed(false);
+			}
+			// Grab
+			if (code == charaRedKeys.getGrabKey()) {
+				characterRed.getActionBooleans().setGrabPressed(false);
+			}
+			// Shield
+			if (code == charaRedKeys.getShieldKey()) {
+				characterRed.getActionBooleans().setShieldPressed(false);
+			}
+			// Shoot Push
+			if (code == charaRedKeys.getShootPushKey()) {
+				characterRed.getActionBooleans().setShootPushPressed(false);
+			}
+
+
+			// Pour le personnage bleu
+			// Sauter
+			if (code == charaBlueKeys.getJumpKey()) {
+				characterBlue.getActionBooleans().setJumpPressed(false);
+			}
+			// Gauche
+			if (code == charaBlueKeys.getLeftKey()) {
+				characterBlue.getActionBooleans().setLeftPressed(false);
+			}
+			// Droite
+			if (code == charaBlueKeys.getRightKey()) {
+				characterBlue.getActionBooleans().setRightPressed(false);
+			}
+			// Grab
+			if (code == charaBlueKeys.getGrabKey()) {
+				characterBlue.getActionBooleans().setGrabPressed(false);
+			}
+			// Shield
+			if (code == charaBlueKeys.getShieldKey()) {
+				characterBlue.getActionBooleans().setShieldPressed(false);
+			}
+			// Shoot Push
+			if (code == charaBlueKeys.getShootPushKey()) {
+				characterBlue.getActionBooleans().setShootPushPressed(false);
+			}
+
 		}
 
 		@Override
-		public void keyReleased(KeyEvent e) {
+		public void keyTyped(KeyEvent event) {
 		}
-		
 	}
+
+
+	/**Le jeu tourne dans un thread a part */
+	public class StartGame implements Runnable {
+		public void run() {
+			board.startGame();
+		}
+	}
+
 }
