@@ -36,7 +36,7 @@ public class KeyBindings implements Serializable {
 	public int getGrabKey() {
 		return grabKey;
 	}
-		public int getShieldKey() {
+	public int getShieldKey() {
 		return shieldKey;
 	}
 	public int getShootPushKey() {

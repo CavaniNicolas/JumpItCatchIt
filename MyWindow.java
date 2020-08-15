@@ -108,6 +108,18 @@ public class MyWindow extends JFrame {
 			if (code == charaRedKeys.getRightKey()) {
 				characterRed.getActionBooleans().setRightPressed(true);
 			}
+			// Grab
+			if (code == charaRedKeys.getGrabKey()) {
+				characterRed.getActionBooleans().setGrabPressed(true);
+			}
+			// Shield
+			if (code == charaRedKeys.getShieldKey()) {
+				characterRed.getActionBooleans().setShieldPressed(true);
+			}
+			// Shoot Push
+			if (code == charaRedKeys.getShootPushKey()) {
+				characterRed.getActionBooleans().setShootPushPressed(true);
+			}
 			
 			// Pour le personnage bleu
 			// Sauter
@@ -121,6 +133,18 @@ public class MyWindow extends JFrame {
 			// Droite
 			if (code == charaBlueKeys.getRightKey()) {
 				characterBlue.getActionBooleans().setRightPressed(true);
+			}
+			// Grab
+			if (code == charaBlueKeys.getGrabKey()) {
+				characterBlue.getActionBooleans().setGrabPressed(true);
+			}
+			// Shield
+			if (code == charaBlueKeys.getShieldKey()) {
+				characterBlue.getActionBooleans().setShieldPressed(true);
+			}
+			// Shoot Push
+			if (code == charaBlueKeys.getShootPushKey()) {
+				characterBlue.getActionBooleans().setShootPushPressed(true);
 			}
 
 		}
@@ -150,7 +174,20 @@ public class MyWindow extends JFrame {
 			if (code == charaRedKeys.getRightKey()) {
 				characterRed.getActionBooleans().setRightPressed(false);
 			}
-			
+			// Grab
+			if (code == charaRedKeys.getGrabKey()) {
+				characterRed.getActionBooleans().setGrabPressed(false);
+			}
+			// Shield
+			if (code == charaRedKeys.getShieldKey()) {
+				characterRed.getActionBooleans().setShieldPressed(false);
+			}
+			// Shoot Push
+			if (code == charaRedKeys.getShootPushKey()) {
+				characterRed.getActionBooleans().setShootPushPressed(false);
+			}
+
+
 			// Pour le personnage bleu
 			// Sauter
 			if (code == charaBlueKeys.getJumpKey()) {
@@ -164,6 +201,19 @@ public class MyWindow extends JFrame {
 			if (code == charaBlueKeys.getRightKey()) {
 				characterBlue.getActionBooleans().setRightPressed(false);
 			}
+			// Grab
+			if (code == charaBlueKeys.getGrabKey()) {
+				characterBlue.getActionBooleans().setGrabPressed(false);
+			}
+			// Shield
+			if (code == charaBlueKeys.getShieldKey()) {
+				characterBlue.getActionBooleans().setShieldPressed(false);
+			}
+			// Shoot Push
+			if (code == charaBlueKeys.getShootPushKey()) {
+				characterBlue.getActionBooleans().setShootPushPressed(false);
+			}
+
 		}
 
 		@Override

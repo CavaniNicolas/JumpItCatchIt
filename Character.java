@@ -11,7 +11,7 @@ public class Character extends Entity {
 	private int lives = 6;
 
 	// Booleens d'actions
-	private ActionBooleans actionBooleans;
+	private ActionBooleans actionBooleans = new ActionBooleans();
 
 
 	private Color colorCharacter;
@@ -59,13 +59,13 @@ public class Character extends Entity {
 	public class ActionBooleans {
 
 		// Booleens de pression sur les touches / (de demande d'actions)
-		private boolean jumpPressed;
-		private boolean leftPressed;
-		private boolean rightPressed;
-		private boolean grabPressed;
-		private boolean shieldPressed;
-		private boolean shootPushPressed;
-		private boolean switchPressed;
+		private boolean jumpPressed = false;
+		private boolean leftPressed = false;
+		private boolean rightPressed = false;
+		private boolean grabPressed = false;
+		private boolean shieldPressed = false;
+		private boolean shootPushPressed = false;
+		private boolean switchPressed = false;
 
 
 		// Booleens d'autorisation d'actions
