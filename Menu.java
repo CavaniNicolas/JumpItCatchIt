@@ -5,8 +5,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ComponentEvent;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -88,13 +86,13 @@ public class Menu extends JFrame{
 				//delete those files
 				File f = new File(pathRedKeyBindings);
 				if(f.exists() && !f.isDirectory()) {
-					System.out.println(f.delete());
+					f.delete();
 				}
 				f = new File(pathBlueKeyBindings);
 				if(f.exists() && !f.isDirectory()) {
-					System.out.println(f.delete());
+					f.delete();
 				}
-				//recreate the menu with default settings
+				//recreate the menu with default settings doesn't work right now
 				content.removeAll();
 				createKeyBindingMenu();
 			}
