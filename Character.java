@@ -10,16 +10,29 @@ public class Character extends Entity {
 	/**Nombre de vies (en moities de coeur) */
 	private int lives = 6;
 
-	// Booleens d'actions
+	/** Booleens d'actions */
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
 
-	// Booleens de positions
+	/** Booleen de position, a gauche ou a droite de son adversaire */
 	private boolean isOnLeftSide;
+	/** Booleen de position, sur la plateforme de gauche */
+	private boolean isOnLeftPlatform;
+	/** Booleen de position, sur la plateforme de droite */
+	private boolean isOnRightPlatform;
+
+	/** Booleen, true si on est en train de tomber dans le vide */
+	private boolean isFalling;
 
 	// Couleur et image du personnage
 	private Color colorCharacter;
 	private Image imageCharacter = null;
+
+
+	/** Vitesse Laterale Constante */
+	protected int speedLateral = 4; //temporaire, a mettre dans Entity plus tard
+	/** Vitesse Horizontale Constante */
+	protected int speedVertical = 50;
 
 
 
@@ -41,18 +54,193 @@ public class Character extends Entity {
 	}
 
 
-	/** Applique une vitesse et une acceleration initiales au personnage pour sauter */
-	public void jump() {
-		if (actionBooleans.canJump) {
-			// Vitesse initiale du saut
-			setSpeed(0, 10);
-			// Gravite
-			setAcceleration(0, -10);
+	/** Actualise les coordonnees de collisions maximales et minimales */
+	public void updateCollisionBorders(BoardGraphism boardGraphism, Character otherCharacter) {
 
+		updatePositionBooleans(boardGraphism, otherCharacter);
+
+		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
+
+		// Si on est sur une plateforme, on determine le sol
+		if (isOnLeftPlatform || isOnRightPlatform) {
+			minY = boardGraphism.getReal().getPlatformHeight();
+		} else {
+			minY = 0;
+			accelY = GRAVITY;
+		}
+
+		// Collisions Borders selon X
+		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
+		if (isFalling == false) {
+			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
+				minX = halfCharacterWidth;
+				maxX = otherCharacter.x - halfCharacterWidth;
+
+			} else {
+				minX = otherCharacter.x + halfCharacterWidth;
+				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+			}
+
+		// Si on tombe au milieu, les bords sont les plateformes
+		} else {
+			minX = boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2;
+			maxX = boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2;
+		}
+
+	}
+
+
+	/** Actualise les booleens de position */
+	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		// Si on est a gauche ou a droite de son adversaire
+		if (x < otherCharacter.x) {
+			isOnLeftSide = true;
+		} else {
+			isOnLeftSide = false;
+		}
+
+		// Si on est sur la plateforme de gauche
+		if (x < boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2) {
+			isOnLeftPlatform = true;
+			isOnRightPlatform = false;
+			isFalling = false;
+		// Si on est sur la plateforme de droite
+		} else if (x > boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
+			isOnLeftPlatform = false;
+			isOnRightPlatform = true;
+			isFalling = false;
+		} else {
+			// Si on est sur aucune plateforme et Si on tombe
+			if (y <= boardGraphism.getReal().getPlatformHeight()) {
+				isFalling = true;
+				isOnLeftPlatform = false;
+				isOnRightPlatform = false;
+			} else {
+				isFalling = false;
+			}
+		}
+
+
+		// ICI : Si "falling == true" (cf updateCollisionBorders()) pensez a mettre canJump a false
+		// (peut etre aussi canLeft et canRight si on effectue une projection vers le vide),
+		// ICI : Si "falling == true" et qu'on touche le minY,
+		// alors on repositionne le personnage sur la plateforme et on lui fait perdre de la vie
+
+	}
+
+
+	/** Actualise les booleens d'actions */
+	public void updateActionBooleans() {
+
+		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
+		if (actionBooleans.leftPressed && actionBooleans.rightPressed) {
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
+		} else {
+			actionBooleans.canLeft = true;
+			actionBooleans.canRight = true;
+		}
+
+		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
+		// Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans)
+		if (x <= minX) {
+			actionBooleans.canLeft = false;
+		}
+		if (x >= maxX) {
+			actionBooleans.canRight = false;
+		}
+
+		// On peut resauter et se deplacer quand on est au sol, et on ne peut pas switch
+		if (y == minY) {
+			actionBooleans.isJumping = false;
+			actionBooleans.canJump = true;
+			actionBooleans.canSwitch = false;
+			
+			actionBooleans.canLeft = true;
+			actionBooleans.canRight = true;
+			actionBooleans.isJumpFirstReleaseDone = false;
+			actionBooleans.canActivateCanSwitch = true;
+			actionBooleans.isSwitching = false;
+		}
+
+		// Si on peut activer le canSwitch (gestion des pressions des touches) et qu'il n'a pas encore ete active, on l'active
+		if (actionBooleans.isJumpFirstReleaseDone && actionBooleans.canActivateCanSwitch) {
+			actionBooleans.canSwitch = true;
+			actionBooleans.canActivateCanSwitch = false;
+		}
+
+	}
+
+
+	/**Actualise la position du personnage (selon X et Y) puis le deplace (le deplacement gere les collisions grace aux collision borders */
+	public void updatePosition() {
+		checkMovement();
+		checkJump();
+		checkSwitch();
+
+		move();
+	}
+
+
+	/**Actualise la position du personnage (selon X) (quand on est sur la plateforme) */
+	private void checkMovement() {
+
+		// Applique une vitesse initiale au personnage pour se deplacer lateralement
+		if (actionBooleans.leftPressed && actionBooleans.canLeft) {
+			this.speedX = - this.speedLateral;
+
+		} else if (actionBooleans.rightPressed && actionBooleans.canRight) {
+			this.speedX = this.speedLateral;
+
+		} else {
+			this.speedX = 0;
+		}
+	}
+
+
+	/**Actualise la position du personnage (selon Y) */
+	private void checkJump() {
+		// if (this.colorCharacter == Color.red)
+		// System.out.println("can jump " + actionBooleans.canJump + " isjumping " + actionBooleans.isJumping);
+
+		// Applique une vitesse et une acceleration initiales au personnage pour sauter
+		if (actionBooleans.jumpPressed && actionBooleans.canJump) {
+			// Vitesse initiale du saut
+			this.speedY = this.speedVertical;
+			// Gravite
+			this.accelY = GRAVITY;
+
+			// On est en train de sauter
+			actionBooleans.isJumping = true;
 			// On ne peut pas resauter en l'air
 			actionBooleans.canJump = false;
-			// On peut switch uniquement en l'air
-			actionBooleans.canSwitch = true;
+			// // On peut switch uniquement en l'air
+			// actionBooleans.canSwitch = true; // sera a modifer d'emplacement et potentielement de gameplay
+		}
+
+
+		// ICI : Appel des fonctions qui calculeront la force a appliquer au personnage pour effectuer le switch et application de ces forces au personnage
+	}
+
+	private void checkSwitch() {
+
+		if (this.colorCharacter == Color.red)
+		System.out.println("canactivatecanswitch " + actionBooleans.canActivateCanSwitch + " canswitch " + actionBooleans.canSwitch);
+		// Si on appuie sur sauter pendant qu'on est en l'air, on switch
+		if (actionBooleans.isJumping && actionBooleans.jumpPressed && actionBooleans.canSwitch) {
+			// Vitesse initiale du switch
+			this.speedY = this.speedVertical/2;
+			this.speedX = 4*this.speedVertical;
+			// Gravite
+			this.accelY = GRAVITY;
+
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
+
+			actionBooleans.isSwitching = true;
+
+			actionBooleans.canSwitch = false;
 		}
 	}
 
@@ -106,17 +294,22 @@ public class Character extends Entity {
 
 
 		// Booleens d'autorisation d'actions
-		private boolean canJump;
-		private boolean canLeft;
-		private boolean canRight;
+		private boolean canJump = true;
+		private boolean canLeft = true;
+		private boolean canRight = true;
 		private boolean canGrab;
 		private boolean canShield;
 		private boolean canShoot;
 		private boolean canPush;
 		private boolean canSwitch;
 
+		/**Booleen permettant dactiver canSwitch (en fonction des pression sur Jump) */
+		private boolean canActivateCanSwitch;
+		private boolean isJumpFirstReleaseDone;
 
 		// Booleens d'actions en cours
+		private boolean isJumping;
+		private boolean isSwitching;
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)
@@ -161,6 +354,30 @@ public class Character extends Entity {
 		}
 		public void setSwitchPressed(boolean switchPressed) {
 			this.switchPressed = switchPressed;
+		}
+		public boolean isCanActivateCanSwitch() {
+			return canActivateCanSwitch;
+		}
+		public void setCanActivateCanSwitch(boolean canActivateCanSwitch) {
+			this.canActivateCanSwitch = canActivateCanSwitch;
+		}
+		public boolean isJumping() {
+			return isJumping;
+		}
+		public void setIsJumping(boolean isJumping) {
+			this.isJumping = isJumping;
+		}
+		public boolean isCanSwitch() {
+			return canSwitch;
+		}
+		public void setCanSwitch(boolean canSwitch) {
+			this.canSwitch = canSwitch;
+		}
+		public boolean isJumpFirstReleaseDone() {
+			return isJumpFirstReleaseDone;
+		}
+		public void setIsJumpFirstReleaseDone(boolean isJumpFirstReleaseDone) {
+			this.isJumpFirstReleaseDone = isJumpFirstReleaseDone;
 		}
 
 	}
