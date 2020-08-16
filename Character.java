@@ -16,8 +16,13 @@ public class Character extends Entity {
 
 	/** Booleen de position, a gauche ou a droite de son adversaire */
 	private boolean isOnLeftSide;
-	/** Booleen de position, sur la plateforme de gauche ou de droite */
+	/** Booleen de position, sur la plateforme de gauche */
 	private boolean isOnLeftPlatform;
+	/** Booleen de position, sur la plateforme de droite */
+	private boolean isOnRightPlatform;
+
+	/** Booleen, true si on est en train de tomber dans le vide */
+	private boolean isFalling;
 
 	// Couleur et image du personnage
 	private Color colorCharacter;
@@ -56,34 +61,30 @@ public class Character extends Entity {
 
 		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
 
-		// Collisions Borders selon X
-		if (isOnLeftSide) {
-			minX = halfCharacterWidth;
-			maxX = otherCharacter.x - halfCharacterWidth;
-
+		// Si on est sur une plateforme, on determine le sol
+		if (isOnLeftPlatform || isOnRightPlatform) {
+			minY = boardGraphism.getReal().getPlatformHeight();
 		} else {
-			minX = otherCharacter.x + halfCharacterWidth;
-			maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+			minY = 0;
+			accelY = GRAVITY;
 		}
 
-		// Collision Borders selon Y (depend de x)
-		if (isOnLeftPlatform) {
-			if (x <= boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2) {
-				minY = boardGraphism.getReal().getPlatformHeight();
+		// Collisions Borders selon X
+		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
+		if (isFalling == false) {
+			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
+				minX = halfCharacterWidth;
+				maxX = otherCharacter.x - halfCharacterWidth;
+
 			} else {
-				minY = 0;
-				accelY = GRAVITY;
-				// ICI : passage a true d'un booleen "falling" par exemple pour eviter de glitcher et remonter sur la plateforme
-				// Ceci entrainerait de la perte de vie et la remise en place du personnage sur la plateforme (cf updatePositionBooleans())
+				minX = otherCharacter.x + halfCharacterWidth;
+				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
 			}
 
+		// Si on tombe au milieu, les bords sont les plateformes
 		} else {
-			if (x >= boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
-				minY = boardGraphism.getReal().getPlatformHeight();
-			} else {
-				minY = 0;
-				accelY = GRAVITY;
-			}
+			minX = boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2;
+			maxX = boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2;
 		}
 
 	}
@@ -99,17 +100,33 @@ public class Character extends Entity {
 			isOnLeftSide = false;
 		}
 
-		// Si on est sur la plateforme de gauche ou de droite
-		if (x < boardGraphism.getMaxX() / 2) {
+		// Si on est sur la plateforme de gauche
+		if (x < boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2) {
 			isOnLeftPlatform = true;
-		} else {
+			isOnRightPlatform = false;
+			isFalling = false;
+		// Si on est sur la plateforme de droite
+		} else if (x > boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
 			isOnLeftPlatform = false;
+			isOnRightPlatform = true;
+			isFalling = false;
+		} else {
+			// Si on est sur aucune plateforme et Si on tombe
+			if (y <= boardGraphism.getReal().getPlatformHeight()) {
+				isFalling = true;
+				isOnLeftPlatform = false;
+				isOnRightPlatform = false;
+			} else {
+				isFalling = false;
+			}
 		}
+
 
 		// ICI : Si "falling == true" (cf updateCollisionBorders()) pensez a mettre canJump a false
 		// (peut etre aussi canLeft et canRight si on effectue une projection vers le vide),
 		// ICI : Si "falling == true" et qu'on touche le minY,
 		// alors on repositionne le personnage sur la plateforme et on lui fait perdre de la vie
+
 	}
 
 

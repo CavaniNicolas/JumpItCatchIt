@@ -38,22 +38,26 @@ public class Entity {
 		speedX += accelX;
 		speedY += accelY;
 
+		// Collision a gauche, on conserve le max
 		if (minX > x + speedX) {
 			x = minX;
 		} else {
 			x = x + speedX;
 		}
 
+		// Collision a droite, on conserve le min
 		if (maxX < x) {
 			x = maxX;
 		}
 
 
+		// Collision au sol, on conserve le max (on est au sol)
 		if (minY > y + speedY) {
 			y = minY;
 			speedY = 0;
 			accelY = 0;
 
+		// Sinon on tombe, on conserve le min
 		} else {
 			y = y + speedY;
 		}
