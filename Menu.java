@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,13 +22,22 @@ public class Menu extends JFrame{
 	String pathRedKeyBindings, pathBlueKeyBindings;
 
 	public Menu(){
-		this.setSize(550, 270);
+		this.setSize(450, 300);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		//this.setDefaultCloseOperation();
 		content = new JPanel();
 		content.setBackground(Color.white);
 
+		createKeyBindingMenu();
+
+		//and display the option menu
+		this.setContentPane(content);
+		this.setVisible(true);
+	  }
+
+	/** initiates the components of the menu */
+	public void createKeyBindingMenu() {
 		//check if non default key settings exist
 		pathRedKeyBindings = "redKeyBindings.txt";
 		pathBlueKeyBindings = "blueKeyBindings.txt";
@@ -48,18 +58,53 @@ public class Menu extends JFrame{
 		content.add(redPlayerBindings.getPanel());
 		content.add(bluePlayerBindings.getPanel());
 
-		
-		/*JButton saveButton = new JButton("Save bindings");
-    	saveButton.addActionListener(new ActionListener(){
+		JButton saveButton = new JButton("Save bindings");
+		saveButton.setPreferredSize(new Dimension(150, 25));
+    	saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {        
-				KeyBindings redBindings = new KeyBindings(redPlayerBindings.getLeft());
-        setVisible(true);
-      	}*/
+				KeyBindings redBindings = new KeyBindings(getValueOfText(redPlayerBindings.getLeft()), getValueOfText(redPlayerBindings.getRight()), getValueOfText(redPlayerBindings.getJump()), getValueOfText(redPlayerBindings.getGrab()), getValueOfText(redPlayerBindings.getShield()), getValueOfText(redPlayerBindings.getShootPush()));
+				KeyBindings blueBindings = new KeyBindings(getValueOfText(bluePlayerBindings.getLeft()), getValueOfText(bluePlayerBindings.getRight()), getValueOfText(bluePlayerBindings.getJump()), getValueOfText(bluePlayerBindings.getGrab()), getValueOfText(bluePlayerBindings.getShield()), getValueOfText(bluePlayerBindings.getShootPush()));
+				saveBindings(redBindings, "redKeyBindings.txt");
+				saveBindings(blueBindings, "blueKeyBindings.txt");
+			}
+		});
 
-		//and display the option menu
-		this.setContentPane(content);
-		this.setVisible(true);
-	  }
+		JButton backButton = new JButton("Back");
+		backButton.setPreferredSize(new Dimension(150, 25));
+    	backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {        
+				System.out.println("YOU SHALL NOT PASS");
+			}
+		});
+
+		JButton defaultButton = new JButton("Reset bindings");
+		defaultButton.setPreferredSize(new Dimension(150, 25));
+    	defaultButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {        
+				//check if non default key settings exist
+				pathRedKeyBindings = "redKeyBindings.txt";
+				pathBlueKeyBindings = "blueKeyBindings.txt";
+
+				//delete those files
+				File f = new File(pathRedKeyBindings);
+				if(f.exists() && !f.isDirectory()) {
+					System.out.println(f.delete());
+				}
+				f = new File(pathBlueKeyBindings);
+				if(f.exists() && !f.isDirectory()) {
+					System.out.println(f.delete());
+				}
+				//recreate the menu with default settings
+				content.removeAll();
+				createKeyBindingMenu();
+			}
+		});
+
+		//add the buttons
+		content.add(saveButton);
+		content.add(backButton);
+		content.add(defaultButton);
+	}
 
 	public int getValueOfText(JTextField textField) {
 		String str = textField.getText();
