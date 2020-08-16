@@ -3,8 +3,7 @@ import java.awt.event.ComponentEvent;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+
 import javax.swing.JFrame;
 
 
@@ -34,7 +33,7 @@ public class MyWindow extends JFrame {
 		thread.start();
 		//board.startGame();
 
-		this.addKeyListener(new PlayerKeyListener());
+		this.addKeyListener(board.getPlayerKeyListener());
 
 	}
 
@@ -74,151 +73,6 @@ public class MyWindow extends JFrame {
 		// this.setUndecorated(true);
 
 		this.setVisible(true);
-	}
-
-
-	/**class PlayerKeyListener implements KeyListener<p>
-	 * Gere les saisies clavier
-	 */
-	public class PlayerKeyListener implements KeyListener {
-
-		@Override
-		public void keyPressed(KeyEvent event) {
-
-			int code = event.getKeyChar();
-			//System.out.print("Code clavier "+ code + "\n ");
-
-			Character characterRed = board.getCharacterRed();
-			Character characterBlue = board.getCharacterBlue();
-
-			KeyBindings charaRedKeys = board.getCharacterRed().getKeyBindings();
-			KeyBindings charaBlueKeys = board.getCharacterBlue().getKeyBindings();
-
-
-			/* Pour le personnage rouge */
-			// Sauter
-			if (code == charaRedKeys.getJumpKey()) {
-				characterRed.getActionBooleans().setJumpPressed(true);
-			}
-			// Gauche
-			if (code == charaRedKeys.getLeftKey()) {
-				characterRed.getActionBooleans().setLeftPressed(true);
-			}
-			// Droite
-			if (code == charaRedKeys.getRightKey()) {
-				characterRed.getActionBooleans().setRightPressed(true);
-			}
-			// Grab
-			if (code == charaRedKeys.getGrabKey()) {
-				characterRed.getActionBooleans().setGrabPressed(true);
-			}
-			// Shield
-			if (code == charaRedKeys.getShieldKey()) {
-				characterRed.getActionBooleans().setShieldPressed(true);
-			}
-			// Shoot Push
-			if (code == charaRedKeys.getShootPushKey()) {
-				characterRed.getActionBooleans().setShootPushPressed(true);
-			}
-			
-			// Pour le personnage bleu
-			// Sauter
-			if (code == charaBlueKeys.getJumpKey()) {
-				characterBlue.getActionBooleans().setJumpPressed(true);
-			}
-			// Gauche
-			if (code == charaBlueKeys.getLeftKey()) {
-				characterBlue.getActionBooleans().setLeftPressed(true);
-			}
-			// Droite
-			if (code == charaBlueKeys.getRightKey()) {
-				characterBlue.getActionBooleans().setRightPressed(true);
-			}
-			// Grab
-			if (code == charaBlueKeys.getGrabKey()) {
-				characterBlue.getActionBooleans().setGrabPressed(true);
-			}
-			// Shield
-			if (code == charaBlueKeys.getShieldKey()) {
-				characterBlue.getActionBooleans().setShieldPressed(true);
-			}
-			// Shoot Push
-			if (code == charaBlueKeys.getShootPushKey()) {
-				characterBlue.getActionBooleans().setShootPushPressed(true);
-			}
-
-		}
-
-		@Override
-		public void keyReleased(KeyEvent event) {
-			int code = event.getKeyChar();
-			//System.out.print("Code clavier "+ code + "\n ");
-
-			Character characterRed = board.getCharacterRed();
-			Character characterBlue = board.getCharacterBlue();
-
-			KeyBindings charaRedKeys = board.getCharacterRed().getKeyBindings();
-			KeyBindings charaBlueKeys = board.getCharacterBlue().getKeyBindings();
-
-
-			/* Pour le personnage rouge */
-			// Sauter
-			if (code == charaRedKeys.getJumpKey()) {
-				characterRed.getActionBooleans().setJumpPressed(false);
-			}
-			// Gauche
-			if (code == charaRedKeys.getLeftKey()) {
-				characterRed.getActionBooleans().setLeftPressed(false);
-			}
-			// Droite
-			if (code == charaRedKeys.getRightKey()) {
-				characterRed.getActionBooleans().setRightPressed(false);
-			}
-			// Grab
-			if (code == charaRedKeys.getGrabKey()) {
-				characterRed.getActionBooleans().setGrabPressed(false);
-			}
-			// Shield
-			if (code == charaRedKeys.getShieldKey()) {
-				characterRed.getActionBooleans().setShieldPressed(false);
-			}
-			// Shoot Push
-			if (code == charaRedKeys.getShootPushKey()) {
-				characterRed.getActionBooleans().setShootPushPressed(false);
-			}
-
-
-			// Pour le personnage bleu
-			// Sauter
-			if (code == charaBlueKeys.getJumpKey()) {
-				characterBlue.getActionBooleans().setJumpPressed(false);
-			}
-			// Gauche
-			if (code == charaBlueKeys.getLeftKey()) {
-				characterBlue.getActionBooleans().setLeftPressed(false);
-			}
-			// Droite
-			if (code == charaBlueKeys.getRightKey()) {
-				characterBlue.getActionBooleans().setRightPressed(false);
-			}
-			// Grab
-			if (code == charaBlueKeys.getGrabKey()) {
-				characterBlue.getActionBooleans().setGrabPressed(false);
-			}
-			// Shield
-			if (code == charaBlueKeys.getShieldKey()) {
-				characterBlue.getActionBooleans().setShieldPressed(false);
-			}
-			// Shoot Push
-			if (code == charaBlueKeys.getShootPushKey()) {
-				characterBlue.getActionBooleans().setShootPushPressed(false);
-			}
-
-		}
-
-		@Override
-		public void keyTyped(KeyEvent event) {
-		}
 	}
 
 

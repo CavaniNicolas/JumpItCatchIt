@@ -67,4 +67,9 @@ public class KeyBindings implements Serializable {
 		this.shootPushKey = shootPushKey;
 	}
 
+	//toString
+	public String toString() {
+		return leftKey + "\n" + rightKey + "\n" + jumpKey + "\n" + grabKey + "\n" + shieldKey + "\n" + shootPushKey + "\n";
+	}
+
 }
