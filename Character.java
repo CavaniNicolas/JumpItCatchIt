@@ -151,10 +151,23 @@ public class Character extends Entity {
 			actionBooleans.canRight = false;
 		}
 
-		// On peut resauter une fois quon a atterit, et on ne peut plus switch
+		// On peut resauter et se deplacer quand on est au sol, et on ne peut pas switch
 		if (y == minY) {
+			actionBooleans.isJumping = false;
 			actionBooleans.canJump = true;
 			actionBooleans.canSwitch = false;
+			
+			actionBooleans.canLeft = true;
+			actionBooleans.canRight = true;
+			actionBooleans.isJumpFirstReleaseDone = false;
+			actionBooleans.canActivateCanSwitch = true;
+			actionBooleans.isSwitching = false;
+		}
+
+		// Si on peut activer le canSwitch (gestion des pressions des touches) et qu'il n'a pas encore ete active, on l'active
+		if (actionBooleans.isJumpFirstReleaseDone && actionBooleans.canActivateCanSwitch) {
+			actionBooleans.canSwitch = true;
+			actionBooleans.canActivateCanSwitch = false;
 		}
 
 	}
@@ -162,16 +175,16 @@ public class Character extends Entity {
 
 	/**Actualise la position du personnage (selon X et Y) puis le deplace (le deplacement gere les collisions grace aux collision borders */
 	public void updatePosition() {
-		updateXPosition();
-		updateYPosition();
-		// switch();
+		checkMovement();
+		checkJump();
+		checkSwitch();
 
 		move();
 	}
 
 
 	/**Actualise la position du personnage (selon X) (quand on est sur la plateforme) */
-	private void updateXPosition() {
+	private void checkMovement() {
 
 		// Applique une vitesse initiale au personnage pour se deplacer lateralement
 		if (actionBooleans.leftPressed && actionBooleans.canLeft) {
@@ -187,7 +200,9 @@ public class Character extends Entity {
 
 
 	/**Actualise la position du personnage (selon Y) */
-	private void updateYPosition() {
+	private void checkJump() {
+		// if (this.colorCharacter == Color.red)
+		// System.out.println("can jump " + actionBooleans.canJump + " isjumping " + actionBooleans.isJumping);
 
 		// Applique une vitesse et une acceleration initiales au personnage pour sauter
 		if (actionBooleans.jumpPressed && actionBooleans.canJump) {
@@ -196,15 +211,37 @@ public class Character extends Entity {
 			// Gravite
 			this.accelY = GRAVITY;
 
+			// On est en train de sauter
+			actionBooleans.isJumping = true;
 			// On ne peut pas resauter en l'air
 			actionBooleans.canJump = false;
-			// On peut switch uniquement en l'air
-			actionBooleans.canSwitch = true; // sera a modifer d'emplacement et potentielement de gameplay
+			// // On peut switch uniquement en l'air
+			// actionBooleans.canSwitch = true; // sera a modifer d'emplacement et potentielement de gameplay
 		}
 
 
 		// ICI : Appel des fonctions qui calculeront la force a appliquer au personnage pour effectuer le switch et application de ces forces au personnage
+	}
 
+	private void checkSwitch() {
+
+		if (this.colorCharacter == Color.red)
+		System.out.println("canactivatecanswitch " + actionBooleans.canActivateCanSwitch + " canswitch " + actionBooleans.canSwitch);
+		// Si on appuie sur sauter pendant qu'on est en l'air, on switch
+		if (actionBooleans.isJumping && actionBooleans.jumpPressed && actionBooleans.canSwitch) {
+			// Vitesse initiale du switch
+			this.speedY = this.speedVertical/2;
+			this.speedX = 4*this.speedVertical;
+			// Gravite
+			this.accelY = GRAVITY;
+
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
+
+			actionBooleans.isSwitching = true;
+
+			actionBooleans.canSwitch = false;
+		}
 	}
 
 
@@ -266,8 +303,13 @@ public class Character extends Entity {
 		private boolean canPush;
 		private boolean canSwitch;
 
+		/**Booleen permettant dactiver canSwitch (en fonction des pression sur Jump) */
+		private boolean canActivateCanSwitch;
+		private boolean isJumpFirstReleaseDone;
 
 		// Booleens d'actions en cours
+		private boolean isJumping;
+		private boolean isSwitching;
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)
@@ -312,6 +354,30 @@ public class Character extends Entity {
 		}
 		public void setSwitchPressed(boolean switchPressed) {
 			this.switchPressed = switchPressed;
+		}
+		public boolean isCanActivateCanSwitch() {
+			return canActivateCanSwitch;
+		}
+		public void setCanActivateCanSwitch(boolean canActivateCanSwitch) {
+			this.canActivateCanSwitch = canActivateCanSwitch;
+		}
+		public boolean isJumping() {
+			return isJumping;
+		}
+		public void setIsJumping(boolean isJumping) {
+			this.isJumping = isJumping;
+		}
+		public boolean isCanSwitch() {
+			return canSwitch;
+		}
+		public void setCanSwitch(boolean canSwitch) {
+			this.canSwitch = canSwitch;
+		}
+		public boolean isJumpFirstReleaseDone() {
+			return isJumpFirstReleaseDone;
+		}
+		public void setIsJumpFirstReleaseDone(boolean isJumpFirstReleaseDone) {
+			this.isJumpFirstReleaseDone = isJumpFirstReleaseDone;
 		}
 
 	}

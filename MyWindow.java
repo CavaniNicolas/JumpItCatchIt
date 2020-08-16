@@ -165,6 +165,12 @@ public class MyWindow extends JFrame {
 			// Sauter
 			if (code == charaRedKeys.getJumpKey()) {
 				characterRed.getActionBooleans().setJumpPressed(false);
+
+				// Active le booleens qui permet dactiver le canSwitch si on est dans les airs et qu'on
+				// relache le bouton sauter (pour pouvoir rappuyer dessus dans les airs pour switch)
+				if (characterRed.getActionBooleans().isJumping() == true && characterRed.getActionBooleans().isJumpFirstReleaseDone() == false) {
+					characterRed.getActionBooleans().setIsJumpFirstReleaseDone(true);
+				}
 			}
 			// Gauche
 			if (code == charaRedKeys.getLeftKey()) {
