@@ -14,8 +14,10 @@ public class Character extends Entity {
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
 
-	/** Booleens de positions */
+	/** Booleen de position, a gauche ou a droite de son adversaire */
 	private boolean isOnLeftSide;
+	/** Booleen de position, sur la plateforme de gauche ou de droite */
+	private boolean isOnLeftPlatform;
 
 	// Couleur et image du personnage
 	private Color colorCharacter;
@@ -47,11 +49,71 @@ public class Character extends Entity {
 	}
 
 
-	public void updateCollisionBorders(BoardGraphism boardGraphism) {
+	/** Actualise les coordonnees de collisions maximales et minimales */
+	public void updateCollisionBorders(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		updatePositionBooleans(boardGraphism, otherCharacter);
+
+		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
+
+		// Collisions Borders selon X
+		if (isOnLeftSide) {
+			minX = halfCharacterWidth;
+			maxX = otherCharacter.x - halfCharacterWidth;
+
+		} else {
+			minX = otherCharacter.x + halfCharacterWidth;
+			maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+		}
+
+		// Collision Borders selon Y (depend de x)
+		if (isOnLeftPlatform) {
+			if (x <= boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2) {
+				minY = boardGraphism.getReal().getPlatformHeight();
+			} else {
+				minY = 0;
+				accelY = GRAVITY;
+				// ICI : passage a true d'un booleen "falling" par exemple pour eviter de glitcher et remonter sur la plateforme
+				// Ceci entrainerait de la perte de vie et la remise en place du personnage sur la plateforme (cf updatePositionBooleans())
+			}
+
+		} else {
+			if (x >= boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
+				minY = boardGraphism.getReal().getPlatformHeight();
+			} else {
+				minY = 0;
+				accelY = GRAVITY;
+			}
+		}
 
 	}
 
 
+	/** Actualise les booleens de position */
+	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		// Si on est a gauche ou a droite de son adversaire
+		if (x < otherCharacter.x) {
+			isOnLeftSide = true;
+		} else {
+			isOnLeftSide = false;
+		}
+
+		// Si on est sur la plateforme de gauche ou de droite
+		if (x < boardGraphism.getMaxX() / 2) {
+			isOnLeftPlatform = true;
+		} else {
+			isOnLeftPlatform = false;
+		}
+
+		// ICI : Si "falling == true" (cf updateCollisionBorders()) pensez a mettre canJump a false
+		// (peut etre aussi canLeft et canRight si on effectue une projection vers le vide),
+		// ICI : Si "falling == true" et qu'on touche le minY,
+		// alors on repositionne le personnage sur la plateforme et on lui fait perdre de la vie
+	}
+
+
+	/** Actualise les booleens d'actions */
 	public void updateActionBooleans() {
 
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
@@ -63,16 +125,25 @@ public class Character extends Entity {
 			actionBooleans.canRight = true;
 		}
 
+		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
+		// Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans)
+		if (x <= minX) {
+			actionBooleans.canLeft = false;
+		}
+		if (x >= maxX) {
+			actionBooleans.canRight = false;
+		}
+
 		// On peut resauter une fois quon a atterit, et on ne peut plus switch
 		if (y == minY) {
 			actionBooleans.canJump = true;
 			actionBooleans.canSwitch = false;
 		}
+
 	}
 
 
-
-	/**Actualise la position du personnage (selon X et Y) */
+	/**Actualise la position du personnage (selon X et Y) puis le deplace (le deplacement gere les collisions grace aux collision borders */
 	public void updatePosition() {
 		updateXPosition();
 		updateYPosition();
@@ -80,7 +151,9 @@ public class Character extends Entity {
 
 		move();
 	}
-	/**Actualise la position du personnage (selon X) quand on est sur la plateforme */
+
+
+	/**Actualise la position du personnage (selon X) (quand on est sur la plateforme) */
 	private void updateXPosition() {
 
 		// Applique une vitesse initiale au personnage pour se deplacer lateralement
@@ -94,6 +167,8 @@ public class Character extends Entity {
 			this.speedX = 0;
 		}
 	}
+
+
 	/**Actualise la position du personnage (selon Y) */
 	private void updateYPosition() {
 
@@ -107,11 +182,11 @@ public class Character extends Entity {
 			// On ne peut pas resauter en l'air
 			actionBooleans.canJump = false;
 			// On peut switch uniquement en l'air
-			actionBooleans.canSwitch = true;
+			actionBooleans.canSwitch = true; // sera a modifer d'emplacement et potentielement de gameplay
 		}
 
-	}
-	public void jumpCollision() {
+
+		// ICI : Appel des fonctions qui calculeront la force a appliquer au personnage pour effectuer le switch et application de ces forces au personnage
 
 	}
 
