@@ -83,16 +83,16 @@ public class KeyBindingMenu {
 			try {
 				//create the object from the file
 				keyBindings = (KeyBindings)ois.readObject();
-				//System.out.println("\nLEFT : " + (char)keyBindings.getLeftKey());
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			// don't forget to close the flux
+			//close the flux
 			ois.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		//set the JTextFields to the value of the bindings
 		left.setText(String.valueOf((char)keyBindings.getLeftKey()));
 		right.setText(String.valueOf((char)keyBindings.getRightKey()));
 		jump.setText(String.valueOf((char)keyBindings.getJumpKey()));
@@ -113,33 +113,7 @@ public class KeyBindingMenu {
 		return (int)ch[0];
 	}
 
-	
 	public JPanel getPanel() {
 		return panel;
 	}
-
-	/*
-	public JTextField getLeft() {
-		return left;
-	}
-
-	public JTextField getRight() {
-		return right;
-	}
-
-	public JTextField getJump() {
-		return jump;
-	}
-
-	public JTextField getGrab() {
-		return grab;
-	}
-
-	public JTextField getShield() {
-		return shield;
-	}
-
-	public JTextField getShootPush() {
-		return shootPush;
-	}*/
 }

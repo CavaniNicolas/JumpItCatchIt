@@ -130,9 +130,7 @@ public class Menu extends JFrame{
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
-	  }
-	
-
+	}
 
 	public static void main(String[] args) {
 		/* la partie qui suit est utilisée pour générer un set de touches par défaut
@@ -146,4 +144,3 @@ public class Menu extends JFrame{
 		new Menu();
 	}
 }
-
