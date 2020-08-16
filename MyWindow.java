@@ -21,7 +21,7 @@ public class MyWindow extends JFrame {
 		createWindow();
 
 
-		// ICI a faire plus tard: 
+		// ICI a faire plus tard:
 		// On lance le menu, avec 3 boutons : Play Options Quit
 		// Dans les Options on peut modifier les touches claviers des deux joueurs
 		// Le bouton Play appel les fonctions initGame() et startGame();
@@ -46,19 +46,19 @@ public class MyWindow extends JFrame {
 	public void createWindow() {
 		this.setTitle("Jump It Catch It");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// Fenetre hors plein ecran : width = 80% et height = 90% (les proportions sont a peu pres conservees)
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)(screenSize.getWidth()*0.8);
 		int height = (int)(screenSize.getHeight()*0.9);
 		this.setSize(width, height);
 		this.setLocation( (int)(screenSize.getWidth() * 0.1), (int)(screenSize.getHeight() * 0.05) );
-		
+
 		this.setContentPane(board);
 
 
 		// this.setResizable(false);
-		
+
 		// Permet ensuite d'actualiser les valeurs des coordonnees et dimensions graphiques lors du prochain appel de paintComponent()
 		this.addComponentListener(new ComponentAdapter() {
 			// Si la fenetre est redimensionnee
@@ -66,7 +66,7 @@ public class MyWindow extends JFrame {
 				board.getBoardGraphism().setIsGraphicUpdateDone(false);
 			}
 		});
-		
+
 
 		// Plein ecran
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);

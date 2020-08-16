@@ -8,9 +8,9 @@ public class Entity {
 	protected final int GRAVITY = -2;
 
 	// Coordonnees de collisions minimales et maximales
-	protected int minX = 0; // Init a enlever
-	protected int maxX = 1600;
-	protected int minY = 0;
+	protected int minX;
+	protected int maxX;
+	protected int minY;
 
 	// Coordonnees de l'entite
 	protected int x;
@@ -56,6 +56,10 @@ public class Entity {
 			y = minY;
 			speedY = 0;
 			accelY = 0;
+
+			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
+			speedX = 0;
+			accelX = 0;
 
 		// Sinon on tombe, on conserve le min
 		} else {
