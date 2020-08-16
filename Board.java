@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JPanel;
 
 /**class Board extends JPanel<p>
@@ -12,6 +15,8 @@ public class Board extends JPanel {
 	/**Les attributs graphiques et les fonctions d'affichage (les attributs sont initialises au premier appel de paintComponent() */
 	private BoardGraphism boardGraphism = new BoardGraphism();
 
+	/**La classe KeyListener */
+	private PlayerKeyListener playerKeyListener = new PlayerKeyListener();
 
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying = false;
@@ -116,5 +121,77 @@ public class Board extends JPanel {
 	public Character getCharacterBlue() {
 		return characterBlue;
 	}
+
+	public PlayerKeyListener getPlayerKeyListener() {
+		return playerKeyListener;
+	}
+
+
+	/**class PlayerKeyListener implements KeyListener<p>
+	 * Gere les saisies clavier
+	 */
+	public class PlayerKeyListener implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent event) {
+
+			int code = event.getKeyChar();
+			//System.out.print("Code clavier "+ code + "\n ");
+
+			togglePressedKeys(code, characterRed, true);
+			togglePressedKeys(code, characterBlue, true);
+
+		}
+
+
+		@Override
+		public void keyReleased(KeyEvent event) {
+			int code = event.getKeyChar();
+			//System.out.print("Code clavier "+ code + "\n ");
+
+			togglePressedKeys(code, characterRed, false);
+			togglePressedKeys(code, characterBlue, false);
+
+		}
+
+
+		@Override
+		public void keyTyped(KeyEvent event) {
+		}
+
+
+		/** Toggle les booleens de KeyPressed */
+		public void togglePressedKeys(int code, Character character, boolean toggle) {
+			KeyBindings characterKeys = character.getKeyBindings();
+
+			// Pour le personnage bleu
+			// Sauter
+			if (code == characterKeys.getJumpKey()) {
+				character.getActionBooleans().setJumpPressed(false);
+			}
+			// Gauche
+			if (code == characterKeys.getLeftKey()) {
+				character.getActionBooleans().setLeftPressed(false);
+			}
+			// Droite
+			if (code == characterKeys.getRightKey()) {
+				character.getActionBooleans().setRightPressed(false);
+			}
+			// Grab
+			if (code == characterKeys.getGrabKey()) {
+				character.getActionBooleans().setGrabPressed(false);
+			}
+			// Shield
+			if (code == characterKeys.getShieldKey()) {
+				character.getActionBooleans().setShieldPressed(false);
+			}
+			// Shoot Push
+			if (code == characterKeys.getShootPushKey()) {
+				character.getActionBooleans().setShootPushPressed(false);
+			}
+		}
+
+	}
+
 
 }
