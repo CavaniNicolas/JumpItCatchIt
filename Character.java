@@ -226,7 +226,6 @@ public class Character extends Entity {
 	private void checkSwitch() {
 
 		if (this.colorCharacter == Color.red)
-		System.out.println("canactivatecanswitch " + actionBooleans.canActivateCanSwitch + " canswitch " + actionBooleans.canSwitch);
 		// Si on appuie sur sauter pendant qu'on est en l'air, on switch
 		if (actionBooleans.isJumping && actionBooleans.jumpPressed && actionBooleans.canSwitch) {
 			// Vitesse initiale du switch

@@ -199,27 +199,27 @@ public class Board extends JPanel {
 			// Pour le personnage bleu
 			// Sauter
 			if (code == characterKeys.getJumpKey()) {
-				character.getActionBooleans().setJumpPressed(false);
+				character.getActionBooleans().setJumpPressed(toggle);
 			}
 			// Gauche
 			if (code == characterKeys.getLeftKey()) {
-				character.getActionBooleans().setLeftPressed(false);
+				character.getActionBooleans().setLeftPressed(toggle);
 			}
 			// Droite
 			if (code == characterKeys.getRightKey()) {
-				character.getActionBooleans().setRightPressed(false);
+				character.getActionBooleans().setRightPressed(toggle);
 			}
 			// Grab
 			if (code == characterKeys.getGrabKey()) {
-				character.getActionBooleans().setGrabPressed(false);
+				character.getActionBooleans().setGrabPressed(toggle);
 			}
 			// Shield
 			if (code == characterKeys.getShieldKey()) {
-				character.getActionBooleans().setShieldPressed(false);
+				character.getActionBooleans().setShieldPressed(toggle);
 			}
 			// Shoot Push
 			if (code == characterKeys.getShootPushKey()) {
-				character.getActionBooleans().setShootPushPressed(false);
+				character.getActionBooleans().setShootPushPressed(toggle);
 			}
 		}
 
