@@ -31,7 +31,7 @@ public class Board extends JPanel {
 
 	/** each player's key bindings */
 	KeyBindings redKeyBindings;
-	KeyBindings blueKeyBindings;
+	KeyBindings blueKeyBindings; // A supprimer pour en faire des variables locales des methodes
 
 
 
@@ -79,6 +79,7 @@ public class Board extends JPanel {
 		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
 
+
 	/** sets the players bindings to their correct value */
 	public void setBindings() {
 		//check if non default key settings exist
@@ -96,6 +97,7 @@ public class Board extends JPanel {
 		redKeyBindings = getBindings(pathRedKeyBindings);
 		blueKeyBindings = getBindings(pathBlueKeyBindings);
 	}
+
 
 	/** return a KeyBinding object from a String path to a file */
 	public KeyBindings getBindings(String path) {
@@ -132,7 +134,7 @@ public class Board extends JPanel {
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
 
 		// On récupère les keyBindings des joueurs
-		setBindings();
+		setBindings(); // faire deux appels a cette fonction, elle devra retourner les KeyBindings, et prendre en parametres le nom du fichier a aller chercher + le nom du fichier par defaut
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings);

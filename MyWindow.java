@@ -52,4 +52,5 @@ public class MyWindow extends JFrame {
 
 		this.setVisible(true);
 	}
+
 }
