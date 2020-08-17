@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+
 public class MainMenu extends JFrame {
 	//attributes relative to the option menu
 	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
@@ -43,9 +44,6 @@ public class MainMenu extends JFrame {
 
 	/** creates the mainMenuJPanel with its component*/
 	public void createMainMenuPanel() {
-		mainMenuPane = new JPanel();
-		mainMenuPane.setBackground(Color.white);
-
 		JButton playButton = new JButton("Play");
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
@@ -55,7 +53,11 @@ public class MainMenu extends JFrame {
 				Thread thread = new Thread(new StartGame());
 				thread.start();
 				//board.startGame();
+				//add the keylistener
 				frame.addKeyListener(board.getPlayerKeyListener());
+				//give the frame the focus
+				frame.setFocusable(true);
+				frame.setFocusTraversalKeysEnabled(false);
 				//displays the game panel
 				frame.setContentPane(board);
 				frame.setVisible(true);

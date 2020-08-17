@@ -201,7 +201,7 @@ public class Board extends JPanel {
 			if (code == characterKeys.getJumpKey()) {
 				character.getActionBooleans().setJumpPressed(toggle);
 
-        // Si on relache le bouton sauter
+        		// Si on relache le bouton sauter
 				if (toggle == false) {
 					// Active le booleens qui permet dactiver le canSwitch si on est dans les airs et qu'on
 					// relache le bouton sauter (pour pouvoir rappuyer dessus dans les airs pour switch)
@@ -210,7 +210,7 @@ public class Board extends JPanel {
 					}
 				}
 
-      }
+      		}
 			// Gauche
 			if (code == characterKeys.getLeftKey()) {
 				character.getActionBooleans().setLeftPressed(toggle);

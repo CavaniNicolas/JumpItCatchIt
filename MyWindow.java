@@ -33,10 +33,9 @@ public class MyWindow extends JFrame {
 		this.setSize(width, height);
 		this.setLocation( (int)(screenSize.getWidth() * 0.1), (int)(screenSize.getHeight() * 0.05) );
 
+		// this.setResizable(false);
 		mainMenu = new MainMenu(this);
 
-
-		// this.setResizable(false);
 
 		// Permet ensuite d'actualiser les valeurs des coordonnees et dimensions graphiques lors du prochain appel de paintComponent()
 		this.addComponentListener(new ComponentAdapter() {
