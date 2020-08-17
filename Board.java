@@ -36,9 +36,9 @@ public class Board extends JPanel {
 
 			updateWindow();
 
-			updateActionBooleans();
-
+			
 			updateAllCollisionBorders();
+			updateActionBooleans();
 			updatePositionAndMoveAll();
 
 			sleep(12);
@@ -68,8 +68,8 @@ public class Board extends JPanel {
 	public void updatePositionAndMoveAll() {
 
 		// Les personnages
-		characterRed.updatePosition();
-		characterBlue.updatePosition();
+		characterRed.updatePosition(boardGraphism, characterBlue);
+		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
 
 
