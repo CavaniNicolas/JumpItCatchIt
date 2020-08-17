@@ -1,9 +1,7 @@
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 
 
@@ -12,29 +10,10 @@ import javax.swing.JFrame;
 */
 public class MyWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
-
-	/**Contient le jeu en soit */
-	private Board board = new Board();
-
+	private MainMenu mainMenu;
 
 	public MyWindow() {
 		createWindow();
-
-
-		// ICI a faire plus tard:
-		// On lance le menu, avec 3 boutons : Play Options Quit
-		// Dans les Options on peut modifier les touches claviers des deux joueurs
-		// Le bouton Play appel les fonctions initGame() et startGame();
-		// Pour le moment on lance juste le jeu
-
-		board.initGame();
-
-		Thread thread = new Thread(new StartGame());
-		thread.start();
-		//board.startGame();
-
-		this.addKeyListener(board.getPlayerKeyListener());
-
 	}
 
 
@@ -54,7 +33,7 @@ public class MyWindow extends JFrame {
 		this.setSize(width, height);
 		this.setLocation( (int)(screenSize.getWidth() * 0.1), (int)(screenSize.getHeight() * 0.05) );
 
-		this.setContentPane(board);
+		mainMenu = new MainMenu(this);
 
 
 		// this.setResizable(false);
@@ -63,7 +42,7 @@ public class MyWindow extends JFrame {
 		this.addComponentListener(new ComponentAdapter() {
 			// Si la fenetre est redimensionnee
 			public void componentResized(ComponentEvent componentEvent) {
-				board.getBoardGraphism().setIsGraphicUpdateDone(false);
+				mainMenu.getBoard().getBoardGraphism().setIsGraphicUpdateDone(false);
 			}
 		});
 
@@ -74,13 +53,4 @@ public class MyWindow extends JFrame {
 
 		this.setVisible(true);
 	}
-
-
-	/**Le jeu tourne dans un thread a part */
-	public class StartGame implements Runnable {
-		public void run() {
-			board.startGame();
-		}
-	}
-
 }

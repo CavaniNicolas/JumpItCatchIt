@@ -12,22 +12,21 @@ import java.io.ObjectOutputStream;
 
 public class MainMenu extends JFrame {
 	//attributes relative to the option menu
-	KeyBindingMenu redPlayerBindings, bluePlayerBindings;
-	String pathRedKeyBindings, pathBlueKeyBindings;
+	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
+	private String pathRedKeyBindings, pathBlueKeyBindings;
 
+	//the panels that can be displayed
 	private JPanel mainMenuPane;
 	private JPanel optionPane;
+	private Board board;
 
-	MainMenu self;
+	//the frame displaying all the stuff
+	private JFrame frame;
 
-	public MainMenu() {
-		self = this;
-		
-		this.setSize(450, 300);
-		this.setLocationRelativeTo(null);
-		this.setResizable(false);
-		//this.setDefaultCloseOperation();
+	public MainMenu(JFrame frame) {		
+		this.frame = frame;
 
+		//create the 3 panels to be displayed
 		mainMenuPane = new JPanel();
 		mainMenuPane.setBackground(Color.white);
 		optionPane = new JPanel();
@@ -35,11 +34,14 @@ public class MainMenu extends JFrame {
 
 		createMainMenuPanel();
 		createKeyBindingMenu();
+		board = new Board();
 
-		this.setContentPane(mainMenuPane);
-		this.setVisible(true);
+		//the first panel to be displayed is the main menu
+		this.frame.setContentPane(mainMenuPane);
+		this.frame.setVisible(true);
 	}
 
+	/** creates the mainMenuJPanel with its component*/
 	public void createMainMenuPanel() {
 		mainMenuPane = new JPanel();
 		mainMenuPane.setBackground(Color.white);
@@ -48,24 +50,25 @@ public class MainMenu extends JFrame {
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				/*this.setContentPane(board);
-				this.setVisible(true);
+				//start game
 				board.initGame();
 				Thread thread = new Thread(new StartGame());
 				thread.start();
 				//board.startGame();
-				this.addKeyListener(new PlayerKeyListener());*/
-				System.out.println("THIS GAME IS SO COOL");
+				frame.addKeyListener(board.getPlayerKeyListener());
+				//displays the game panel
+				frame.setContentPane(board);
+				frame.setVisible(true);
 			}
 		});
 
 		JButton optionButton = new JButton("Options");
 		optionButton.setPreferredSize(new Dimension(150, 25));
     	optionButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				self.setContentPane(optionPane);
-				self.setVisible(true);
-				//System.out.println("YOU SHALL NOT ENTER OPTIONS");      
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the option panel 
+				frame.setContentPane(optionPane);
+				frame.setVisible(true);
 			}
 		});
 
@@ -118,7 +121,8 @@ public class MainMenu extends JFrame {
 		JButton saveButton = new JButton("Save bindings");
 		saveButton.setPreferredSize(new Dimension(150, 25));
 		saveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {        
+			public void actionPerformed(ActionEvent arg0) {   
+				//saves the current (the ones being displayed) keyBindings     
 				KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
 				KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
 				saveBindings(redBindings, "redKeyBindings.txt");
@@ -132,8 +136,9 @@ public class MainMenu extends JFrame {
 		JButton backButton = new JButton("Back");
 		backButton.setPreferredSize(new Dimension(150, 25));
 		backButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {     
-				self.setContentPane(mainMenuPane);
+			public void actionPerformed(ActionEvent arg0) { 
+				//displays the main menu again    
+				frame.setContentPane(mainMenuPane);
 			}
 		});
 
@@ -166,7 +171,7 @@ public class MainMenu extends JFrame {
 	}
 
 	/** saves a KeyBindings object to a file designated by a given path string */
-	public void saveBindings(KeyBindings keyBindings, String path) {
+	public static void saveBindings(KeyBindings keyBindings, String path) {
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(
@@ -183,7 +188,41 @@ public class MainMenu extends JFrame {
 		}
 	}
 
+	/** create default key bindings files in case they're deleted */
+	public static void createDefaultBindings() {
+		String pathRedKeyBindings = "redKeyBindingsDefault.txt";
+		String pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
+
+		File file = new File(pathRedKeyBindings);
+		if(file.exists() && !file.isDirectory()) {
+			file.delete();
+		}
+		file = new File(pathBlueKeyBindings);
+		if(file.exists() && !file.isDirectory()) {
+			file.delete();
+		}
+		// Touches joueur rouge
+		int a=97, z=122, e=101, s=115, d=100, f=102;
+		KeyBindings redKeyBindings = new KeyBindings(a, e, z, s, d, f);
+		// Touches joueur bleu
+		int u=117, i=105, o=111, k=107, l=108, m=109;
+		KeyBindings blueKeyBindings = new KeyBindings(u, o, i, k, l, m);
+		saveBindings(redKeyBindings, pathRedKeyBindings);
+		saveBindings(blueKeyBindings, pathBlueKeyBindings);
+	}
+
+	public Board getBoard() {
+		return board;
+	}
+
+	/**Le jeu tourne dans un thread a part */
+	public class StartGame implements Runnable {
+		public void run() {
+			board.startGame();
+		}
+	}
+
 	public static void main(String[] args) {
-		new MainMenu();
+		MainMenu.createDefaultBindings();
 	}
 }
