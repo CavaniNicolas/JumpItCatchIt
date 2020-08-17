@@ -54,89 +54,6 @@ public class Character extends Entity {
 	}
 
 
-	/** Actualise les coordonnees de collisions maximales et minimales */
-	public void updateCollisionBorders(BoardGraphism boardGraphism, Character otherCharacter) {
-
-		updatePositionBooleans(boardGraphism, otherCharacter);
-
-		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
-
-		// Si on est sur une plateforme, on determine le sol
-		if (isOnLeftPlatform || isOnRightPlatform) {
-			minY = boardGraphism.getReal().getPlatformHeight();
-		} else {
-			// Si on est pas sur une plateforme il faut tomber
-			minY = -100;
-			accelY = GRAVITY;
-		}
-
-		// Collisions Borders selon X
-		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
-		if (isFalling == false) {
-			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
-				minX = halfCharacterWidth;
-				maxX = otherCharacter.x - halfCharacterWidth;
-
-			} else {
-				minX = otherCharacter.x + halfCharacterWidth;
-				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
-			}
-
-		// Si on tombe au milieu, les bords sont les plateformes
-		} else {
-			minX = boardGraphism.getReal().getPlatformWidth() + halfCharacterWidth;
-			maxX = boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - halfCharacterWidth;
-		}
-
-
-		// Supprime la collisions entre les joueurs lors d'un switch d'un des joueurs
-		if (actionBooleans.isSwitching || otherCharacter.getActionBooleans().isSwitching) {
-			minX = halfCharacterWidth;
-			maxX = boardGraphism.getMaxX() - halfCharacterWidth;
-		}
-	}
-
-
-	/** Actualise les booleens de position */
-	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
-
-		// Si on est a gauche ou a droite de son adversaire
-		if (x < otherCharacter.x) {
-			isOnLeftSide = true;
-		} else {
-			isOnLeftSide = false;
-		}
-
-		// Si on est sur la plateforme de gauche
-		if (x < boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2) {
-			isOnLeftPlatform = true;
-			isOnRightPlatform = false;
-			isFalling = false;
-		// Si on est sur la plateforme de droite
-		} else if (x > boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
-			isOnLeftPlatform = false;
-			isOnRightPlatform = true;
-			isFalling = false;
-		// Si on est sur aucune plateforme
-		} else {
-			// Si on tombe
-			if (y <= boardGraphism.getReal().getPlatformHeight()) {
-				isFalling = true;
-				isOnLeftPlatform = false;
-				isOnRightPlatform = false;
-			} else {
-				isFalling = false;
-			}
-		}
-
-
-		// Si on tombe et qu'on a touché le fond, on replace le personnage sur la plateforme disponible
-		if (isFalling && y == minY) {
-			replacePlayer();
-		}
-
-	}
-
 
 	/** Actualise les booleens d'actions */
 	public void updateActionBooleans() {
@@ -190,10 +107,126 @@ public class Character extends Entity {
 	}
 
 
-	/**Repositionne le joueur sur la plateforme disponible si il est tombe dans le vide */
-	public void replacePlayer() {
+
+	/** Actualise les booleens de position */
+	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		// Si on est a gauche ou a droite de son adversaire
+		if (x < otherCharacter.x) {
+			isOnLeftSide = true;
+		} else {
+			isOnLeftSide = false;
+		}
+
+		// Si on est sur la plateforme de gauche
+		if (x < boardGraphism.getReal().getPlatformWidth() + (boardGraphism.getReal().getCharacterWidth() / 2) ) {
+			isOnLeftPlatform = true;
+			isOnRightPlatform = false;
+			isFalling = false;
+		// Si on est sur la plateforme de droite
+		} else if (x > boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
+			isOnLeftPlatform = false;
+			isOnRightPlatform = true;
+			isFalling = false;
+		// Si on est sur aucune plateforme
+		} else {
+			// On est sur aucune plateforme
+			isOnLeftPlatform = false;
+			isOnRightPlatform = false;
+			// Si on tombe
+			if (y <= boardGraphism.getReal().getPlatformHeight()) {
+				isFalling = true;
+				isOnLeftPlatform = false;
+				isOnRightPlatform = false;
+			} else {
+				isFalling = false;
+			}
+		}
+
+
+		// Si on tombe et qu'on a touché le fond, on replace le personnage sur la plateforme disponible
+		if (isFalling && y == minY) {
+			replacePlayer(boardGraphism, otherCharacter);
+		}
 
 	}
+
+
+	/**Repositionne le joueur sur la plateforme disponible si il est tombe dans le vide */
+	public void replacePlayer(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		// On ne tombe plus
+		isFalling = false;
+
+		// Si la plateforme de gauche est libre
+		if (otherCharacter.isOnLeftPlatform == false) {
+			x = boardGraphism.getReal().getSecondaryXcoordLeft();
+			System.out.println(minY);
+
+			isOnLeftPlatform = true;
+		// Si la plateforme de droite est libre
+		} else {
+			x = boardGraphism.getReal().getSecondaryXcoordRight();
+			isOnRightPlatform = true;
+		}
+
+		//  hauteur du spawn
+		y = boardGraphism.getReal().getGroundLevelYCoord() * 3;
+
+		// Reset des vitesses accelerations
+		speedX = 0;
+		speedY = 0;
+		accelX = 0;
+		accelY = GRAVITY / 2;
+
+	}
+
+
+	/** Actualise les coordonnees de collisions maximales et minimales */
+	public void updateCollisionBorders(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		updatePositionBooleans(boardGraphism, otherCharacter);
+
+		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
+
+		// Si on est sur une plateforme, on determine le sol
+		if (isOnLeftPlatform || isOnRightPlatform) {
+			minY = boardGraphism.getReal().getPlatformHeight();
+		} else {
+			// Si on est pas sur une plateforme il faut tomber
+			minY = -140;
+		}
+
+		if (isFalling) {
+			accelY = GRAVITY;
+		}
+
+		// Collisions Borders selon X
+		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
+		if (isFalling == false) {
+			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
+				minX = halfCharacterWidth;
+				maxX = otherCharacter.x - halfCharacterWidth;
+
+			} else {
+				minX = otherCharacter.x + halfCharacterWidth;
+				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+			}
+
+		// Si on tombe au milieu, les bords sont les plateformes
+		} else {
+			minX = boardGraphism.getReal().getPlatformWidth() + halfCharacterWidth;
+			maxX = boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - halfCharacterWidth;
+		}
+
+
+		// Supprime la collisions entre les joueurs lors d'un switch d'un des joueurs
+		if (actionBooleans.isSwitching || otherCharacter.getActionBooleans().isSwitching) {
+			minX = halfCharacterWidth;
+			maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+		}
+	}
+
 
 
 	/**Actualise la position du personnage (selon X et Y) puis le deplace (le deplacement gere les collisions grace aux collision borders */
