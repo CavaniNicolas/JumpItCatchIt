@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 
 
 public class MainMenu extends JFrame {
+	private static final long serialVersionUID = 4L;
 	//attributes relative to the option menu
 	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
 	private String pathRedKeyBindings, pathBlueKeyBindings;
@@ -24,6 +25,7 @@ public class MainMenu extends JFrame {
 	//the frame displaying all the stuff
 	private JFrame frame;
 
+
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
 
@@ -33,6 +35,9 @@ public class MainMenu extends JFrame {
 		optionPane = new JPanel();
 		optionPane.setBackground(Color.white);
 
+
+		//########################
+		//uncomment this part and comment the following one to display a menu
 		createMainMenuPanel();
 		createKeyBindingMenu();
 		board = new Board();
@@ -40,7 +45,34 @@ public class MainMenu extends JFrame {
 		//the first panel to be displayed is the main menu
 		this.frame.setContentPane(mainMenuPane);
 		this.frame.setVisible(true);
+		//#########################
+
+		//########################
+		//uncomment this part and comment the previous one to not display a menu
+		/*
+		board = new Board();
+		startGame();*/
+		//########################
 	}
+
+
+	/** starts the board and sets the frame to display it */
+	public void startGame() {
+		//start game
+		board.initGame();
+		Thread thread = new Thread(new StartGame());
+		thread.start();
+		//board.startGame();
+		//add the keylistener
+		frame.addKeyListener(board.getPlayerKeyListener());
+		//give the frame the focus
+		frame.setFocusable(true);
+		frame.setFocusTraversalKeysEnabled(false);
+		//displays the game panel
+		frame.setContentPane(board);
+		frame.setVisible(true);
+	}
+
 
 	/** creates the mainMenuJPanel with its component*/
 	public void createMainMenuPanel() {
@@ -48,19 +80,7 @@ public class MainMenu extends JFrame {
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				//start game
-				board.initGame();
-				Thread thread = new Thread(new StartGame());
-				thread.start();
-				//board.startGame();
-				//add the keylistener
-				frame.addKeyListener(board.getPlayerKeyListener());
-				//give the frame the focus
-				frame.setFocusable(true);
-				frame.setFocusTraversalKeysEnabled(false);
-				//displays the game panel
-				frame.setContentPane(board);
-				frame.setVisible(true);
+				startGame();
 			}
 		});
 
@@ -87,6 +107,7 @@ public class MainMenu extends JFrame {
 		mainMenuPane.add(quitButton);
 	}
 
+
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
 	public void setBindings() {
 		//check if non default key settings exist
@@ -106,6 +127,7 @@ public class MainMenu extends JFrame {
 		redPlayerBindings.setBindings(pathRedKeyBindings);
 		bluePlayerBindings.setBindings(pathBlueKeyBindings);
 	}
+
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
@@ -172,6 +194,7 @@ public class MainMenu extends JFrame {
 		optionPane.add(defaultButton);
 	}
 
+
 	/** saves a KeyBindings object to a file designated by a given path string */
 	public static void saveBindings(KeyBindings keyBindings, String path) {
 		ObjectOutputStream oos;
@@ -189,6 +212,7 @@ public class MainMenu extends JFrame {
 			exc.printStackTrace();
 		}
 	}
+
 
 	/** create default key bindings files in case they're deleted */
 	public static void createDefaultBindings() {
@@ -213,9 +237,11 @@ public class MainMenu extends JFrame {
 		saveBindings(blueKeyBindings, pathBlueKeyBindings);
 	}
 
+
 	public Board getBoard() {
 		return board;
 	}
+
 
 	/**Le jeu tourne dans un thread a part */
 	public class StartGame implements Runnable {
@@ -224,7 +250,9 @@ public class MainMenu extends JFrame {
 		}
 	}
 
+
 	public static void main(String[] args) {
 		MainMenu.createDefaultBindings();
 	}
+
 }

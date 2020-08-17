@@ -9,12 +9,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+
 public class KeyBindingMenu {
 	private KeyBindings keyBindings;
 	private JPanel panel;
 	private JTextField left, right, jump, grab, shield, shootPush;
 	private JLabel leftLabel, rightLabel, jumpLabel, grabLabel, shieldLabel, shootPushLabel;
 	
+
 	public KeyBindingMenu(String name) {
 		//JPanel binding player
 		panel = new JPanel();
@@ -71,6 +73,7 @@ public class KeyBindingMenu {
 		panel.add(shootPush);	
 	}
 
+
 	/** sets the JTextFields so they display the bindings saved in a file designated by a given path string */
 	public void setBindings(String path) {
 		ObjectInputStream ois;
@@ -101,10 +104,12 @@ public class KeyBindingMenu {
 		shootPush.setText(String.valueOf((char)keyBindings.getShootPushKey()));
 	}
 
+
 	/** return current key bindings */
 	public KeyBindings getCurrentKeyBindings() {
 		return new KeyBindings(getValueOfText(left), getValueOfText(right), getValueOfText(jump), getValueOfText(grab), getValueOfText(shield), getValueOfText(shootPush));
 	}
+
 
 	/** returns the ascii value of the first char of a jtextfield */
 	public int getValueOfText(JTextField textField) {
@@ -113,7 +118,9 @@ public class KeyBindingMenu {
 		return (int)ch[0];
 	}
 
+
 	public JPanel getPanel() {
 		return panel;
 	}
+
 }
