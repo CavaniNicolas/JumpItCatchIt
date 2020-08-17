@@ -32,7 +32,7 @@ public class Character extends Entity {
 	/** Vitesse Laterale Constante */
 	protected int speedLateral = 4; //temporaire, a mettre dans Entity plus tard
 	/** Vitesse Horizontale Constante */
-	protected int speedVertical = 50;
+	protected int speedVertical = 45;
 
 
 
@@ -53,81 +53,6 @@ public class Character extends Entity {
 		this(x, y, colorCharacter, null, keyBindings);
 	}
 
-
-	/** Actualise les coordonnees de collisions maximales et minimales */
-	public void updateCollisionBorders(BoardGraphism boardGraphism, Character otherCharacter) {
-
-		updatePositionBooleans(boardGraphism, otherCharacter);
-
-		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
-
-		// Si on est sur une plateforme, on determine le sol
-		if (isOnLeftPlatform || isOnRightPlatform) {
-			minY = boardGraphism.getReal().getPlatformHeight();
-		} else {
-			minY = 0;
-			accelY = GRAVITY;
-		}
-
-		// Collisions Borders selon X
-		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
-		if (isFalling == false) {
-			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
-				minX = halfCharacterWidth;
-				maxX = otherCharacter.x - halfCharacterWidth;
-
-			} else {
-				minX = otherCharacter.x + halfCharacterWidth;
-				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
-			}
-
-		// Si on tombe au milieu, les bords sont les plateformes
-		} else {
-			minX = boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2;
-			maxX = boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2;
-		}
-
-	}
-
-
-	/** Actualise les booleens de position */
-	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
-
-		// Si on est a gauche ou a droite de son adversaire
-		if (x < otherCharacter.x) {
-			isOnLeftSide = true;
-		} else {
-			isOnLeftSide = false;
-		}
-
-		// Si on est sur la plateforme de gauche
-		if (x < boardGraphism.getReal().getPlatformWidth() + boardGraphism.getReal().getCharacterWidth() / 2) {
-			isOnLeftPlatform = true;
-			isOnRightPlatform = false;
-			isFalling = false;
-		// Si on est sur la plateforme de droite
-		} else if (x > boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
-			isOnLeftPlatform = false;
-			isOnRightPlatform = true;
-			isFalling = false;
-		} else {
-			// Si on est sur aucune plateforme et Si on tombe
-			if (y <= boardGraphism.getReal().getPlatformHeight()) {
-				isFalling = true;
-				isOnLeftPlatform = false;
-				isOnRightPlatform = false;
-			} else {
-				isFalling = false;
-			}
-		}
-
-
-		// ICI : Si "falling == true" (cf updateCollisionBorders()) pensez a mettre canJump a false
-		// (peut etre aussi canLeft et canRight si on effectue une projection vers le vide),
-		// ICI : Si "falling == true" et qu'on touche le minY,
-		// alors on repositionne le personnage sur la plateforme et on lui fait perdre de la vie
-
-	}
 
 
 	/** Actualise les booleens d'actions */
@@ -151,14 +76,17 @@ public class Character extends Entity {
 			actionBooleans.canRight = false;
 		}
 
-		// On peut resauter et se deplacer quand on est au sol, et on ne peut pas switch
-		if (y == minY) {
-			actionBooleans.isJumping = false;
+		// On peut resauter et se deplacer quand on est au sol, et on ne peut pas sauter ou switch
+		if (y == minY && isFalling == false) {
 			actionBooleans.canJump = true;
+			actionBooleans.isJumping = false;
 			actionBooleans.canSwitch = false;
-			
+
+			// Au sol on peut se deplacer
 			actionBooleans.canLeft = true;
 			actionBooleans.canRight = true;
+
+			// Pour le switch
 			actionBooleans.isJumpFirstReleaseDone = false;
 			actionBooleans.canActivateCanSwitch = true;
 			actionBooleans.isSwitching = false;
@@ -170,11 +98,108 @@ public class Character extends Entity {
 			actionBooleans.canActivateCanSwitch = false;
 		}
 
+		// On ne peut pas se deplacer lateralement lors d'un switch
+		if (actionBooleans.isSwitching) {
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
+		}
+
 	}
 
 
+
+	/** Actualise les booleens de position */
+	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		// Si on est a gauche ou a droite de son adversaire
+		if (x < otherCharacter.x) {
+			isOnLeftSide = true;
+		} else {
+			isOnLeftSide = false;
+		}
+
+		// Si on est sur la plateforme de gauche
+		if (x < boardGraphism.getReal().getPlatformWidth() + (boardGraphism.getReal().getCharacterWidth() / 2) ) {
+			isOnLeftPlatform = true;
+			isOnRightPlatform = false;
+			isFalling = false;
+		// Si on est sur la plateforme de droite
+		} else if (x > boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
+			isOnLeftPlatform = false;
+			isOnRightPlatform = true;
+			isFalling = false;
+		// Si on est sur aucune plateforme
+		} else {
+			// On est sur aucune plateforme
+			isOnLeftPlatform = false;
+			isOnRightPlatform = false;
+			// Si on tombe
+			if (y <= boardGraphism.getReal().getPlatformHeight()) {
+				isFalling = true;
+			} else {
+				isFalling = false;
+			}
+		}
+
+	}
+
+
+	/** Actualise les coordonnees de collisions maximales et minimales */
+	public void updateCollisionBorders(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		updatePositionBooleans(boardGraphism, otherCharacter);
+
+		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
+
+		// Si on est sur une plateforme, on determine le sol
+		if (isOnLeftPlatform || isOnRightPlatform) {
+			minY = boardGraphism.getReal().getGroundLevelYCoord();
+		} else {
+			// Si on est pas sur une plateforme il faut tomber
+			minY = -140;
+			
+			if (isFalling) {
+				accelY = GRAVITY;
+			}
+		}
+
+		// Collisions Borders selon X
+		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
+		if (isFalling == false) {
+			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
+				minX = halfCharacterWidth;
+				maxX = otherCharacter.x - halfCharacterWidth;
+
+			} else {
+				minX = otherCharacter.x + halfCharacterWidth;
+				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+			}
+
+			// Supprime la collisions entre les joueurs lors d'un switch d'un des joueurs
+			if (actionBooleans.isSwitching || otherCharacter.getActionBooleans().isSwitching) {
+				minX = halfCharacterWidth;
+				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+			}
+
+		// Si on tombe au milieu, les bords sont les plateformes
+		} else {
+			minX = boardGraphism.getReal().getPlatformWidth() + halfCharacterWidth;
+			maxX = boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - halfCharacterWidth;
+		}
+
+	}
+
+
+
 	/**Actualise la position du personnage (selon X et Y) puis le deplace (le deplacement gere les collisions grace aux collision borders */
-	public void updatePosition() {
+	public void updatePosition(BoardGraphism boardGraphism, Character otherCharacter) {
+		
+		// Si on tombe et qu'on a touché le fond, on replace le personnage sur la plateforme disponible
+		if (isFalling && y == minY) {
+			replacePlayer(boardGraphism, otherCharacter);
+			updateCollisionBorders(boardGraphism, otherCharacter);
+		}
+
 		checkMovement();
 		checkJump();
 		checkSwitch();
@@ -183,7 +208,36 @@ public class Character extends Entity {
 	}
 
 
-	/**Actualise la position du personnage (selon X) (quand on est sur la plateforme) */
+	/**Repositionne le joueur sur la plateforme disponible si il est tombe dans le vide */
+	public void replacePlayer(BoardGraphism boardGraphism, Character otherCharacter) {
+
+		// On ne tombe plus
+		isFalling = false;
+
+		// Si la plateforme de gauche est libre
+		if (otherCharacter.isOnLeftPlatform == false) {
+			x = boardGraphism.getReal().getSecondaryXcoordLeft();
+
+			isOnLeftPlatform = true;
+		// Si la plateforme de droite est libre
+		} else {
+			x = boardGraphism.getReal().getSecondaryXcoordRight();
+			isOnRightPlatform = true;
+		}
+
+		//  hauteur du spawn
+		y = boardGraphism.getReal().getGroundLevelYCoord() * 3;
+
+		// Reset des vitesses accelerations
+		speedX = 0;
+		speedY = 0;
+		accelX = 0;
+		accelY = GRAVITY / 2;
+
+	}
+
+
+	/**Applique la vitesse pour effectuer un deplacement lateral */
 	private void checkMovement() {
 
 		// Applique une vitesse initiale au personnage pour se deplacer lateralement
@@ -199,13 +253,11 @@ public class Character extends Entity {
 	}
 
 
-	/**Actualise la position du personnage (selon Y) */
+	/**Applique les vitesses et accelerations pour effectuer un saut */
 	private void checkJump() {
-		// if (this.colorCharacter == Color.red)
-		// System.out.println("can jump " + actionBooleans.canJump + " isjumping " + actionBooleans.isJumping);
 
 		// Applique une vitesse et une acceleration initiales au personnage pour sauter
-		if (actionBooleans.jumpPressed && actionBooleans.canJump) {
+		if (actionBooleans.jumpPressed && actionBooleans.canJump && isFalling == false) {
 			// Vitesse initiale du saut
 			this.speedY = this.speedVertical;
 			// Gravite
@@ -215,30 +267,30 @@ public class Character extends Entity {
 			actionBooleans.isJumping = true;
 			// On ne peut pas resauter en l'air
 			actionBooleans.canJump = false;
-			// // On peut switch uniquement en l'air
-			// actionBooleans.canSwitch = true; // sera a modifer d'emplacement et potentielement de gameplay
 		}
 
-
-		// ICI : Appel des fonctions qui calculeront la force a appliquer au personnage pour effectuer le switch et application de ces forces au personnage
 	}
 
+
+	/**Applique les vitesses et accelerations pour effectuer un switch */
 	private void checkSwitch() {
 
-		if (this.colorCharacter == Color.red)
 		// Si on appuie sur sauter pendant qu'on est en l'air, on switch
-		if (actionBooleans.isJumping && actionBooleans.jumpPressed && actionBooleans.canSwitch) {
-			// Vitesse initiale du switch
-			this.speedY = this.speedVertical/2;
-			this.speedX = 4*this.speedVertical;
+		if (actionBooleans.isJumping && actionBooleans.jumpPressed && actionBooleans.canSwitch && isFalling == false) {
+
 			// Gravite
 			this.accelY = GRAVITY;
+			// Propulsion
+			this.speedY = this.speedVertical / 2;
+			if (isOnLeftPlatform) {
+				this.accelX = 30;
+			}
+			if (isOnRightPlatform) {
+				this.accelX = -30;
+			}
 
-			actionBooleans.canLeft = false;
-			actionBooleans.canRight = false;
-
+			// On est en train de switch, on ne peux plus effectuer un switch
 			actionBooleans.isSwitching = true;
-
 			actionBooleans.canSwitch = false;
 		}
 	}

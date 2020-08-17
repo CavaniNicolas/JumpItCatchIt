@@ -36,9 +36,9 @@ public class Board extends JPanel {
 
 			updateWindow();
 
-			updateActionBooleans();
-
+			
 			updateAllCollisionBorders();
+			updateActionBooleans();
 			updatePositionAndMoveAll();
 
 			sleep(12);
@@ -68,8 +68,8 @@ public class Board extends JPanel {
 	public void updatePositionAndMoveAll() {
 
 		// Les personnages
-		characterRed.updatePosition();
-		characterBlue.updatePosition();
+		characterRed.updatePosition(boardGraphism, characterBlue);
+		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
 
 
@@ -200,7 +200,17 @@ public class Board extends JPanel {
 			// Sauter
 			if (code == characterKeys.getJumpKey()) {
 				character.getActionBooleans().setJumpPressed(toggle);
-			}
+
+        // Si on relache le bouton sauter
+				if (toggle == false) {
+					// Active le booleens qui permet dactiver le canSwitch si on est dans les airs et qu'on
+					// relache le bouton sauter (pour pouvoir rappuyer dessus dans les airs pour switch)
+					if (character.getActionBooleans().isJumping() == true && character.getActionBooleans().isJumpFirstReleaseDone() == false) {
+						character.getActionBooleans().setIsJumpFirstReleaseDone(true);
+					}
+				}
+
+      }
 			// Gauche
 			if (code == characterKeys.getLeftKey()) {
 				character.getActionBooleans().setLeftPressed(toggle);

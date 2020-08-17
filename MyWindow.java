@@ -25,7 +25,7 @@ public class MyWindow extends JFrame {
 	public void createWindow() {
 		this.setTitle("Jump It Catch It");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// Fenetre hors plein ecran : width = 80% et height = 90% (les proportions sont a peu pres conservees)
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int)(screenSize.getWidth()*0.8);
@@ -37,7 +37,7 @@ public class MyWindow extends JFrame {
 
 
 		// this.setResizable(false);
-		
+
 		// Permet ensuite d'actualiser les valeurs des coordonnees et dimensions graphiques lors du prochain appel de paintComponent()
 		this.addComponentListener(new ComponentAdapter() {
 			// Si la fenetre est redimensionnee
@@ -45,7 +45,7 @@ public class MyWindow extends JFrame {
 				mainMenu.getBoard().getBoardGraphism().setIsGraphicUpdateDone(false);
 			}
 		});
-		
+
 
 		// Plein ecran
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
