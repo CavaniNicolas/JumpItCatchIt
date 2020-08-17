@@ -38,20 +38,19 @@ public class MainMenu extends JFrame {
 
 		//########################
 		//uncomment this part and comment the following one to display a menu
-		createMainMenuPanel();
-		createKeyBindingMenu();
-		board = new Board();
+		// createMainMenuPanel();
+		// createKeyBindingMenu();
+		// board = new Board();
 
-		//the first panel to be displayed is the main menu
-		this.frame.setContentPane(mainMenuPane);
-		this.frame.setVisible(true);
+		// //the first panel to be displayed is the main menu
+		// this.frame.setContentPane(mainMenuPane);
+		// this.frame.setVisible(true);
 		//#########################
 
 		//########################
 		//uncomment this part and comment the previous one to not display a menu
-		/*
 		board = new Board();
-		startGame();*/
+		startGame();
 		//########################
 	}
 
