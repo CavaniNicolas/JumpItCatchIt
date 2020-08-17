@@ -214,6 +214,12 @@ public class Character extends Entity {
 		// On ne tombe plus
 		isFalling = false;
 
+		// Il faudra attendre d'etre sur le sol avant de pouvoir resauter et switch
+		actionBooleans.isJumping = false;
+		actionBooleans.isSwitching = false;
+		actionBooleans.canJump = false;
+		actionBooleans.canSwitch = false;
+
 		// Si la plateforme de gauche est libre
 		if (otherCharacter.isOnLeftPlatform == false) {
 			x = boardGraphism.getReal().getSecondaryXcoordLeft();
