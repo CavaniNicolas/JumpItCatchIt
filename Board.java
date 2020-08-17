@@ -1,10 +1,13 @@
 import java.awt.Color;
 import java.awt.Graphics;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import javax.swing.JPanel;
+import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+
 
 /**class Board extends JPanel<p>
  * Gere le jeu
@@ -25,6 +28,10 @@ public class Board extends JPanel {
 	private Character characterRed;
 	/**Personnage bleu (initialement a droite) */
 	private Character characterBlue;
+
+	/** each player's key bindings */
+	KeyBindings redKeyBindings;
+	KeyBindings blueKeyBindings;
 
 
 
@@ -72,6 +79,48 @@ public class Board extends JPanel {
 		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
 
+	/** sets the players bindings to their correct value */
+	public void setBindings() {
+		//check if non default key settings exist
+		String pathRedKeyBindings = "redKeyBindings.txt";
+		String pathBlueKeyBindings = "blueKeyBindings.txt";
+
+		File f = new File(pathRedKeyBindings);
+		if(!f.exists() || f.isDirectory()) {
+			pathRedKeyBindings = "redKeyBindingsDefault.txt";
+		}
+		f = new File(pathBlueKeyBindings);
+		if(!f.exists() || f.isDirectory()) {
+			pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
+		}
+		redKeyBindings = getBindings(pathRedKeyBindings);
+		blueKeyBindings = getBindings(pathBlueKeyBindings);
+	}
+
+	/** return a KeyBinding object from a String path to a file */
+	public KeyBindings getBindings(String path) {
+		KeyBindings keyBindings = null;
+		ObjectInputStream ois;
+		// create an input flux to read an object from a file
+		try {
+			ois = new ObjectInputStream(
+					new BufferedInputStream(
+						new FileInputStream(
+							new File(path))));
+			try {
+				//create the object from the file
+				keyBindings = (KeyBindings)ois.readObject();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			//close the flux
+			ois.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return keyBindings;
+	}
+
 
 	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
 	public void initGame() {
@@ -82,12 +131,8 @@ public class Board extends JPanel {
 		// On charge les objets (sans image) tout doit etre fonctionnel
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
 
-		// Touches joueur rouge
-		int a=97, z=122, e=101, s=115, d=100, f=102;
-		KeyBindings redKeyBindings = new KeyBindings(a, e, z, s, d, f);
-		// Touches joueur bleu
-		int u=117, i=105, o=111, k=107, l=108, m=109;
-		KeyBindings blueKeyBindings = new KeyBindings(u, o, i, k, l, m);
+		// On récupère les keyBindings des joueurs
+		setBindings();
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings);

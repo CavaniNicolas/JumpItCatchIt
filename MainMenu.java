@@ -33,6 +33,9 @@ public class MainMenu extends JFrame {
 		optionPane = new JPanel();
 		optionPane.setBackground(Color.white);
 
+
+		//########################
+		//uncomment this part and comment the following one to display a menu
 		createMainMenuPanel();
 		createKeyBindingMenu();
 		board = new Board();
@@ -40,6 +43,31 @@ public class MainMenu extends JFrame {
 		//the first panel to be displayed is the main menu
 		this.frame.setContentPane(mainMenuPane);
 		this.frame.setVisible(true);
+		//#########################
+
+		//########################
+		//uncomment this part and comment the previous one to not display a menu
+		/*
+		board = new Board();
+		startGame();*/
+		//########################
+	}
+
+	/** starts the board and sets the frame to display it */
+	public void startGame() {
+		//start game
+		board.initGame();
+		Thread thread = new Thread(new StartGame());
+		thread.start();
+		//board.startGame();
+		//add the keylistener
+		frame.addKeyListener(board.getPlayerKeyListener());
+		//give the frame the focus
+		frame.setFocusable(true);
+		frame.setFocusTraversalKeysEnabled(false);
+		//displays the game panel
+		frame.setContentPane(board);
+		frame.setVisible(true);
 	}
 
 	/** creates the mainMenuJPanel with its component*/
@@ -48,19 +76,7 @@ public class MainMenu extends JFrame {
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				//start game
-				board.initGame();
-				Thread thread = new Thread(new StartGame());
-				thread.start();
-				//board.startGame();
-				//add the keylistener
-				frame.addKeyListener(board.getPlayerKeyListener());
-				//give the frame the focus
-				frame.setFocusable(true);
-				frame.setFocusTraversalKeysEnabled(false);
-				//displays the game panel
-				frame.setContentPane(board);
-				frame.setVisible(true);
+				startGame();
 			}
 		});
 
