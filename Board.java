@@ -81,44 +81,8 @@ public class Board extends JPanel {
 
 	/** sets the players bindings to their correct value */
 	public void setBindings() {
-		//check if non default key settings exist
-		String pathRedKeyBindings = "redKeyBindings.txt";
-		String pathBlueKeyBindings = "blueKeyBindings.txt";
-
-		File f = new File(pathRedKeyBindings);
-		if(!f.exists() || f.isDirectory()) {
-			pathRedKeyBindings = "redKeyBindingsDefault.txt";
-		}
-		f = new File(pathBlueKeyBindings);
-		if(!f.exists() || f.isDirectory()) {
-			pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
-		}
-		redKeyBindings = getBindings(pathRedKeyBindings);
-		blueKeyBindings = getBindings(pathBlueKeyBindings);
-	}
-
-	/** return a KeyBinding object from a String path to a file */
-	public KeyBindings getBindings(String path) {
-		KeyBindings keyBindings = null;
-		ObjectInputStream ois;
-		// create an input flux to read an object from a file
-		try {
-			ois = new ObjectInputStream(
-					new BufferedInputStream(
-						new FileInputStream(
-							new File(path))));
-			try {
-				//create the object from the file
-				keyBindings = (KeyBindings)ois.readObject();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			//close the flux
-			ois.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return keyBindings;
+		redKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+		blueKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
 	}
 
 

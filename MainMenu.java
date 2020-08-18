@@ -5,16 +5,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-
 
 public class MainMenu extends JFrame {
 	//attributes relative to the option menu
 	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
-	private String pathRedKeyBindings, pathBlueKeyBindings;
 
 	//the panels that can be displayed
 	private JPanel mainMenuPane;
@@ -105,22 +99,8 @@ public class MainMenu extends JFrame {
 
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
 	public void setBindings() {
-		//check if non default key settings exist
-		pathRedKeyBindings = "redKeyBindings.txt";
-		pathBlueKeyBindings = "blueKeyBindings.txt";
-
-		File f = new File(pathRedKeyBindings);
-		if(!f.exists() || f.isDirectory()) {
-			pathRedKeyBindings = "redKeyBindingsDefault.txt";
-		}
-		f = new File(pathBlueKeyBindings);
-		if(!f.exists() || f.isDirectory()) {
-			pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
-		}
-
-		//set their bindings
-		redPlayerBindings.setBindings(pathRedKeyBindings);
-		bluePlayerBindings.setBindings(pathBlueKeyBindings);
+		redPlayerBindings.setBindings(FileFunctions.getPathFileToUse("red"));
+		bluePlayerBindings.setBindings(FileFunctions.getPathFileToUse("blue"));
 	}
 
 	/** initiates the components of the menu */
@@ -143,8 +123,8 @@ public class MainMenu extends JFrame {
 				//saves the current (the ones being displayed) keyBindings     
 				KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
 				KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
-				saveBindings(redBindings, "redKeyBindings.txt");
-				saveBindings(blueBindings, "blueKeyBindings.txt");
+				FileFunctions.saveBindings(redBindings, "redKeyBindings.txt");
+				FileFunctions.saveBindings(blueBindings, "blueKeyBindings.txt");
 				//just to display 1 char bindings
 				setBindings();
 			}
@@ -166,17 +146,7 @@ public class MainMenu extends JFrame {
 		defaultButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {        
 				//check if non default key settings exist and delete those files
-				pathRedKeyBindings = "redKeyBindings.txt";
-				pathBlueKeyBindings = "blueKeyBindings.txt";
-
-				File f = new File(pathRedKeyBindings);
-				if(f.exists() && !f.isDirectory()) {
-					f.delete();
-				}
-				f = new File(pathBlueKeyBindings);
-				if(f.exists() && !f.isDirectory()) {
-					f.delete();
-				}
+				FileFunctions.deleteNonDefaultBindings();
 				//recreate the menu with default settings 
 				setBindings();
 			}
@@ -188,47 +158,6 @@ public class MainMenu extends JFrame {
 		optionPane.add(defaultButton);
 	}
 
-	/** saves a KeyBindings object to a file designated by a given path string */
-	public static void saveBindings(KeyBindings keyBindings, String path) {
-		ObjectOutputStream oos;
-		try {
-			oos = new ObjectOutputStream(
-					new BufferedOutputStream(
-						new FileOutputStream(
-							new File(path))));
-					
-			//write the bindings in a file
-			oos.writeObject(keyBindings);
-			//close the flux
-			oos.close();
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-	}
-
-	/** create default key bindings files in case they're deleted */
-	public static void createDefaultBindings() {
-		String pathRedKeyBindings = "redKeyBindingsDefault.txt";
-		String pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
-
-		File file = new File(pathRedKeyBindings);
-		if(file.exists() && !file.isDirectory()) {
-			file.delete();
-		}
-		file = new File(pathBlueKeyBindings);
-		if(file.exists() && !file.isDirectory()) {
-			file.delete();
-		}
-		// Touches joueur rouge
-		int a=97, z=122, e=101, s=115, d=100, f=102;
-		KeyBindings redKeyBindings = new KeyBindings(a, e, z, s, d, f);
-		// Touches joueur bleu
-		int u=117, i=105, o=111, k=107, l=108, m=109;
-		KeyBindings blueKeyBindings = new KeyBindings(u, o, i, k, l, m);
-		saveBindings(redKeyBindings, pathRedKeyBindings);
-		saveBindings(blueKeyBindings, pathBlueKeyBindings);
-	}
-
 	public Board getBoard() {
 		return board;
 	}
@@ -238,9 +167,5 @@ public class MainMenu extends JFrame {
 		public void run() {
 			board.startGame();
 		}
-	}
-
-	public static void main(String[] args) {
-		MainMenu.createDefaultBindings();
 	}
 }

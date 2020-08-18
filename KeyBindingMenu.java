@@ -4,13 +4,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.Color;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 
 public class KeyBindingMenu {
-	private KeyBindings keyBindings;
 	private JPanel panel;
 	private JTextField left, right, jump, grab, shield, shootPush;
 	private JLabel leftLabel, rightLabel, jumpLabel, grabLabel, shieldLabel, shootPushLabel;
@@ -73,24 +68,7 @@ public class KeyBindingMenu {
 
 	/** sets the JTextFields so they display the bindings saved in a file designated by a given path string */
 	public void setBindings(String path) {
-		ObjectInputStream ois;
-		// create an input flux to read an object from a file
-		try {
-			ois = new ObjectInputStream(
-					new BufferedInputStream(
-						new FileInputStream(
-							new File(path))));
-			try {
-				//create the object from the file
-				keyBindings = (KeyBindings)ois.readObject();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			//close the flux
-			ois.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		KeyBindings keyBindings = FileFunctions.getBindings(path);
 
 		//set the JTextFields to the value of the bindings
 		left.setText(String.valueOf((char)keyBindings.getLeftKey()));
