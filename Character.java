@@ -42,21 +42,19 @@ public class Character extends Entity {
 	private Image imageProjectile = null;
 
 
-	public Character(int x, int y, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings) {
+	/**Constructeur Character */
+	public Character(int x, int y, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
 		super(x, y, 0, 0, 0, 0);
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
 		this.keyBindings = keyBindings;
+		initGraphicAttributes(boardGraphism);
 	}
 
 
-	public Character(int x, int y, Color colorCharacter, Image imageCharacter) {
-		this(x, y, colorCharacter, imageCharacter, null);
-	}
-
-
-	public Character(int x, int y, Color colorCharacter, KeyBindings keyBindings) {
-		this(x, y, colorCharacter, null, keyBindings);
+	/**Constructeur Character sans Image */
+	public Character(int x, int y, Color colorCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
+		this(x, y, colorCharacter, null, keyBindings, boardGraphism);
 	}
 
 
@@ -321,13 +319,13 @@ public class Character extends Entity {
 		/**Si on appuie sur Shoot et qu'on peut shoot */
 		if (actionBooleans.shootPushPressed && actionBooleans.canShoot) {
 
-			System.out.println("FIRE");
+			System.out.println("FIRE ");
 			// Tire vers la droite
 			if (isOnLeftSide) {
-				projectiles.add(new Projectile(x, y + boardGraphism.getReal().getCharacterHeight() / 2, 1, 0, 1, 0, 1, this, colorProjectile) ); // Attention a revoir !
+				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), 1, 0, 1, 0, boardGraphism, 1, this, colorProjectile) ); // Attention a revoir !
 			// Tire vers la gauche
 			} else {
-				projectiles.add(new Projectile(x, y + boardGraphism.getReal().getCharacterHeight() / 2, -1, 0, -1, 0, 1, this, colorProjectile) );
+				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), -1, 0, -1, 0, boardGraphism, 1, this, colorProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite
@@ -347,10 +345,10 @@ public class Character extends Entity {
 	/**Dessine le personnage */
 	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {
 		g.setColor(colorCharacter);
-		int x = (int)((double)(this.x - boardGraphism.getReal().getCharacterWidth() / 2) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + boardGraphism.getReal().getCharacterHeight())) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = (int)((double)(boardGraphism.getReal().getCharacterWidth()) * boardGraphism.getGraphic().getOneUnityWidth());
-		int height = (int)((double)(boardGraphism.getReal().getCharacterHeight()) * boardGraphism.getGraphic().getOneUnityHeight());
+		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
+		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height)) * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = (int)((double)(this.width) * boardGraphism.getGraphic().getOneUnityWidth());
+		int height = (int)((double)(this.height) * boardGraphism.getGraphic().getOneUnityHeight());
 		g.fillRect(x, y, width, height);
 	}
 
@@ -360,6 +358,13 @@ public class Character extends Entity {
 		for (int i=0; i<projectiles.size(); i++) {
 			projectiles.get(i).drawProjectile(g, boardGraphism);
 		}
+	}
+
+
+	/**Initialise les champs graphiques */
+	public void initGraphicAttributes(BoardGraphism boardGraphism) {
+		this.width = boardGraphism.getReal().getCharacterWidth();
+		this.height = boardGraphism.getReal().getCharacterHeight();
 	}
 
 

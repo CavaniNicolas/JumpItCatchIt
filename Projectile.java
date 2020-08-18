@@ -26,21 +26,34 @@ public class Projectile extends Entity {
 	private Image imageProjectile = null;
 
 
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, int damage, Character aimedCharacter, Color colorProjectile) {
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, BoardGraphism boardGraphism, int damage, Character aimedCharacter, Color colorProjectile) {
 		super(x, y, speedX, speedY, accelX, accelY);
 		this.initX = x;
 		this.damage = damage;
 		this.aimedCharacter = aimedCharacter;
 		this.isActive = true;
 		this.colorProjectile = colorProjectile;
+		initGraphicAttributes(boardGraphism);
 	}
 
 
+	/**Dessine le projectile */
 	public void drawProjectile(Graphics g, BoardGraphism boardGraphism) {
 		g.setColor(colorProjectile);
-		int x = (int)((double)(this.x - 400) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + 400)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int radius = (int)((double)(/*boardGraphism.getReal().getCharacterWidth()*/ 800) * boardGraphism.getGraphic().getOneUnityWidth());
-		g.fillOval(x, y, radius, radius);
+		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
+		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height / 2)) * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = (int)((double)(this.width) * boardGraphism.getGraphic().getOneUnityWidth());
+		int height = (int)((double)(this.height) * boardGraphism.getGraphic().getOneUnityHeight());
+		g.fillOval(x, y, width, height);
 	}
+
+
+	/**Initialise les champs graphiques */
+	public void initGraphicAttributes(BoardGraphism boardGraphism) {
+		this.width = boardGraphism.getReal().getProjectileWidth();
+		this.height = boardGraphism.getReal().getProjectileHeight();
+		this.minX = 0;
+		this.maxX = boardGraphism.getMaxX();
+	}
+
 }

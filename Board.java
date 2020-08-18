@@ -180,8 +180,8 @@ public class Board extends JPanel {
 		setBindings(); // faire deux appels a cette fonction, elle devra retourner les KeyBindings, et prendre en parametres le nom du fichier a aller chercher + le nom du fichier par defaut
 
 		// Creation des deux persos
-		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings);
-		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings);
+		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings, boardGraphism);
+		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings, boardGraphism);
 
 
 		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)

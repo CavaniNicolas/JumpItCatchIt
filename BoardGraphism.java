@@ -17,9 +17,9 @@ public class BoardGraphism {
 
 
 	/**Largeur reelle max du board */
-	private int maxX = 16000;
+	private int maxX = 16_000;
 	/**Hauteur reelle max du board */
-	private int maxY = 10000;
+	private int maxY = 10_000;
 
 
 	/**Largeur du JPanel (Board) */
@@ -37,21 +37,25 @@ public class BoardGraphism {
 			real.oneUnityHeight = 1.0;
 
 			// dimensions des plateformes
-			real.platformWidth = 5000;
-			real.platformHeight = 1500;
+			real.platformWidth = 5_000;
+			real.platformHeight = 1_500;
 
 			// dimensions des personnages
-			real.characterWidth = 1600;
-			real.characterHeight = 2000;
+			real.characterWidth = 1_600;
+			real.characterHeight = 2_000;
+
+			// dimensions des projectiles
+			real.projectileWidth = 700;
+			real.projectileHeight = 700;
 
 			// positions des personnages en X sur les plateforme
-			real.primaryXcoordLeft = 3800;
-			real.primaryXcoordRight = 12200;
-			real.secondaryXcoordLeft = 1800;
-			real.secondaryXcoordRight = 14200;
+			real.primaryXcoordLeft = 3_800;
+			real.primaryXcoordRight = 12_200;
+			real.secondaryXcoordLeft = 1_800;
+			real.secondaryXcoordRight = 14_200;
 
 			// position au sol en Y
-			real.groundLevelYCoord = 1500;
+			real.groundLevelYCoord = 1_500;
 
 	}
 
@@ -75,6 +79,10 @@ public class BoardGraphism {
 			// dimensions des personnages
 			graphic.characterWidth = (int)(real.characterWidth * graphic.oneUnityWidth);
 			graphic.characterHeight = (int)(real.characterHeight * graphic.oneUnityHeight);
+
+			// dimensions des projectiles
+			graphic.projectileWidth = (int)(real.getProjectileWidth() * graphic.oneUnityWidth);
+			graphic.projectileHeight = (int)(real.getProjectileHeight() * graphic.oneUnityHeight);
 
 			// positions des personnages en X sur les plateforme
 			graphic.primaryXcoordLeft = (int)(real.primaryXcoordLeft * graphic.oneUnityHeight);
@@ -170,6 +178,11 @@ public class BoardGraphism {
 		/**Hauteur des personnages*/
 		private int characterHeight;
 
+		/**Largeur des projectiles */
+		private int projectileWidth;
+		/**Hauteur des projectiles */
+		private int projectileHeight;
+
 		/**Coordonnee principale en X du personnage a gauche (position sur la plateforme) */
 		private int primaryXcoordLeft;
 		/**Coordonnee secondaire en X du personnage a gauche (position a l'atterrissage d'un changement de plateforme) */
@@ -230,6 +243,14 @@ public class BoardGraphism {
 
 		public int getGroundLevelYCoord() {
 			return groundLevelYCoord;
+		}
+
+		public int getProjectileWidth() {
+			return projectileWidth;
+		}
+
+		public int getProjectileHeight() {
+			return projectileHeight;
 		}
 	}
 

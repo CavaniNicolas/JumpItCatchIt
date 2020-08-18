@@ -8,9 +8,13 @@ public class Entity {
 	protected final int GRAVITY = -20;
 
 	// Coordonnees de collisions minimales et maximales
-	protected int minX = 0;
-	protected int maxX = 16000; // Initialisation importante pour les projectiles
+	protected int minX;
+	protected int maxX;
 	protected int minY;
+
+	// Largeur et Hauteur de l'entite	
+	protected int width;
+	protected int height;
 
 	// Coordonnees de l'entite
 	protected int x;
@@ -67,7 +71,6 @@ public class Entity {
 		}
 
 	}
-
 
 
 	/* ======= */
