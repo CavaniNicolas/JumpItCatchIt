@@ -1,6 +1,8 @@
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Dimension;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -70,6 +72,9 @@ public class MainMenu extends JFrame {
 
 	/** creates the mainMenuJPanel with its component*/
 	public void createMainMenuPanel() {
+		mainMenuPane.setBorder(BorderFactory.createTitledBorder("JUMP IT AND CATCH IT"));
+		mainMenuPane.setBackground(Color.white);
+
 		JButton playButton = new JButton("Play");
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
@@ -110,6 +115,9 @@ public class MainMenu extends JFrame {
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
+		optionPane.setBorder(BorderFactory.createTitledBorder("OPTIONS"));
+		optionPane.setBackground(Color.white);
+
 		//create each player bindings panel
 		redPlayerBindings = new KeyBindingMenu("Red player bindings");
 		bluePlayerBindings = new KeyBindingMenu("Blue player bindings");

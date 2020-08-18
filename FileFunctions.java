@@ -61,6 +61,7 @@ public class FileFunctions {
 
 	/** create default key bindings files in case they're deleted */
 	public static void createDefaultBindings() {
+		deleteNonDefaultBindings();
 		String pathRedKeyBindings = "redKeyBindingsDefault.txt";
 		String pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
 

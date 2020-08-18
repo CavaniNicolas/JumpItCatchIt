@@ -13,7 +13,6 @@ public class KeyBindingMenu extends JPanel {
 		//JPanel binding player
 		this.setBorder(BorderFactory.createTitledBorder(name));
 		this.setBackground(Color.white);
-		this.setPreferredSize(new Dimension(270, 250));
 
 		keySelectingPanels = new ArrayList<KeySelectingPanel>();
 	}
@@ -21,6 +20,7 @@ public class KeyBindingMenu extends JPanel {
 	/** creates a new KeySelectingPanel based on a KeyBinding */
 	public void addKeySelectingPanels(String path, String defaultPath) {
 		KeyBindings keyBindings = FileFunctions.getBindings(path);
+		this.setPreferredSize(new Dimension(270, 40*keyBindings.getKeyBindings().size()));
 
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
 			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath);
