@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
+	private static final long serialVersionUID = 4L;
 	//attributes relative to the option menu
 	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
 
@@ -17,6 +18,7 @@ public class MainMenu extends JFrame {
 
 	//the frame displaying all the stuff
 	private JFrame frame;
+
 
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
@@ -47,6 +49,7 @@ public class MainMenu extends JFrame {
 		//########################
 	}
 
+
 	/** starts the board and sets the frame to display it */
 	public void startGame() {
 		//start game
@@ -63,6 +66,7 @@ public class MainMenu extends JFrame {
 		frame.setContentPane(board);
 		frame.setVisible(true);
 	}
+
 
 	/** creates the mainMenuJPanel with its component*/
 	public void createMainMenuPanel() {
@@ -97,11 +101,13 @@ public class MainMenu extends JFrame {
 		mainMenuPane.add(quitButton);
 	}
 
+
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
 	public void setBindings() {
 		redPlayerBindings.setBindings(FileFunctions.getPathFileToUse("red"));
 		bluePlayerBindings.setBindings(FileFunctions.getPathFileToUse("blue"));
 	}
+
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
@@ -161,6 +167,7 @@ public class MainMenu extends JFrame {
 	public Board getBoard() {
 		return board;
 	}
+
 
 	/**Le jeu tourne dans un thread a part */
 	public class StartGame implements Runnable {

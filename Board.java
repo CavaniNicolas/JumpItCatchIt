@@ -3,11 +3,6 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JPanel;
-import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-
 
 /**class Board extends JPanel<p>
  * Gere le jeu
@@ -28,12 +23,6 @@ public class Board extends JPanel {
 	private Character characterRed;
 	/**Personnage bleu (initialement a droite) */
 	private Character characterBlue;
-
-	/** each player's key bindings */
-	KeyBindings redKeyBindings;
-	KeyBindings blueKeyBindings;
-
-
 
 	/**Le jeu lui meme (la boucle while true) */
 	public void startGame() {
@@ -79,13 +68,6 @@ public class Board extends JPanel {
 		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
 
-	/** sets the players bindings to their correct value */
-	public void setBindings() {
-		redKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
-		blueKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
-	}
-
-
 	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
 	public void initGame() {
 
@@ -96,7 +78,8 @@ public class Board extends JPanel {
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
 
 		// On récupère les keyBindings des joueurs
-		setBindings();
+		KeyBindings redKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+		KeyBindings blueKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings);
