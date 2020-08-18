@@ -242,7 +242,7 @@ public class MainMenu extends JFrame {
 	}
 
 
-	/**Le jeu tourne dans un thread a part */
+	/**Le jeu tourne dans un thread a part, il contient les timer (thread) de jeu et d'affichage */
 	public class StartGame implements Runnable {
 		public void run() {
 			board.startGame();
