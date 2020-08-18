@@ -23,6 +23,8 @@ public class Character extends Entity {
 
 	/** Booleen, true si on est en train de tomber dans le vide */
 	private boolean isFalling;
+	/** Booleen, true si on est en train de respawn */
+	private boolean isSpawning;
 
 	// Couleur et image du personnage
 	private Color colorCharacter;
@@ -78,10 +80,12 @@ public class Character extends Entity {
 		// On verifie les coolDown des sorts
 		checkCoolDowns();
 
-		// Au sol on peut se deplacer
+		// Au sol on peut se deplacer, et on est plus en train de spawner
 		if (y == minY && isFalling == false) {
 			actionBooleans.canLeft = true;
 			actionBooleans.canRight = true;
+
+			isSpawning = false;
 		}
 
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
@@ -91,6 +95,12 @@ public class Character extends Entity {
 		} else {
 			actionBooleans.canLeft = true;
 			actionBooleans.canRight = true;
+		}
+
+		// Pendant quon respawn on ne peut pas bouger
+		if (isSpawning) {
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
 		}
 
 		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
@@ -253,6 +263,8 @@ public class Character extends Entity {
 	/**Repositionne le joueur sur la plateforme disponible si il est tombe dans le vide */
 	public void replacePlayer(BoardGraphism boardGraphism, Character otherCharacter) {
 
+		// On respawn
+		isSpawning = true;
 		// On ne tombe plus
 		isFalling = false;
 
