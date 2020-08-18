@@ -64,13 +64,16 @@ public class Character extends Entity {
 	/** Actualise les booleens d'actions */
 	public void updateActionBooleans() {
 
+		// Au sol on peut se deplacer
+		if (y == minY && isFalling == false) {
+			actionBooleans.canLeft = true;
+			actionBooleans.canRight = true;
+		}
+
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
 		if (actionBooleans.leftPressed && actionBooleans.rightPressed) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
-		} else {
-			actionBooleans.canLeft = true;
-			actionBooleans.canRight = true;
 		}
 
 		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
@@ -82,15 +85,11 @@ public class Character extends Entity {
 			actionBooleans.canRight = false;
 		}
 
-		// On peut resauter et se deplacer quand on est au sol, et on ne peut pas sauter ou switch
+		// On peut resauter quand on est au sol, et on ne peut pas sauter ou switch
 		if (y == minY && isFalling == false) {
 			actionBooleans.canJump = true;
 			actionBooleans.isJumping = false;
 			actionBooleans.canSwitch = false;
-
-			// Au sol on peut se deplacer
-			actionBooleans.canLeft = true;
-			actionBooleans.canRight = true;
 
 			// Pour le switch
 			actionBooleans.isJumpFirstReleaseDone = false;
@@ -220,11 +219,13 @@ public class Character extends Entity {
 		// On ne tombe plus
 		isFalling = false;
 
-		// Il faudra attendre d'etre sur le sol avant de pouvoir resauter et switch
+		// Il faudra attendre d'etre sur le sol avant de pouvoir resauter et switch et se deplacer
 		actionBooleans.isJumping = false;
 		actionBooleans.isSwitching = false;
 		actionBooleans.canJump = false;
 		actionBooleans.canSwitch = false;
+		actionBooleans.canLeft = false;
+		actionBooleans.canRight = false;
 
 		// Si la plateforme de gauche est libre
 		if (otherCharacter.isOnLeftPlatform == false) {
