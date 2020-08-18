@@ -19,11 +19,11 @@ public class KeyBindingMenu extends JPanel {
 	}
 
 	/** creates a new KeySelectingPanel based on a KeyBinding */
-	public void addKeySelectingPanels(String path) {
+	public void addKeySelectingPanels(String path, String defaultPath) {
 		KeyBindings keyBindings = FileFunctions.getBindings(path);
 
-		for (KeyBinding keyBinding : keyBindings.getKeyBindings()) {
-			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBinding);
+		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
+			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath);
 			keySelectingPanels.add(keySelectingPanel);
 			this.add(keySelectingPanel);
 		}

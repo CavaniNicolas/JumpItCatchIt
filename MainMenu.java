@@ -114,8 +114,8 @@ public class MainMenu extends JFrame {
 		redPlayerBindings = new KeyBindingMenu("Red player bindings");
 		bluePlayerBindings = new KeyBindingMenu("Blue player bindings");
 
-		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"));
-		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"));
+		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"), "redKeyBindingsDefault.txt");
+		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "blueKeyBindingsDefault.txt");
 
 		setBindings();
 
