@@ -74,10 +74,25 @@ public class FileFunctions {
 		}
 		// Touches joueur rouge
 		int a=97, z=122, e=101, s=115, d=100, f=102;
-		KeyBindings redKeyBindings = new KeyBindings(a, e, z, s, d, f);
+		KeyBindings redKeyBindings = new KeyBindings();
+		redKeyBindings.addBinding(new KeyBinding(a, "Left"));
+		redKeyBindings.addBinding(new KeyBinding(e, "Right"));
+		redKeyBindings.addBinding(new KeyBinding(z, "Jump"));
+		redKeyBindings.addBinding(new KeyBinding(s, "Grab"));
+		redKeyBindings.addBinding(new KeyBinding(d, "Shield"));
+		redKeyBindings.addBinding(new KeyBinding(f, "Shoot and push"));
+
 		// Touches joueur bleu
 		int u=117, i=105, o=111, k=107, l=108, m=109;
-		KeyBindings blueKeyBindings = new KeyBindings(u, o, i, k, l, m);
+		KeyBindings blueKeyBindings = new KeyBindings();
+		blueKeyBindings.addBinding(new KeyBinding(u, "Left"));
+		blueKeyBindings.addBinding(new KeyBinding(o, "Right"));
+		blueKeyBindings.addBinding(new KeyBinding(i, "Jump"));
+		blueKeyBindings.addBinding(new KeyBinding(k, "Grab"));
+		blueKeyBindings.addBinding(new KeyBinding(l, "Shield"));
+		blueKeyBindings.addBinding(new KeyBinding(m, "Shoot and push"));
+
+		//saves the new default bindings
 		saveBindings(redKeyBindings, pathRedKeyBindings);
 		saveBindings(blueKeyBindings, pathBlueKeyBindings);
 	}

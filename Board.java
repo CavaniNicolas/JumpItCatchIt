@@ -189,8 +189,8 @@ public class Board extends JPanel {
 			KeyBindings characterKeys = character.getKeyBindings();
 
 			// Pour le personnage bleu
-			// Sauter
-			if (code == characterKeys.getJumpKey()) {
+			// Sauter (2)
+			if (code == characterKeys.getKeyBindings().get(2).getKeyValue()) {
 				character.getActionBooleans().setJumpPressed(toggle);
 
         		// Si on relache le bouton sauter
@@ -203,24 +203,24 @@ public class Board extends JPanel {
 				}
 
       		}
-			// Gauche
-			if (code == characterKeys.getLeftKey()) {
+			// Gauche (0)
+			if (code == characterKeys.getKeyBindings().get(0).getKeyValue()) {
 				character.getActionBooleans().setLeftPressed(toggle);
 			}
-			// Droite
-			if (code == characterKeys.getRightKey()) {
+			// Droite (1)
+			if (code == characterKeys.getKeyBindings().get(1).getKeyValue()) {
 				character.getActionBooleans().setRightPressed(toggle);
 			}
-			// Grab
-			if (code == characterKeys.getGrabKey()) {
+			// Grab (3)
+			if (code == characterKeys.getKeyBindings().get(3).getKeyValue()) {
 				character.getActionBooleans().setGrabPressed(toggle);
 			}
-			// Shield
-			if (code == characterKeys.getShieldKey()) {
+			// Shield (4)
+			if (code == characterKeys.getKeyBindings().get(4).getKeyValue()) {
 				character.getActionBooleans().setShieldPressed(toggle);
 			}
-			// Shoot Push
-			if (code == characterKeys.getShootPushKey()) {
+			// Shoot Push (5)
+			if (code == characterKeys.getKeyBindings().get(5).getKeyValue()) {
 				character.getActionBooleans().setShootPushPressed(toggle);
 			}
 		}

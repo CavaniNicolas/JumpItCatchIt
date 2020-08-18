@@ -104,10 +104,9 @@ public class MainMenu extends JFrame {
 
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
 	public void setBindings() {
-		redPlayerBindings.setBindings(FileFunctions.getPathFileToUse("red"));
-		bluePlayerBindings.setBindings(FileFunctions.getPathFileToUse("blue"));
+		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("red"));
+		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("blue"));
 	}
-
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
@@ -115,11 +114,14 @@ public class MainMenu extends JFrame {
 		redPlayerBindings = new KeyBindingMenu("Red player bindings");
 		bluePlayerBindings = new KeyBindingMenu("Blue player bindings");
 
+		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"));
+		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"));
+
 		setBindings();
 
 		//add them to main panel
-		optionPane.add(redPlayerBindings.getPanel());
-		optionPane.add(bluePlayerBindings.getPanel());
+		optionPane.add(redPlayerBindings);
+		optionPane.add(bluePlayerBindings);
 
 		/** save bindings */
 		JButton saveButton = new JButton("Save bindings");
