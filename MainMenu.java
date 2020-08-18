@@ -119,8 +119,8 @@ public class MainMenu extends JFrame {
 		optionPane.setBackground(Color.white);
 
 		//create each player bindings panel
-		redPlayerBindings = new KeyBindingMenu("Red player bindings");
-		bluePlayerBindings = new KeyBindingMenu("Blue player bindings");
+		redPlayerBindings = new KeyBindingMenu("Red player bindings", this);
+		bluePlayerBindings = new KeyBindingMenu("Blue player bindings", this);
 
 		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"), "redKeyBindingsDefault.txt");
 		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "blueKeyBindingsDefault.txt");
@@ -178,6 +178,13 @@ public class MainMenu extends JFrame {
 		return board;
 	}
 
+	public KeyBindingMenu getRedPlayerBindingMenu() {
+		return redPlayerBindings;
+	}
+
+	public KeyBindingMenu getBluePlayerBindingMenu() {
+		return bluePlayerBindings;
+	}
 
 	/**Le jeu tourne dans un thread a part */
 	public class StartGame implements Runnable {

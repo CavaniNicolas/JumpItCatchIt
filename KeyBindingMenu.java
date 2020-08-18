@@ -1,6 +1,5 @@
 import java.awt.Dimension;
 import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -8,8 +7,10 @@ import java.awt.Color;
 
 public class KeyBindingMenu extends JPanel {
 	private ArrayList<KeySelectingPanel> keySelectingPanels;
+	private MainMenu mainMenu;
 
-	public KeyBindingMenu(String name) {
+	public KeyBindingMenu(String name, MainMenu mainMenu) {
+		this.mainMenu = mainMenu;
 		//JPanel binding player
 		this.setBorder(BorderFactory.createTitledBorder(name));
 		this.setBackground(Color.white);
@@ -23,10 +24,14 @@ public class KeyBindingMenu extends JPanel {
 		this.setPreferredSize(new Dimension(270, 40*keyBindings.getKeyBindings().size()));
 
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
-			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath);
+			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath, mainMenu);
 			keySelectingPanels.add(keySelectingPanel);
 			this.add(keySelectingPanel);
 		}
+	}
+
+	public ArrayList<KeySelectingPanel> getKeySelectingPanels() {
+		return keySelectingPanels;
 	}
 
 	/** sets the JTextFields so they display the bindings saved in a file designated by a given path string */

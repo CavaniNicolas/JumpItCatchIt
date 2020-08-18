@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -12,14 +13,21 @@ public class KeySelectingPanel extends JPanel {
 	private JButton selectingButton;
 	private JLabel label;
 	private JButton resetButton;
+	private ArrayList<KeySelectingPanel> similarKeySelectingPanels;
+	private MainMenu mainMenu;
 
-	public KeySelectingPanel(KeyBinding keyBinding, int position, String path) {
+	public KeySelectingPanel(KeyBinding keyBinding, int position, String path, MainMenu mainMenu) {
+		similarKeySelectingPanels = new ArrayList<KeySelectingPanel>();
+		this.mainMenu = mainMenu;
+
 		this.setBackground(Color.white);
 		this.setPreferredSize(new Dimension(250, 30));
 
 		label = new JLabel();
 		label.setPreferredSize(new Dimension(100,25));
 		selectingButton = new JButton();
+		//selectingButton.setBorderPainted(false);
+		selectingButton.setOpaque(true);
 		selectingButton.setPreferredSize(new Dimension(50, 25));
 		selectingButton.addKeyListener(new keyButtonListener());
 		resetButton = new JButton("Reset");
@@ -37,9 +45,49 @@ public class KeySelectingPanel extends JPanel {
 		this.add(resetButton);
 	}
 
+	public ArrayList<KeySelectingPanel> getSimilarKeySelectingPanels() {
+		return similarKeySelectingPanels;
+	}
+
 	public void setBinding(KeyBinding keyBinding) {
 		label.setText(keyBinding.getKeyActionDescription());
 		selectingButton.setText(intToString(keyBinding.getKeyValue()));
+	}
+
+	/** changes the color of the button if the bindings are already used */
+	public void checkAvailability() {
+		//if changing to an available state, check the former similar panel to change it as well
+		if (similarKeySelectingPanels.size() == 1) {
+			similarKeySelectingPanels.get(0).checkAvailability();
+		}
+		//resets to available before testing again
+		similarKeySelectingPanels.clear();
+		selectingButton.setBackground(Color.white);
+
+		//check all the other panels for similar panels
+		for (KeySelectingPanel keySelectingPanel : mainMenu.getRedPlayerBindingMenu().getKeySelectingPanels()) {
+			if (keySelectingPanel != this && keySelectingPanel.getButton().getText().equals(this.selectingButton.getText())) {
+				//add the similar panel to the list of similar panels
+				similarKeySelectingPanels.add(keySelectingPanel);
+				//gives a red color to same bindings
+				selectingButton.setBackground(Color.red);
+				keySelectingPanel.getButton().setBackground(Color.red);
+			}
+		}
+		for (KeySelectingPanel keySelectingPanel : mainMenu.getBluePlayerBindingMenu().getKeySelectingPanels()) {
+			if (keySelectingPanel != this && keySelectingPanel.getButton().getText().equals(this.selectingButton.getText())) {
+				//add the similar panel to the list of similar panels
+				similarKeySelectingPanels.add(keySelectingPanel);
+				//gives a red color to same bindings
+				selectingButton.setBackground(Color.red);
+				keySelectingPanel.getButton().setBackground(Color.red);
+			}
+		}
+	}
+
+	/** return selectingButton's text */
+	public JButton getButton() {
+		return selectingButton;
 	}
 
 	/** returns the key binding described currently by the button and key description */
@@ -71,6 +119,7 @@ public class KeySelectingPanel extends JPanel {
 			//if (cara in validCaracters) {
 				selectingButton.setText(cara);
 			//}
+			checkAvailability();
 		}
 	}
 }
