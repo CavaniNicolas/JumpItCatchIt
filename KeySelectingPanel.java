@@ -9,16 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class KeySelectingPanel extends JPanel {
-	private int position;
-	private String path;
 	private JButton selectingButton;
 	private JLabel label;
 	private JButton resetButton;
 
 	public KeySelectingPanel(KeyBinding keyBinding, int position, String path) {
-		this.position = position;
-		this.path = path;
-
 		this.setBackground(Color.white);
 		this.setPreferredSize(new Dimension(250, 30));
 
