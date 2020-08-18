@@ -29,6 +29,7 @@ public class Board extends JPanel {
 	/**Personnage bleu (initialement a droite) */
 	private Character characterBlue;
 
+
 	/** each player's key bindings */
 	KeyBindings redKeyBindings;
 	KeyBindings blueKeyBindings; // A supprimer pour en faire des variables locales des methodes
@@ -47,17 +48,12 @@ public class Board extends JPanel {
 			updateAllCollisionBorders();
 			updateActionBooleans();
 			updatePositionAndMoveAll();
+			checkActions();
+
+			moveProjectiles();
 
 			sleep(12);
 		}
-	}
-
-
-	/** Actualise les booleens d'actions de personnages */
-	public void updateActionBooleans() {
-		// Les personnages
-		characterRed.updateActionBooleans();
-		characterBlue.updateActionBooleans();
 	}
 
 
@@ -71,12 +67,59 @@ public class Board extends JPanel {
 	}
 
 
+	/** Actualise les booleens d'actions de personnages */
+	public void updateActionBooleans() {
+		// Les personnages
+		characterRed.updateActionBooleans();
+		characterBlue.updateActionBooleans();
+	}
+
+
 	/**Actualise la position de tous les objets, (les collisions sont gerees lors du deplacement des objets grace aux collision borders)*/
 	public void updatePositionAndMoveAll() {
 
 		// Les personnages
 		characterRed.updatePosition(boardGraphism, characterBlue);
 		characterBlue.updatePosition(boardGraphism, characterRed);
+	}
+
+
+	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
+	public void checkActions() {
+		
+		// Les personnages
+		characterRed.checkActions(boardGraphism);
+		characterBlue.checkActions(boardGraphism);
+	}
+
+
+	/**Deplace les projectiles */
+	public void moveProjectiles() {
+		characterRed.moveProjectiles();
+		characterBlue.moveProjectiles();
+	}
+
+
+	/**Actualise l'affichage graphique */
+	public void updateWindow() {
+		repaint();
+	}
+
+
+	/**Fonction d'affichage principale
+	 * <p>
+	 * Appelee a l'aide de repaint().
+	 * <p>
+	 * Les fonctions drawTruc sont pour les objets en mouvement
+	 * Lesfonctions displayTruc sont pour les objets fixes
+	 */
+	public void paintComponent(Graphics g) {
+		// Initialisation des attributs graphiques, effectuees a chaque redimensionnement de la fenetre
+		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(), this.getHeight());
+
+		boardGraphism.displayPlatforms(g);
+		boardGraphism.drawCharacters(g, characterRed, characterBlue);
+		boardGraphism.drawProjectiles(g, characterRed, characterBlue);
 	}
 
 
@@ -149,28 +192,6 @@ public class Board extends JPanel {
 	/**Charge toutes les images du jeu et les ajoute aux objets */
 	public void loadAndSetAllImages() {
 
-	}
-
-
-	/**Actualise l'affichage graphique */
-	public void updateWindow() {
-		repaint();
-	}
-
-
-	/**Fonction d'affichage principale
-	 * <p>
-	 * Appelee a l'aide de repaint().
-	 * <p>
-	 * Les fonctions drawTruc sont pour les objets en mouvement
-	 * Lesfonctions displayTruc sont pour les objets fixes
-	 */
-	public void paintComponent(Graphics g) {
-		// Initialisation des attributs graphiques, effectuees a chaque redimensionnement de la fenetre
-		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(), this.getHeight());
-
-		boardGraphism.displayPlatforms(g);
-		boardGraphism.drawCharacters(g, characterRed, characterBlue);
 	}
 
 

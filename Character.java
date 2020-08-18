@@ -1,6 +1,6 @@
 import java.awt.Color;
 import java.awt.Image;
-
+import java.util.ArrayList;
 import java.awt.Graphics;
 
 public class Character extends Entity {
@@ -34,6 +34,12 @@ public class Character extends Entity {
 	/** Vitesse Horizontale Constante */
 	protected int speedVertical = 45;
 
+
+	/**Projectiles du joueur */
+	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	/**Couleur des projectiles */
+	private Color colorProjectile = Color.orange; // Sera a initialiser
+	private Image imageProjectile = null;
 
 
 	public Character(int x, int y, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings) {
@@ -204,7 +210,7 @@ public class Character extends Entity {
 		checkJump();
 		checkSwitch();
 
-		move();
+		this.move();
 	}
 
 
@@ -302,16 +308,38 @@ public class Character extends Entity {
 	}
 
 
+	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
+	public void checkActions(BoardGraphism boardGraphism) {
+		checkShoot(boardGraphism);
+	}
+
+
 	/** Creer une entite Projectile */
-	public void shoot() {
-		if (actionBooleans.canShoot) {
-			Entity shot;
+	public void checkShoot(BoardGraphism boardGraphism) {
+
+		/**Si on appuie sur Shoot et qu'on peut shoot */
+		if (actionBooleans.shootPushPressed && actionBooleans.canShoot) {
+
+			System.out.println("FIRE");
+			// Tire vers la droite
 			if (isOnLeftSide) {
-				shot = new Entity(x, y, 10, 0, 0, 0);
+				projectiles.add(new Projectile(x, y + boardGraphism.getReal().getCharacterHeight() / 2, 1, 0, 1, 0, 1, this, colorProjectile) ); // Attention a revoir !
+			// Tire vers la gauche
 			} else {
-				shot = new Entity(x, y, -10, 0, 0, 0);
+				projectiles.add(new Projectile(x, y + boardGraphism.getReal().getCharacterHeight() / 2, -1, 0, -1, 0, 1, this, colorProjectile) );
 			}
+
+			// On ne peut plus shoot tout de suite
+			actionBooleans.canShoot = false; // Add un timer
 		}	
+	}
+
+
+	/** Deplace les projectiles */
+	public void moveProjectiles() {
+		for (int i=0; i<projectiles.size(); i++) {
+			projectiles.get(i).move();
+		}
 	}
 
 
@@ -323,6 +351,14 @@ public class Character extends Entity {
 		int width = (int)((double)(boardGraphism.getReal().getCharacterWidth()) * boardGraphism.getGraphic().getOneUnityWidth());
 		int height = (int)((double)(boardGraphism.getReal().getCharacterHeight()) * boardGraphism.getGraphic().getOneUnityHeight());
 		g.fillRect(x, y, width, height);
+	}
+
+
+	/**Dessine les projectiles de ce personnage */
+	public void drawProjectiles(Graphics g, BoardGraphism boardGraphism) {
+		for (int i=0; i<projectiles.size(); i++) {
+			projectiles.get(i).drawProjectile(g, boardGraphism);
+		}
 	}
 
 
@@ -356,7 +392,7 @@ public class Character extends Entity {
 		private boolean canRight = true;
 		private boolean canGrab;
 		private boolean canShield;
-		private boolean canShoot;
+		private boolean canShoot = true;
 		private boolean canPush;
 		private boolean canSwitch;
 

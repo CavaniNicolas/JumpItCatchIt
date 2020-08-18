@@ -98,6 +98,13 @@ public class BoardGraphism {
 	}
 
 
+	/**Dessine les projectiles */
+	public void drawProjectiles(Graphics g, Character character1, Character character2) {
+		character1.drawProjectiles(g, this);
+		character2.drawProjectiles(g, this);
+	}
+
+
 	/**Affiche les plateformes des deux joueurs */
 	public void displayPlatforms(Graphics g) {
 		g.setColor(Color.lightGray);
