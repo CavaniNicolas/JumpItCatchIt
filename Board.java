@@ -39,6 +39,8 @@ public class Board extends JPanel {
 
 	/**Timer du jeu */
 	private Timer gamePlayTimer;
+	/**Timer d'affichage du jeu */
+	private Timer gameDisplayTimer;
 
 	/** each player's key bindings */
 	KeyBindings redKeyBindings;
@@ -47,6 +49,7 @@ public class Board extends JPanel {
 
 	public Board() {
 		gamePlayTimer = new Timer(12, new GamePlayTimerListener());
+		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
 	}
 
 
@@ -55,6 +58,7 @@ public class Board extends JPanel {
 		this.isPlaying = true;
 
 		gamePlayTimer.start();
+		gameDisplayTimer.start();
 	}
 
 
@@ -327,9 +331,8 @@ public class Board extends JPanel {
 
 			if (isPlaying == false) {
 				gamePlayTimer.stop();
+				gameDisplayTimer.stop();
 			}
-
-			updateWindow();
 
 			updateAllCollisionBorders();
 			updateActionBooleans();
@@ -338,7 +341,18 @@ public class Board extends JPanel {
 
 			moveProjectiles();
 		}
+	}
 
+
+	public class GameDisplayTimerListener implements ActionListener {
+
+		/**Action a effectuer lorsque le timer renvoie un event */
+		@Override
+		public void actionPerformed(ActionEvent event) {
+
+			updateWindow();
+
+		}
 	}
 
 }
