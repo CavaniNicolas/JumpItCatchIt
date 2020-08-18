@@ -49,6 +49,11 @@ public class Character extends Entity {
 	private Color colorProjectile = Color.orange; // Sera a initialiser
 	private Image imageProjectile = null;
 
+	/**Cool Down pour lancer un projectile (en milli secondes) */
+	private long coolDownProjectile = 1_500;
+	/** Moment auquel on lance un projectile */
+	private long startTimeProjectile;
+
 
 	/**Constructeur Character */
 	public Character(int x, int y, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
@@ -68,7 +73,10 @@ public class Character extends Entity {
 
 
 	/** Actualise les booleens d'actions */
-	public void updateActionBooleans() {
+	public void updateActionBooleans(Character otherCharacter) {
+		
+		// On verifie les coolDown des sorts
+		checkCoolDowns();
 
 		// Au sol on peut se deplacer
 		if (y == minY && isFalling == false) {
@@ -115,8 +123,28 @@ public class Character extends Entity {
 			actionBooleans.canRight = false;
 		}
 
+		// On ne peut pas tirer pendant qu'on switch
+		if (actionBooleans.isSwitching) {
+			actionBooleans.canShoot = false;
+		}
+		
+		// On ne peut pas shoot si les deux joueurs sont sur la meme plateforme (pour les deux joueurs)
+		if ((isOnLeftPlatform && otherCharacter.isOnLeftPlatform) ||
+			(isOnRightPlatform && otherCharacter.isOnRightPlatform)) {
+				actionBooleans.canShoot = false;
+		}
+
 	}
 
+
+	/**Verifie les cool downs et active les booleens */
+	public void checkCoolDowns() {
+
+		// Pour les projectiles
+		if (System.currentTimeMillis() - startTimeProjectile >= coolDownProjectile) {
+			actionBooleans.canShoot = true;
+		}
+	}
 
 
 	/** Actualise les booleens de position */
@@ -327,7 +355,6 @@ public class Character extends Entity {
 		/**Si on appuie sur Shoot et qu'on peut shoot */
 		if (actionBooleans.shootPushPressed && actionBooleans.canShoot) {
 
-			System.out.println("FIRE ");
 			// Tire vers la droite
 			if (isOnLeftSide) {
 				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
@@ -339,7 +366,8 @@ public class Character extends Entity {
 			}
 
 			// On ne peut plus shoot tout de suite
-			actionBooleans.canShoot = false; // Add un timer
+			actionBooleans.canShoot = false;
+			startTimeProjectile = System.currentTimeMillis();
 		}	
 	}
 

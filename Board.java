@@ -62,6 +62,27 @@ public class Board extends JPanel {
 	}
 
 
+	public class GamePlayTimerListener implements ActionListener {
+
+		/**Action a effectuer lorsque le timer renvoie un event */
+		@Override
+		public void actionPerformed(ActionEvent event) {
+
+			if (isPlaying == false) {
+				gamePlayTimer.stop();
+				gameDisplayTimer.stop();
+			}
+
+			updateAllCollisionBorders();
+			updateActionBooleans();
+			updatePositionAndMoveAll();
+			checkActions();
+
+			moveProjectiles();
+		}
+	}
+
+
 	/**
 	 * Actualise les coordonnees de collision minimale et maximale de tous les
 	 * objets
@@ -78,8 +99,8 @@ public class Board extends JPanel {
 	/** Actualise les booleens d'actions de personnages */
 	public void updateActionBooleans() {
 		// Les personnages
-		characterRed.updateActionBooleans();
-		characterBlue.updateActionBooleans();
+		characterRed.updateActionBooleans(characterBlue);
+		characterBlue.updateActionBooleans(characterRed);
 	}
 
 
@@ -320,27 +341,6 @@ public class Board extends JPanel {
 			}
 		}
 
-	}
-
-
-	public class GamePlayTimerListener implements ActionListener {
-
-		/**Action a effectuer lorsque le timer renvoie un event */
-		@Override
-		public void actionPerformed(ActionEvent event) {
-
-			if (isPlaying == false) {
-				gamePlayTimer.stop();
-				gameDisplayTimer.stop();
-			}
-
-			updateAllCollisionBorders();
-			updateActionBooleans();
-			updatePositionAndMoveAll();
-			checkActions();
-
-			moveProjectiles();
-		}
 	}
 
 
