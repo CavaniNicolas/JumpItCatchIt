@@ -17,9 +17,9 @@ public class BoardGraphism {
 
 
 	/**Largeur reelle max du board */
-	private int maxX = 1600;
+	private int maxX = 16000;
 	/**Hauteur reelle max du board */
-	private int maxY = 1000;
+	private int maxY = 10000;
 
 
 	/**Largeur du JPanel (Board) */
@@ -37,21 +37,21 @@ public class BoardGraphism {
 			real.oneUnityHeight = 1.0;
 
 			// dimensions des plateformes
-			real.platformWidth = 500;
-			real.platformHeight = 150;
+			real.platformWidth = 5000;
+			real.platformHeight = 1500;
 
 			// dimensions des personnages
-			real.characterWidth = 160;
-			real.characterHeight = 200;
+			real.characterWidth = 1600;
+			real.characterHeight = 2000;
 
 			// positions des personnages en X sur les plateforme
-			real.primaryXcoordLeft = 380;
-			real.primaryXcoordRight = 1220;
-			real.secondaryXcoordLeft = 180;
-			real.secondaryXcoordRight = 1420;
+			real.primaryXcoordLeft = 3800;
+			real.primaryXcoordRight = 12200;
+			real.secondaryXcoordLeft = 1800;
+			real.secondaryXcoordRight = 14200;
 
 			// position au sol en Y
-			real.groundLevelYCoord = 150;
+			real.groundLevelYCoord = 1500;
 
 	}
 

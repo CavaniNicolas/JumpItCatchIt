@@ -5,11 +5,11 @@
 public class Entity {
 
 	/**Gravite */
-	protected final int GRAVITY = -2;
+	protected final int GRAVITY = -20;
 
 	// Coordonnees de collisions minimales et maximales
 	protected int minX = 0;
-	protected int maxX = 1600; // Initialisation importante pour les projectiles
+	protected int maxX = 16000; // Initialisation importante pour les projectiles
 	protected int minY;
 
 	// Coordonnees de l'entite

@@ -30,9 +30,9 @@ public class Character extends Entity {
 
 
 	/** Vitesse Laterale Constante */
-	protected int speedLateral = 4; //temporaire, a mettre dans Entity plus tard
+	protected int speedLateral = 40; //temporaire, a mettre dans Entity plus tard
 	/** Vitesse Horizontale Constante */
-	protected int speedVertical = 45;
+	protected int speedVertical = 450;
 
 
 	/**Projectiles du joueur */
@@ -244,7 +244,7 @@ public class Character extends Entity {
 		speedX = 0;
 		speedY = 0;
 		accelX = 0;
-		accelY = GRAVITY / 2;
+		accelY = GRAVITY / 6;
 
 	}
 
@@ -295,10 +295,10 @@ public class Character extends Entity {
 			// Propulsion
 			this.speedY = this.speedVertical / 2;
 			if (isOnLeftPlatform) {
-				this.accelX = 30;
+				this.accelX = 275;
 			}
 			if (isOnRightPlatform) {
-				this.accelX = -30;
+				this.accelX = -275;
 			}
 
 			// On est en train de switch, on ne peux plus effectuer un switch

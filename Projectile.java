@@ -38,9 +38,9 @@ public class Projectile extends Entity {
 
 	public void drawProjectile(Graphics g, BoardGraphism boardGraphism) {
 		g.setColor(colorProjectile);
-		int x = (int)((double)(this.x - 40) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + 40)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int radius = (int)((double)(/*boardGraphism.getReal().getCharacterWidth()*/ 80) * boardGraphism.getGraphic().getOneUnityWidth());
+		int x = (int)((double)(this.x - 400) * boardGraphism.getGraphic().getOneUnityWidth());
+		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + 400)) * boardGraphism.getGraphic().getOneUnityHeight());
+		int radius = (int)((double)(/*boardGraphism.getReal().getCharacterWidth()*/ 800) * boardGraphism.getGraphic().getOneUnityWidth());
 		g.fillOval(x, y, radius, radius);
 	}
 }
