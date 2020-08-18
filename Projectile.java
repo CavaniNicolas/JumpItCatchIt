@@ -7,7 +7,7 @@ public class Projectile extends Entity {
 
 	/**Position initiale en X */
 	private int initX;
-	/**Range du projetctil */
+	/**Range du projetctile */
 	private int rangeX;
 
 	/**Degats */
@@ -26,14 +26,22 @@ public class Projectile extends Entity {
 	private Image imageProjectile = null;
 
 
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, BoardGraphism boardGraphism, int damage, Character aimedCharacter, Color colorProjectile) {
+	/**Constructeur du projectile */
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, BoardGraphism boardGraphism, int rangeX, int damage, Character aimedCharacter, Color colorProjectile) {
 		super(x, y, speedX, speedY, accelX, accelY);
 		this.initX = x;
+		this.rangeX = rangeX;
 		this.damage = damage;
 		this.aimedCharacter = aimedCharacter;
 		this.isActive = true;
 		this.colorProjectile = colorProjectile;
 		initGraphicAttributes(boardGraphism);
+	}
+
+
+	/**Constructeur pour un projectile horizontal */
+	public Projectile(int x, int y, int speedX, BoardGraphism boardGraphism, int range, int damage, Character aimedCharacter, Color colorProjectile) {
+		this(x, y, speedX, 0, 0, 0, boardGraphism, range, damage, aimedCharacter, colorProjectile);
 	}
 
 
@@ -52,8 +60,16 @@ public class Projectile extends Entity {
 	public void initGraphicAttributes(BoardGraphism boardGraphism) {
 		this.width = boardGraphism.getReal().getProjectileWidth();
 		this.height = boardGraphism.getReal().getProjectileHeight();
-		this.minX = 0;
-		this.maxX = boardGraphism.getMaxX();
+
+		// Si le projectile va vers la droite
+		if (speedX > 0) {
+			this.minX = 0;
+			this.maxX = initX + rangeX;
+		// Si il va vers la gauche
+		} else {
+			this.minX = initX - rangeX;
+			this.maxX = boardGraphism.getMaxX();
+		}
 	}
 
 }

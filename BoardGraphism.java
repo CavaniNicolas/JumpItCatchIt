@@ -45,8 +45,8 @@ public class BoardGraphism {
 			real.characterHeight = 2_000;
 
 			// dimensions des projectiles
-			real.projectileWidth = 700;
-			real.projectileHeight = 700;
+			real.projectileWidth = 1_000;
+			real.projectileHeight = 1_000;
 
 			// positions des personnages en X sur les plateforme
 			real.primaryXcoordLeft = 3_800;

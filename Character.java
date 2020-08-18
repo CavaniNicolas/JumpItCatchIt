@@ -33,10 +33,18 @@ public class Character extends Entity {
 	protected int speedLateral = 40; //temporaire, a mettre dans Entity plus tard
 	/** Vitesse Horizontale Constante */
 	protected int speedVertical = 450;
+	/** Vitesse a appliquer a speedX pour le switch */
+	protected int switchSpeed = 275;
 
 
 	/**Projectiles du joueur */
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	/**Vitesse des projectiles */
+	private int speedProjectile = 100;
+	/**Range des projectiles */
+	private int rangeProjectile = 12_000; // Peut etre mieux de la calculer en pourcentage par rapport a la taille maxX du board
+	/**Degats des projectiles */
+	private int damageProjectile = 1;
 	/**Couleur des projectiles */
 	private Color colorProjectile = Color.orange; // Sera a initialiser
 	private Image imageProjectile = null;
@@ -294,10 +302,10 @@ public class Character extends Entity {
 			// Propulsion
 			this.speedY = this.speedVertical / 2;
 			if (isOnLeftPlatform) {
-				this.accelX = 275;
+				this.accelX = this.switchSpeed;
 			}
 			if (isOnRightPlatform) {
-				this.accelX = -275;
+				this.accelX = -this.switchSpeed;
 			}
 
 			// On est en train de switch, on ne peux plus effectuer un switch
@@ -322,10 +330,12 @@ public class Character extends Entity {
 			System.out.println("FIRE ");
 			// Tire vers la droite
 			if (isOnLeftSide) {
-				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), 1, 0, 1, 0, boardGraphism, 1, this, colorProjectile) ); // Attention a revoir !
+				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
+									boardGraphism, rangeProjectile, damageProjectile, this, colorProjectile) );
 			// Tire vers la gauche
 			} else {
-				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), -1, 0, -1, 0, boardGraphism, 1, this, colorProjectile) );
+				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), - speedProjectile,
+									boardGraphism, rangeProjectile, damageProjectile, this, colorProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite
@@ -336,8 +346,14 @@ public class Character extends Entity {
 
 	/** Deplace les projectiles */
 	public void moveProjectiles() {
+		Projectile proj;
 		for (int i=0; i<projectiles.size(); i++) {
-			projectiles.get(i).move();
+			proj = projectiles.get(i);
+
+			proj.move();
+			if (proj.x == proj.minX || proj.x == proj.maxX) {
+				projectiles.remove(i);
+			}
 		}
 	}
 
