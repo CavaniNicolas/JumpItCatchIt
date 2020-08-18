@@ -88,10 +88,13 @@ public class Character extends Entity {
 		if (actionBooleans.leftPressed && actionBooleans.rightPressed) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
+		} else {
+			actionBooleans.canLeft = true;
+			actionBooleans.canRight = true;
 		}
 
 		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
-		// Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans)
+		/* Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans) */
 		if (x <= minX) {
 			actionBooleans.canLeft = false;
 		}
