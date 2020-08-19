@@ -273,6 +273,8 @@ public class Character extends Entity {
 		isSpawning = true;
 		// On ne tombe plus
 		isFalling = false;
+		// On perd de la vie
+		lives -= 1;
 
 		// Il faudra attendre d'etre sur le sol avant de pouvoir resauter et switch et se deplacer
 		actionBooleans.isJumping = false;
