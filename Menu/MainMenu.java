@@ -18,10 +18,11 @@ public class MainMenu extends JFrame {
 	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
 
 	//the panels that can be displayed
-	private JPanel mainMenuPane;
-	private JPanel optionPane;
+	private JPanel mainMenuPanel;
+	private JPanel optionPanel;
 	private Board board;
 	private JPanel escapePanel;
+	private BackgroundPanel backgroundPanel;
 
 	//boolean handling escape panel
 	private Boolean isEscapePanelShown = false;
@@ -35,13 +36,17 @@ public class MainMenu extends JFrame {
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
 
-		//create the 3 panels to be displayed (excluding board)
+		//create the 5 panels to be displayed (excluding board)
+		backgroundPanel = new BackgroundPanel();
 		board = new Board();
-		createMainMenuPanel();
+		createmainMenuPanell();
 		createKeyBindingMenu();
 		createEscapePanel();
 
-		this.frame.setContentPane(mainMenuPane);
+
+		/** display main menu first*/
+		backgroundPanel.add(mainMenuPanel);
+		this.frame.setContentPane(backgroundPanel);
 		this.frame.setVisible(true);
 
 		//########################
@@ -75,8 +80,8 @@ public class MainMenu extends JFrame {
 	}
 
 	/** creates the mainMenuJPanel with its component*/
-	public void createMainMenuPanel() {
-		mainMenuPane = new BackgroundPanel();
+	public void createmainMenuPanell() {
+		mainMenuPanel = new JPanel();
 
 		//create a panel to contain the buttons
 		JPanel buttonPane = new JPanel();
@@ -99,7 +104,9 @@ public class MainMenu extends JFrame {
     	optionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//displays the option panel 
-				frame.setContentPane(optionPane);
+				backgroundPanel.remove(mainMenuPanel);
+				backgroundPanel.add(optionPanel);
+				frame.setContentPane(backgroundPanel);
 				frame.setVisible(true);
 			}
 		});
@@ -117,7 +124,7 @@ public class MainMenu extends JFrame {
 		buttonPane.add(optionButton);
 		buttonPane.add(quitButton);
 
-		mainMenuPane.add(buttonPane);
+		mainMenuPanel.add(buttonPane);
 	}
 
 
@@ -129,13 +136,13 @@ public class MainMenu extends JFrame {
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
-		optionPane = new BackgroundPanel();
+		optionPanel = new JPanel();
 
 		//smaller panel so that the options don't take the whole screen
-		JPanel optionPane2 = new JPanel();
-		optionPane2.setBorder(BorderFactory.createTitledBorder("OPTIONS"));
-		optionPane2.setBackground(Color.white);
-		optionPane2.setPreferredSize(new Dimension(630, 320));
+		JPanel optionPanel2 = new JPanel();
+		optionPanel2.setBorder(BorderFactory.createTitledBorder("OPTIONS"));
+		optionPanel2.setBackground(Color.white);
+		optionPanel2.setPreferredSize(new Dimension(630, 320));
 
 		//create a panel to contain the buttons
 		JPanel buttonPane = new JPanel();
@@ -176,7 +183,9 @@ public class MainMenu extends JFrame {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//displays the main menu again    
-				frame.setContentPane(mainMenuPane);
+				backgroundPanel.remove(optionPanel);
+				backgroundPanel.add(mainMenuPanel);
+				frame.setContentPane(backgroundPanel);
 				//cancels changes if they are not saved
 				setBindings();
 			}
@@ -200,13 +209,13 @@ public class MainMenu extends JFrame {
 		buttonPane.add(defaultButton);
 
 		//add the player's bindings panels to main panel
-		optionPane2.add(redPlayerBindings);
-		optionPane2.add(bluePlayerBindings);
+		optionPanel2.add(redPlayerBindings);
+		optionPanel2.add(bluePlayerBindings);
 		//and the buttons at the bottm
 		//buttonPane.setLocation(10, 500);
-		optionPane2.add(buttonPane);
+		optionPanel2.add(buttonPane);
 
-		optionPane.add(optionPane2);
+		optionPanel.add(optionPanel2);
 	}
 
 	/** creates the panel that opens when pressing escape */
@@ -222,7 +231,8 @@ public class MainMenu extends JFrame {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//sets the content pane to the main menu and delete board (game has ended)
-				frame.setContentPane(mainMenuPane);
+				backgroundPanel.add(mainMenuPanel);
+				frame.setContentPane(backgroundPanel);
 				board = null;
 			}
 		});
