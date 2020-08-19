@@ -50,6 +50,8 @@ public class KeySelectingPanel extends JPanel {
 	public void setBinding(KeyBinding keyBinding) {
 		label.setText(keyBinding.getKeyActionDescription());
 		selectingButton.setText(intToString(keyBinding.getKeyValue()));
+		selectingButton.setBackground(Color.white);
+		similarKeySelectingPanels.clear();
 	}
 
 	/** changes the color of the button if the bindings are already used */
