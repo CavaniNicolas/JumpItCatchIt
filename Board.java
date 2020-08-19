@@ -147,14 +147,25 @@ public class Board extends JPanel {
 	 * displayTruc sont pour les objets fixes
 	 */
 	public void paintComponent(Graphics g) {
-		// Initialisation des attributs graphiques, effectuees a chaque
+		// Initialisation des attributs graphiques, effectuee a chaque
 		// redimensionnement de la fenetre
 		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(),
 				this.getHeight());
 
+		// Affiche les plateformes
 		boardGraphism.displayPlatforms(g);
-		boardGraphism.drawCharacters(g, characterRed, characterBlue);
-		boardGraphism.drawProjectiles(g, characterRed, characterBlue);
+
+		// Affiche les personnages
+		characterRed.drawCharacter(g, boardGraphism);
+		characterBlue.drawCharacter(g, boardGraphism);
+
+		// Affiche la vie des joueurs
+		characterRed.displayCharacterHUD(g, boardGraphism);
+		characterBlue.displayCharacterHUD(g, boardGraphism);
+
+		// Affiche les projectiles
+		characterRed.drawProjectiles(g, boardGraphism);
+		characterBlue.drawProjectiles(g, boardGraphism);
 	}
 
 

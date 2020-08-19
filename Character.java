@@ -1,18 +1,23 @@
 import java.awt.Color;
 import java.awt.Image;
 import java.util.ArrayList;
+
 import java.awt.Graphics;
 
 public class Character extends Entity {
 
 	private KeyBindings keyBindings;
 
-	/**Nombre de vies (en moities de coeur) */
-	private int lives = 6;
+	/**Nombre de vies max (en moities de coeur) */
+	private int livesMax = 6;
+	/**Nombre de vies actuel */
+	private int lives = livesMax;
 
 	/** Booleens d'actions */
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
+	/** HUD du personnage */
+	private HUDCharacter hudCharacter;
 
 	/** Booleen de position, a gauche ou a droite de son adversaire */
 	private boolean isOnLeftSide;
@@ -32,7 +37,7 @@ public class Character extends Entity {
 
 
 	/** Vitesse Laterale Constante */
-	protected int speedLateral = 40; //temporaire, a mettre dans Entity plus tard
+	protected int speedLateral = 40;
 	/** Vitesse Horizontale Constante */
 	protected int speedVertical = 450;
 	/** Vitesse a appliquer a speedX pour le switch */
@@ -64,6 +69,7 @@ public class Character extends Entity {
 		this.imageCharacter = imageCharacter;
 		this.keyBindings = keyBindings;
 		initGraphicAttributes(boardGraphism);
+		initHUDCharacter(boardGraphism);
 	}
 
 
@@ -424,6 +430,28 @@ public class Character extends Entity {
 	public void initGraphicAttributes(BoardGraphism boardGraphism) {
 		this.width = boardGraphism.getReal().getCharacterWidth();
 		this.height = boardGraphism.getReal().getCharacterHeight();
+	}
+
+
+	/**Initialise les valeurs du HUD */
+	public void initHUDCharacter(BoardGraphism bG) {
+		// On creer le nouvel HUD
+		hudCharacter = new HUDCharacter();
+
+		// Initialisation des attributs des coeurs du HUD
+		int firstHeartX;
+		if (this.colorCharacter == Color.red) {
+			firstHeartX = bG.getReal().getHeartsXLeft();
+		} else {
+			firstHeartX = bG.getReal().getHeartsXRight();
+		}
+		hudCharacter.initHUDHearts(firstHeartX, bG.getReal().getHeartsY(), bG.getReal().getHeartWidth(), bG.getReal().getHeartHeight(), bG.getReal().getInterHearts(), this.colorCharacter);
+	}
+
+
+	// Affiche le HUD du personnage
+	public void displayCharacterHUD(Graphics g, BoardGraphism boardGraphism) {
+		hudCharacter.displayHUDHearts(g, boardGraphism, lives, livesMax);
 	}
 
 
