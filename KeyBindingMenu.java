@@ -23,6 +23,7 @@ public class KeyBindingMenu extends JPanel {
 		KeyBindings keyBindings = FileFunctions.getBindings(path);
 		this.setPreferredSize(new Dimension(270, 40*keyBindings.getKeyBindings().size()));
 
+		//a default path is added in the constructor to allow resetting a binding
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
 			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath, mainMenu);
 			keySelectingPanels.add(keySelectingPanel);

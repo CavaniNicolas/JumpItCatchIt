@@ -1,4 +1,5 @@
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -21,6 +22,8 @@ public class MainMenu extends JFrame {
 	//the frame displaying all the stuff
 	private JFrame frame;
 
+	//all the KeySelectingPanels
+	private ArrayList<KeySelectingPanel> allKeySelectingPanels = new ArrayList<KeySelectingPanel>();
 
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
@@ -125,7 +128,7 @@ public class MainMenu extends JFrame {
 		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"), "redKeyBindingsDefault.txt");
 		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "blueKeyBindingsDefault.txt");
 
-		setBindings();
+		addAllKeySelectingPanels();
 
 		//add them to main panel
 		optionPane.add(redPlayerBindings);
@@ -136,13 +139,17 @@ public class MainMenu extends JFrame {
 		saveButton.setPreferredSize(new Dimension(150, 25));
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {   
-				//saves the current (the ones being displayed) keyBindings     
-				KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
-				KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
-				FileFunctions.saveBindings(redBindings, "redKeyBindings.txt");
-				FileFunctions.saveBindings(blueBindings, "blueKeyBindings.txt");
-				//just to display 1 char bindings
-				setBindings();
+				//saves the current (the ones being displayed) keyBindings if they are all unique
+				if (checkUnicity()) {
+					KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
+					KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
+					FileFunctions.saveBindings(redBindings, "redKeyBindings.txt");
+					FileFunctions.saveBindings(blueBindings, "blueKeyBindings.txt");
+				} else {
+					System.out.println("YOU SHALL NOT PASS");
+				}
+				//to rebuild the array list of all KeySelectingPanels
+				addAllKeySelectingPanels();
 			}
 		});
 
@@ -153,6 +160,8 @@ public class MainMenu extends JFrame {
 			public void actionPerformed(ActionEvent arg0) { 
 				//displays the main menu again    
 				frame.setContentPane(mainMenuPane);
+				//cancels changes if they are not saved
+				setBindings();
 			}
 		});
 
@@ -172,6 +181,26 @@ public class MainMenu extends JFrame {
 		optionPane.add(saveButton);
 		optionPane.add(backButton);
 		optionPane.add(defaultButton);
+	}
+
+	//create an array list of all KeySelectingPanels
+	public void addAllKeySelectingPanels() {
+		allKeySelectingPanels.clear();
+		allKeySelectingPanels.addAll(redPlayerBindings.getKeySelectingPanels());
+		allKeySelectingPanels.addAll(bluePlayerBindings.getKeySelectingPanels());
+	}
+
+	public boolean checkUnicity() {
+		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
+			for (KeySelectingPanel keySelectingPanel2 : allKeySelectingPanels) {
+				if (keySelectingPanel == keySelectingPanel2) {
+					return false;
+				}
+			}
+			//to decrease complexity by half and avoid testing twice
+			allKeySelectingPanels.remove(keySelectingPanel);
+		}
+		return true;
 	}
 
 	public Board getBoard() {

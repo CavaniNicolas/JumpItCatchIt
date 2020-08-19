@@ -64,17 +64,13 @@ public class KeySelectingPanel extends JPanel {
 		similarKeySelectingPanels.clear();
 		selectingButton.setBackground(Color.white);
 
+		//create an array list of all KeySelectingPanels
+		ArrayList<KeySelectingPanel> allKeySelectingPanels = new ArrayList<KeySelectingPanel>();
+		allKeySelectingPanels.addAll(mainMenu.getRedPlayerBindingMenu().getKeySelectingPanels());
+		allKeySelectingPanels.addAll(mainMenu.getBluePlayerBindingMenu().getKeySelectingPanels());
+		
 		//check all the other panels for similar panels
-		for (KeySelectingPanel keySelectingPanel : mainMenu.getRedPlayerBindingMenu().getKeySelectingPanels()) {
-			if (keySelectingPanel != this && keySelectingPanel.getButton().getText().equals(this.selectingButton.getText())) {
-				//add the similar panel to the list of similar panels
-				similarKeySelectingPanels.add(keySelectingPanel);
-				//gives a red color to same bindings
-				selectingButton.setBackground(Color.red);
-				keySelectingPanel.getButton().setBackground(Color.red);
-			}
-		}
-		for (KeySelectingPanel keySelectingPanel : mainMenu.getBluePlayerBindingMenu().getKeySelectingPanels()) {
+		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
 			if (keySelectingPanel != this && keySelectingPanel.getButton().getText().equals(this.selectingButton.getText())) {
 				//add the similar panel to the list of similar panels
 				similarKeySelectingPanels.add(keySelectingPanel);
@@ -95,7 +91,7 @@ public class KeySelectingPanel extends JPanel {
 		return new KeyBinding(stringToInt(selectingButton), label.getText());
 	}
 
-	/** returns the ascii value of the first char of a jtextfield */
+	/** returns the ascii value of the first char of a string */
 	public int stringToInt(JButton button) {
 		String str = button.getText();
 		char [] ch = str.toCharArray();
