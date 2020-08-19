@@ -5,12 +5,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
-import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import javax.swing.Timer;
-
 
 /**
  * class Board extends JPanel
@@ -29,7 +23,10 @@ public class Board extends JPanel {
 	/** La classe KeyListener */
 	private PlayerKeyListener playerKeyListener = new PlayerKeyListener();
 
-	/** Booleen, true si le jeu est en cours */
+	/** mainMenu to allow escaping */
+	MainMenu mainMenu;
+
+	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying = false;
 
 	/** Personnage rouge (initialement a gauche) */
@@ -82,6 +79,10 @@ public class Board extends JPanel {
 		}
 	}
 
+	public void setMainMenu(MainMenu mainMenu) {
+		this.mainMenu = mainMenu;
+	}
+
 
 	/**
 	 * Actualise les coordonnees de collision minimale et maximale de tous les
@@ -114,7 +115,6 @@ public class Board extends JPanel {
 		characterRed.updatePosition(boardGraphism, characterBlue);
 		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
-
 
 	/** Verifie et Lance les actions a effectuer (grab shield shoot push) */
 	public void checkActions() {
@@ -215,7 +215,6 @@ public class Board extends JPanel {
 	 * associees serialisees, la ArrayList d'objets
 	 */
 	public void initGame() {
-
 		// Initialise les coordonnees reelles des objets
 		boardGraphism.initRealCoordsAttributes();
 
@@ -224,9 +223,9 @@ public class Board extends JPanel {
 		// existent, des carres sinon
 
 		// On récupère les keyBindings des joueurs
-		setBindings(); // faire deux appels a cette fonction, elle devra retourner les KeyBindings, et
-						// prendre en parametres le nom du fichier a aller chercher + le nom du fichier
-						// par defaut
+		KeyBindings redKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+		KeyBindings blueKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
+
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
@@ -246,7 +245,28 @@ public class Board extends JPanel {
 	}
 
 
-	/** Delay */
+	/**Actualise l'affichage graphique */
+	public void updateWindow() {
+		repaint();
+	}
+
+
+	/**Fonction d'affichage principale
+	 * <p>
+	 * Appelee a l'aide de repaint().
+	 * <p>
+	 * Les fonctions drawTruc sont pour les objets en mouvement
+	 * Lesfonctions displayTruc sont pour les objets fixes
+	 */
+	public void paintComponent(Graphics g) {
+		// Initialisation des attributs graphiques, effectuees a chaque redimensionnement de la fenetre
+		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(), this.getHeight());
+
+		boardGraphism.displayPlatforms(g);
+		boardGraphism.drawCharacters(g, characterRed, characterBlue);
+	}
+
+	/**Delay */
 	public void sleep(int time) {
 		try {
 			Thread.sleep(time);
@@ -292,6 +312,9 @@ public class Board extends JPanel {
 			togglePressedKeys(code, characterRed, true);
 			togglePressedKeys(code, characterBlue, true);
 
+			if (code == 27) {
+				mainMenu.handleEscapePanel();
+			}
 		}
 
 		@Override
@@ -313,8 +336,8 @@ public class Board extends JPanel {
 			KeyBindings characterKeys = character.getKeyBindings();
 
 			// Pour le personnage bleu
-			// Sauter
-			if (code == characterKeys.getJumpKey()) {
+			// Sauter (2)
+			if (code == characterKeys.getKeyBindings().get(2).getKeyValue()) {
 				character.getActionBooleans().setJumpPressed(toggle);
 
 				// Si on relache le bouton sauter
@@ -329,25 +352,26 @@ public class Board extends JPanel {
 					}
 				}
 
-			}
-			// Gauche
-			if (code == characterKeys.getLeftKey()) {
+      		}
+			// Gauche (0)
+			if (code == characterKeys.getKeyBindings().get(0).getKeyValue()) {
+
 				character.getActionBooleans().setLeftPressed(toggle);
 			}
-			// Droite
-			if (code == characterKeys.getRightKey()) {
+			// Droite (1)
+			if (code == characterKeys.getKeyBindings().get(1).getKeyValue()) {
 				character.getActionBooleans().setRightPressed(toggle);
 			}
-			// Grab
-			if (code == characterKeys.getGrabKey()) {
+			// Grab (3)
+			if (code == characterKeys.getKeyBindings().get(3).getKeyValue()) {
 				character.getActionBooleans().setGrabPressed(toggle);
 			}
-			// Shield
-			if (code == characterKeys.getShieldKey()) {
+			// Shield (4)
+			if (code == characterKeys.getKeyBindings().get(4).getKeyValue()) {
 				character.getActionBooleans().setShieldPressed(toggle);
 			}
-			// Shoot Push
-			if (code == characterKeys.getShootPushKey()) {
+			// Shoot Push (5)
+			if (code == characterKeys.getKeyBindings().get(5).getKeyValue()) {
 				character.getActionBooleans().setShootPushPressed(toggle);
 			}
 		}
