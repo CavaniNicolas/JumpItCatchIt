@@ -3,9 +3,13 @@ import java.awt.Graphics;
 import java.awt.Color;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 import java.awt.Image;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
 
 public class BackgroundPanel extends JPanel {
 	//background color/image
@@ -14,7 +18,21 @@ public class BackgroundPanel extends JPanel {
 	private Color backgroundColor = Color.black;
 
 	public BackgroundPanel() {
-		this.setBorder(BorderFactory.createTitledBorder("JUMP IT AND CATCH IT"));
+		JLabel title = new JLabel("JUMP IT CATCH IT");
+		title.setPreferredSize(new Dimension(1000, 100));
+
+		//create a font from a file
+		Font font;
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("Stylewars2011.TTF").openStream());  
+			// makesure to derive the size
+			font = font.deriveFont(80f);
+			title.setFont(font);
+		} catch (FontFormatException | IOException ex) {
+			ex.printStackTrace();
+		}
+
+		this.add(title);
 		this.setPreferredSize(new Dimension(1600, 1000));
 		this.setBackground(backgroundColor);
 		createBackground();
