@@ -2,18 +2,25 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
-/**class Board extends JPanel<p>
+/**
+ * class Board extends JPanel
+ * <p>
  * Gere le jeu
  */
 public class Board extends JPanel {
 	private static final long serialVersionUID = 2L;
 
-	/**Les attributs graphiques et les fonctions d'affichage (les attributs sont initialises au premier appel de paintComponent() */
+	/**
+	 * Les attributs graphiques et les fonctions d'affichage (les attributs sont
+	 * initialises au premier appel de paintComponent()
+	 */
 	private BoardGraphism boardGraphism = new BoardGraphism();
 
-	/**La classe KeyListener */
+	/** La classe KeyListener */
 	private PlayerKeyListener playerKeyListener = new PlayerKeyListener();
 
 	/** mainMenu to allow escaping */
@@ -22,25 +29,53 @@ public class Board extends JPanel {
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying = false;
 
-	/**Personnage rouge (initialement a gauche) */
+	/** Personnage rouge (initialement a gauche) */
 	private Character characterRed;
-	/**Personnage bleu (initialement a droite) */
+	/** Personnage bleu (initialement a droite) */
 	private Character characterBlue;
 
-	/**Le jeu lui meme (la boucle while true) */
+	/**Timer du jeu */
+	private Timer gamePlayTimer;
+	/**Timer d'affichage du jeu */
+	private Timer gameDisplayTimer;
+
+	/** each player's key bindings */
+	KeyBindings redKeyBindings;
+	KeyBindings blueKeyBindings; // A supprimer pour en faire des variables locales des methodes
+
+
+	public Board() {
+		gamePlayTimer = new Timer(12, new GamePlayTimerListener());
+		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
+	}
+
+
+	/** Le jeu lui meme (la boucle while true) */
 	public void startGame() {
 		this.isPlaying = true;
 
-		while (this.isPlaying) {
+		gamePlayTimer.start();
+		gameDisplayTimer.start();
+	}
 
-			updateWindow();
 
-			
+	public class GamePlayTimerListener implements ActionListener {
+
+		/**Action a effectuer lorsque le timer renvoie un event */
+		@Override
+		public void actionPerformed(ActionEvent event) {
+
+			if (isPlaying == false) {
+				gamePlayTimer.stop();
+				gameDisplayTimer.stop();
+			}
+
 			updateAllCollisionBorders();
 			updateActionBooleans();
 			updatePositionAndMoveAll();
+			checkActions();
 
-			sleep(12);
+			moveProjectiles();
 		}
 	}
 
@@ -49,15 +84,10 @@ public class Board extends JPanel {
 	}
 
 
-	/** Actualise les booleens d'actions de personnages */
-	public void updateActionBooleans() {
-		// Les personnages
-		characterRed.updateActionBooleans();
-		characterBlue.updateActionBooleans();
-	}
-
-
-	/** Actualise les coordonnees de collision minimale et maximale de tous les objets */
+	/**
+	 * Actualise les coordonnees de collision minimale et maximale de tous les
+	 * objets
+	 */
 	public void updateAllCollisionBorders() {
 
 		// Les personnages
@@ -67,7 +97,18 @@ public class Board extends JPanel {
 	}
 
 
-	/**Actualise la position de tous les objets, (les collisions sont gerees lors du deplacement des objets grace aux collision borders)*/
+	/** Actualise les booleens d'actions de personnages */
+	public void updateActionBooleans() {
+		// Les personnages
+		characterRed.updateActionBooleans(characterBlue);
+		characterBlue.updateActionBooleans(characterRed);
+	}
+
+
+	/**
+	 * Actualise la position de tous les objets, (les collisions sont gerees lors du
+	 * deplacement des objets grace aux collision borders)
+	 */
 	public void updatePositionAndMoveAll() {
 
 		// Les personnages
@@ -75,29 +116,130 @@ public class Board extends JPanel {
 		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
 
-	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
+	/** Verifie et Lance les actions a effectuer (grab shield shoot push) */
+	public void checkActions() {
+
+		// Les personnages
+		characterRed.checkActions(boardGraphism);
+		characterBlue.checkActions(boardGraphism);
+	}
+
+
+	/** Deplace les projectiles */
+	public void moveProjectiles() {
+		characterRed.moveProjectiles();
+		characterBlue.moveProjectiles();
+	}
+
+
+	/** Actualise l'affichage graphique */
+	public void updateWindow() {
+		repaint();
+	}
+
+
+	/**
+	 * Fonction d'affichage principale
+	 * <p>
+	 * Appelee a l'aide de repaint().
+	 * <p>
+	 * Les fonctions drawTruc sont pour les objets en mouvement Lesfonctions
+	 * displayTruc sont pour les objets fixes
+	 */
+	public void paintComponent(Graphics g) {
+		// Initialisation des attributs graphiques, effectuee a chaque
+		// redimensionnement de la fenetre
+		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(),
+				this.getHeight());
+
+		// Affiche les plateformes
+		boardGraphism.displayPlatforms(g);
+
+		// Affiche les personnages
+		characterRed.drawCharacter(g, boardGraphism);
+		characterBlue.drawCharacter(g, boardGraphism);
+
+		// Affiche la vie des joueurs
+		characterRed.displayCharacterHUD(g, boardGraphism);
+		characterBlue.displayCharacterHUD(g, boardGraphism);
+
+		// Affiche les projectiles
+		characterRed.drawProjectiles(g, boardGraphism);
+		characterBlue.drawProjectiles(g, boardGraphism);
+	}
+
+
+	/** sets the players bindings to their correct value */
+	public void setBindings() {
+		// check if non default key settings exist
+		String pathRedKeyBindings = "redKeyBindings.txt";
+		String pathBlueKeyBindings = "blueKeyBindings.txt";
+
+		File f = new File(pathRedKeyBindings);
+		if (!f.exists() || f.isDirectory()) {
+			pathRedKeyBindings = "redKeyBindingsDefault.txt";
+		}
+		f = new File(pathBlueKeyBindings);
+		if (!f.exists() || f.isDirectory()) {
+			pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
+		}
+		redKeyBindings = getBindings(pathRedKeyBindings);
+		blueKeyBindings = getBindings(pathBlueKeyBindings);
+	}
+
+
+	/** return a KeyBinding object from a String path to a file */
+	public KeyBindings getBindings(String path) {
+		KeyBindings keyBindings = null;
+		ObjectInputStream ois;
+		// create an input flux to read an object from a file
+		try {
+			ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(path))));
+			try {
+				// create the object from the file
+				keyBindings = (KeyBindings) ois.readObject();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			// close the flux
+			ois.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return keyBindings;
+	}
+
+
+	/**
+	 * Initialise le jeu, creer les deux joueurs avec leurs touches claviers
+	 * associees serialisees, la ArrayList d'objets
+	 */
 	public void initGame() {
 		// Initialise les coordonnees reelles des objets
 		boardGraphism.initRealCoordsAttributes();
 
 		// On charge les objets (sans image) tout doit etre fonctionnel
-		// Les fonctions d'affichage s'occuperont d'afficher des images si elles existent, des carres sinon
+		// Les fonctions d'affichage s'occuperont d'afficher des images si elles
+		// existent, des carres sinon
 
 		// On récupère les keyBindings des joueurs
 		KeyBindings redKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
 		KeyBindings blueKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
 
+
 		// Creation des deux persos
-		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(), boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings);
-		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(), boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings);
+		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
+				boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings, boardGraphism);
+		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
+				boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings, boardGraphism);
 
-
-		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
+		// On charge les images, et on les met dans les objets (null si elles n'ont pas
+		// reussi)
 		loadAndSetAllImages();
 	}
 
 
-	/**Charge toutes les images du jeu et les ajoute aux objets */
+	/** Charge toutes les images du jeu et les ajoute aux objets */
 	public void loadAndSetAllImages() {
 
 	}
@@ -134,7 +276,6 @@ public class Board extends JPanel {
 		}
 	}
 
-
 	public BoardGraphism getBoardGraphism() {
 		return boardGraphism;
 	}
@@ -155,8 +296,9 @@ public class Board extends JPanel {
 		return playerKeyListener;
 	}
 
-
-	/**class PlayerKeyListener implements KeyListener<p>
+	/**
+	 * class PlayerKeyListener implements KeyListener
+	 * <p>
 	 * Gere les saisies clavier
 	 */
 	public class PlayerKeyListener implements KeyListener {
@@ -165,7 +307,7 @@ public class Board extends JPanel {
 		public void keyPressed(KeyEvent event) {
 
 			int code = event.getKeyChar();
-			//System.out.print("Code clavier "+ code + "\n ");
+			// System.out.print("Code clavier "+ code + "\n ");
 
 			togglePressedKeys(code, characterRed, true);
 			togglePressedKeys(code, characterBlue, true);
@@ -175,22 +317,19 @@ public class Board extends JPanel {
 			}
 		}
 
-
 		@Override
 		public void keyReleased(KeyEvent event) {
 			int code = event.getKeyChar();
-			//System.out.print("Code clavier "+ code + "\n ");
+			// System.out.print("Code clavier "+ code + "\n ");
 
 			togglePressedKeys(code, characterRed, false);
 			togglePressedKeys(code, characterBlue, false);
 
 		}
 
-
 		@Override
 		public void keyTyped(KeyEvent event) {
 		}
-
 
 		/** Toggle les booleens de KeyPressed */
 		public void togglePressedKeys(int code, Character character, boolean toggle) {
@@ -201,11 +340,14 @@ public class Board extends JPanel {
 			if (code == characterKeys.getKeyBindings().get(2).getKeyValue()) {
 				character.getActionBooleans().setJumpPressed(toggle);
 
-        		// Si on relache le bouton sauter
+				// Si on relache le bouton sauter
 				if (toggle == false) {
-					// Active le booleens qui permet dactiver le canSwitch si on est dans les airs et qu'on
-					// relache le bouton sauter (pour pouvoir rappuyer dessus dans les airs pour switch)
-					if (character.getActionBooleans().isJumping() == true && character.getActionBooleans().isJumpFirstReleaseDone() == false) {
+					// Active le booleens qui permet dactiver le canSwitch si on est dans les airs
+					// et qu'on
+					// relache le bouton sauter (pour pouvoir rappuyer dessus dans les airs pour
+					// switch)
+					if (character.getActionBooleans().isJumping() == true
+							&& character.getActionBooleans().isJumpFirstReleaseDone() == false) {
 						character.getActionBooleans().setIsJumpFirstReleaseDone(true);
 					}
 				}
@@ -213,6 +355,7 @@ public class Board extends JPanel {
       		}
 			// Gauche (0)
 			if (code == characterKeys.getKeyBindings().get(0).getKeyValue()) {
+
 				character.getActionBooleans().setLeftPressed(toggle);
 			}
 			// Droite (1)
@@ -235,5 +378,16 @@ public class Board extends JPanel {
 
 	}
 
+
+	public class GameDisplayTimerListener implements ActionListener {
+
+		/**Action a effectuer lorsque le timer renvoie un event */
+		@Override
+		public void actionPerformed(ActionEvent event) {
+
+			updateWindow();
+
+		}
+	}
 
 }

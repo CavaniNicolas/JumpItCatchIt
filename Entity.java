@@ -5,12 +5,16 @@
 public class Entity {
 
 	/**Gravite */
-	protected final int GRAVITY = -2;
+	protected final int GRAVITY = -20;
 
 	// Coordonnees de collisions minimales et maximales
 	protected int minX;
 	protected int maxX;
 	protected int minY;
+
+	// Largeur et Hauteur de l'entite	
+	protected int width;
+	protected int height;
 
 	// Coordonnees de l'entite
 	protected int x;
@@ -67,7 +71,6 @@ public class Entity {
 		}
 
 	}
-
 
 
 	/* ======= */
