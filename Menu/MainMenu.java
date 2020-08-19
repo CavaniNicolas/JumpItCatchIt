@@ -232,6 +232,7 @@ public class MainMenu extends JFrame {
 				//sets the content pane to the main menu and delete board (game has ended)
 				handleEscapePanel();
 				frame.setContentPane(backgroundPanel);
+				board.togglePause();
 			}
 		});
 
@@ -254,6 +255,7 @@ public class MainMenu extends JFrame {
 		} else {
 			board.add(escapePanel);
 		}
+		board.togglePause();
 		isEscapePanelShown = !isEscapePanelShown;
 		frame.setVisible(true);
 	}
@@ -293,7 +295,7 @@ public class MainMenu extends JFrame {
 	/**Le jeu tourne dans un thread a part, il contient les timer (thread) de jeu et d'affichage */
 	public class StartGame implements Runnable {
 		public void run() {
-			board.startGame();
+			board.togglePause();
 		}
 	}
 }
