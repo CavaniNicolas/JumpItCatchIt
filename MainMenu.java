@@ -218,6 +218,7 @@ public class MainMenu extends JFrame {
 		escapePanel.setBackground(Color.white);
 		escapePanel.setPreferredSize(new Dimension(220, 90));
 
+		/** go back to the main menu */
 		JButton backButton = new JButton("BACK TO MAIN MENU");
 		backButton.setPreferredSize(new Dimension(180, 25));
 		backButton.addActionListener(new ActionListener() {
@@ -227,6 +228,8 @@ public class MainMenu extends JFrame {
 				createBoard();
 			}
 		});
+
+		/** resume game */
 		JButton resumeButton = new JButton("RESUME");
 		resumeButton.setPreferredSize(new Dimension(180, 25));
 		resumeButton.addActionListener(new ActionListener() {
@@ -241,10 +244,8 @@ public class MainMenu extends JFrame {
 	public void handleEscapePanel() {
 		//escape button
 		if (isEscapePanelShown) {
-			System.out.println("not showing");
 			board.remove(escapePanel);
 		} else {
-			System.out.println("showing");
 			board.add(escapePanel);
 		}
 		isEscapePanelShown = !isEscapePanelShown;
@@ -258,6 +259,7 @@ public class MainMenu extends JFrame {
 		allKeySelectingPanels.addAll(bluePlayerBindings.getKeySelectingPanels());
 	}
 
+	/** check if every binding is unique */
 	public boolean checkUnicity() {
 		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
 			for (KeySelectingPanel keySelectingPanel2 : allKeySelectingPanels) {
