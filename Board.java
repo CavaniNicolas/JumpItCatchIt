@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * class Board extends JPanel
@@ -132,12 +133,6 @@ public class Board extends JPanel {
 	}
 
 
-	/** Actualise l'affichage graphique */
-	public void updateWindow() {
-		repaint();
-	}
-
-
 	/**
 	 * Fonction d'affichage principale
 	 * <p>
@@ -166,47 +161,6 @@ public class Board extends JPanel {
 		// Affiche les projectiles
 		characterRed.drawProjectiles(g, boardGraphism);
 		characterBlue.drawProjectiles(g, boardGraphism);
-	}
-
-
-	/** sets the players bindings to their correct value */
-	public void setBindings() {
-		// check if non default key settings exist
-		String pathRedKeyBindings = "redKeyBindings.txt";
-		String pathBlueKeyBindings = "blueKeyBindings.txt";
-
-		File f = new File(pathRedKeyBindings);
-		if (!f.exists() || f.isDirectory()) {
-			pathRedKeyBindings = "redKeyBindingsDefault.txt";
-		}
-		f = new File(pathBlueKeyBindings);
-		if (!f.exists() || f.isDirectory()) {
-			pathBlueKeyBindings = "blueKeyBindingsDefault.txt";
-		}
-		redKeyBindings = getBindings(pathRedKeyBindings);
-		blueKeyBindings = getBindings(pathBlueKeyBindings);
-	}
-
-
-	/** return a KeyBinding object from a String path to a file */
-	public KeyBindings getBindings(String path) {
-		KeyBindings keyBindings = null;
-		ObjectInputStream ois;
-		// create an input flux to read an object from a file
-		try {
-			ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(path))));
-			try {
-				// create the object from the file
-				keyBindings = (KeyBindings) ois.readObject();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			// close the flux
-			ois.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return keyBindings;
 	}
 
 
@@ -250,21 +204,6 @@ public class Board extends JPanel {
 		repaint();
 	}
 
-
-	/**Fonction d'affichage principale
-	 * <p>
-	 * Appelee a l'aide de repaint().
-	 * <p>
-	 * Les fonctions drawTruc sont pour les objets en mouvement
-	 * Lesfonctions displayTruc sont pour les objets fixes
-	 */
-	public void paintComponent(Graphics g) {
-		// Initialisation des attributs graphiques, effectuees a chaque redimensionnement de la fenetre
-		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(), this.getHeight());
-
-		boardGraphism.displayPlatforms(g);
-		boardGraphism.drawCharacters(g, characterRed, characterBlue);
-	}
 
 	/**Delay */
 	public void sleep(int time) {
