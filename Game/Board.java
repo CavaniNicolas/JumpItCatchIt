@@ -190,9 +190,9 @@ public class Board extends JPanel {
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
-				boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings, boardGraphism);
+				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redKeyBindings, boardGraphism);
 		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
-				boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings, boardGraphism);
+				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueKeyBindings, boardGraphism);
 
 		// On charge les images, et on les met dans les objets (null si elles n'ont pas
 		// reussi)

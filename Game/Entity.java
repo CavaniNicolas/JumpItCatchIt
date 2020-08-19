@@ -38,10 +38,16 @@ public class Entity {
 	}
 
 
-	/** Deplace l'entite */
-	public void move() {
+	/**Deplace l'entite */
+	public void moveXY() {
+		moveX();
+		moveY();
+	}
+
+
+	/** Deplace l'entite selon X*/
+	public void moveX() {
 		speedX += accelX;
-		speedY += accelY;
 
 		// Collision a gauche, on conserve le max
 		if (minX > x + speedX) {
@@ -55,6 +61,12 @@ public class Entity {
 			x = maxX;
 		}
 
+	}
+
+
+	/** Deplace l'entite selon Y*/
+	public void moveY() {
+		speedY += accelY;
 
 		// Collision au sol, on conserve le max (on est au sol)
 		if (minY > y + speedY) {

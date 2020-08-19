@@ -12,6 +12,9 @@ public class Character extends Entity {
 
 	private KeyBindings keyBindings;
 
+	/** Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
+	private boolean isLeftCharacter; // Pourrait etre remplace par un ID
+
 	/**Nombre de vies max (en moities de coeur) */
 	private int livesMax = 6;
 	/**Nombre de vies actuel */
@@ -31,6 +34,14 @@ public class Character extends Entity {
 	private boolean isOnRightPlatform;
 	/**Si les personnages sont a la meme hauteur ou non */
 	private boolean areOnSameY;
+	/**Si les personnages sont l'un dans l'autre en X */
+	private boolean areOnSameXCollisions;
+	/**Vitesse de decollision */
+	private int decollisionSpeed = 30;
+
+
+	/**Largeur de la hitbox selon X */
+	private int hitboxWidth = 800; //this.width / 2;
 
 	/** Booleen, true si on est en train de tomber dans le vide */
 	private boolean isFalling;
@@ -69,8 +80,9 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
 		super(x, y, 0, 0, 0, 0);
+		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
 		this.keyBindings = keyBindings;
@@ -80,8 +92,8 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, Color colorCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
-		this(x, y, colorCharacter, null, keyBindings, boardGraphism);
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
+		this(x, y, isLeftCharacter, colorCharacter, null, keyBindings, boardGraphism);
 	}
 
 
@@ -109,20 +121,21 @@ public class Character extends Entity {
 			actionBooleans.canRight = true;
 		}
 
-		// Pendant quon respawn on ne peut pas bouger
+		// Pendant qu'un perso respawn il ne peut pas bouger
 		if (isSpawning) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
 		}
 
+
 		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
 		/* Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans) */
-		// if (x <= minX) {
-		// 	actionBooleans.canLeft = false;
-		// }
-		// if (x >= maxX) {
-		// 	actionBooleans.canRight = false;
-		// }
+		if (x <= minX) {
+			actionBooleans.canLeft = false;
+		}
+		if (x >= maxX) {
+			actionBooleans.canRight = false;
+		}
 
 		// On peut resauter quand on est au sol, et on ne peut pas sauter ou switch
 		if (y == minY && isFalling == false) {
@@ -135,6 +148,15 @@ public class Character extends Entity {
 			actionBooleans.canActivateCanSwitch = true;
 			actionBooleans.isSwitching = false;
 		}
+
+		// Pendant que les persos sont en collision forte, ils ne peuvent pas se deplacer et sauter et switch
+		if (areOnSameXCollisions) {
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
+			actionBooleans.canJump = false;
+			actionBooleans.canSwitch = false;
+		}
+
 
 		// Si on peut activer le canSwitch (gestion des pressions des touches) et qu'il n'a pas encore ete active, on l'active
 		if (actionBooleans.isJumpFirstReleaseDone && actionBooleans.canActivateCanSwitch) {
@@ -176,7 +198,13 @@ public class Character extends Entity {
 	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
 
 		// Si on est a gauche ou a droite de son adversaire
-		if (x < otherCharacter.x) {
+		if (x == otherCharacter.x) {
+			if (isLeftCharacter) {
+				isOnLeftSide = true;
+			} else {
+				isOnLeftSide = false;
+			}
+		} else if (x < otherCharacter.x) {
 			isOnLeftSide = true;
 		} else {
 			isOnLeftSide = false;
@@ -207,11 +235,29 @@ public class Character extends Entity {
 
 
 		// Si les personnages sont a la meme hauteur ou pas
-		if ( (y >= otherCharacter.y && y < otherCharacter.y + height) || 
-			(y + height > otherCharacter.y && y + height <= otherCharacter.y + height) ) {
+		if ( (y >= otherCharacter.y && y <= otherCharacter.y + height) || 
+			(y + height >= otherCharacter.y && y + height <= otherCharacter.y + height) ) {
 				areOnSameY = true;
 		} else {
 			areOnSameY = false;
+		}
+
+
+		// Si les persos sont a la meme hauteur et qu'il y a une collision forte entre eux selon X
+		if (areOnSameY) {
+
+			// Si le perso est a gauche et est en collision avec l'autre (si on utilise >=, les persos peuvent se repousser en se deplacant)
+			if (isOnLeftSide && x > otherCharacter.x - hitboxWidth) {
+				areOnSameXCollisions = true;
+
+			// Si le perso est a droite et est en collision avec l'autre (si on utilise <=, les persos peuvent se repousser en se deplacant)
+			} else if (isOnLeftSide == false && x < otherCharacter.x + hitboxWidth) {
+				areOnSameXCollisions = true;
+
+			// Sinon les persos ne sont pas en collision
+			} else {
+				areOnSameXCollisions = false;
+			}
 		}
 
 	}
@@ -237,29 +283,28 @@ public class Character extends Entity {
 		}
 
 
-		if (this.colorCharacter == Color.red) {
-			System.out.println(minX + " " + maxX);
-		}
 		// Collisions Borders selon X
 		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
 		if (isFalling == false) {
 
 			// Si les personnages sont a la meme hauteur il ne peuvant pas se traverser
 			if (areOnSameY) {
-
 				// Si le personnage est a gauche de l'autre personnage
 				if (isOnLeftSide) {
+					// Les limites sont le bord gauche du board et l'autre perso
 					minX = halfCharacterWidth;
 					maxX = otherCharacter.x - halfCharacterWidth;
-				
+
 				// Sinon le personnage est a droite de l'autre personnage
 				} else {
+					// Les limites sont le bord droit du board et l'autre perso
 					minX = otherCharacter.x + halfCharacterWidth;
 					maxX = boardGraphism.getMaxX() - halfCharacterWidth;
 				}
 
 			// Sinon ils ne sont pas a la meme hauteur, ils peuvent se traverser
 			} else {
+				// Les limites sont les bords gauche et droit du board
 				minX = halfCharacterWidth;
 				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
 			}
@@ -295,43 +340,6 @@ public class Character extends Entity {
 		checkSwitch();
 
 		moveCharacter(otherCharacter);
-	}
-
-
-	/** Deplace l'entite */
-	@Override
-	public void moveCharacter(Character otherCharacter) {
-		speedX += accelX;
-		speedY += accelY;
-
-		// Collision a gauche, on conserve le max
-		if (minX > x + speedX) {
-			x = minX;
-		} else {
-			x = x + speedX;
-		}
-
-		// Collision a droite, on conserve le min
-		if (maxX < x) {
-			x = maxX;
-		}
-
-
-		// Collision au sol, on conserve le max (on est au sol)
-		if (minY > y + speedY) {
-			y = minY;
-			speedY = 0;
-			accelY = 0;
-
-			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
-			speedX = 0;
-			accelX = 0;
-
-		// Sinon on tombe, on conserve le min
-		} else {
-			y = y + speedY;
-		}
-
 	}
 
 
@@ -464,13 +472,36 @@ public class Character extends Entity {
 	}
 
 
+	/**Deplace le personnage */
+	public void moveCharacter(Character otherCharacter) {
+
+		// Si il y a collisions trop importante entre les perso, il faut les ecarter lentement chacun l'un de l'autre
+		if (areOnSameXCollisions) {
+			//Gestion des X
+			if (isOnLeftSide) {
+				x -= decollisionSpeed;
+			} else {
+				x += decollisionSpeed;
+			}
+
+			//Gestion des Y
+			this.moveY();
+
+		// Si les deux perso ne sont pas en collisions, on se deplace normalement
+		} else {
+			this.moveXY();
+		}
+
+	}
+
+
 	/** Deplace les projectiles */
 	public void moveProjectiles() {
 		Projectile proj;
 		for (int i=0; i<projectiles.size(); i++) {
 			proj = projectiles.get(i);
 
-			proj.move();
+			proj.moveX();
 			if (proj.x == proj.minX || proj.x == proj.maxX) {
 				projectiles.remove(i);
 			}
