@@ -129,7 +129,7 @@ public class Character extends Entity {
 
 
 		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
-		/* Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans) */
+		/* Peut etre pas tres utile ... on verra */
 		if (x <= minX) {
 			actionBooleans.canLeft = false;
 		}
@@ -338,7 +338,7 @@ public class Character extends Entity {
 			updateCollisionBorders(boardGraphism, otherCharacter);
 		}
 
-		checkMovement();
+		checkMovement(otherCharacter);
 		checkJump();
 		checkSwitch();
 
@@ -388,7 +388,7 @@ public class Character extends Entity {
 
 
 	/**Applique la vitesse pour effectuer un deplacement lateral */
-	private void checkMovement() {
+	private void checkMovement(Character otherCharacter) {
 
 		// Applique une vitesse initiale au personnage pour se deplacer lateralement
 		if (actionBooleans.leftPressed && actionBooleans.canLeft) {
@@ -399,6 +399,12 @@ public class Character extends Entity {
 
 		} else {
 			this.speedX = 0;
+		}
+
+
+		// Permet deviter le tremblement des personnages si ils essayent de se deplacer alors quils sont cote a cote mais que leur position ne touche pas leur minX ou maxX
+		if (x + speedX > maxX || x + speedX < minX) {
+			speedX = 0;
 		}
 	}
 
