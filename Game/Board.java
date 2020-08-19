@@ -301,7 +301,6 @@ public class Board extends JPanel {
       		}
 			// Gauche (0)
 			if (code == characterKeys.getKeyBindings().get(0).getKeyValue()) {
-
 				character.getActionBooleans().setLeftPressed(toggle);
 			}
 			// Droite (1)

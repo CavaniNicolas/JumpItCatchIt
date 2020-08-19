@@ -35,14 +35,11 @@ public class MainMenu extends JFrame {
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
 
-		//create the 4 panels to be displayed
+		//create the 3 panels to be displayed (excluding board)
+		board = new Board();
 		createMainMenuPanel();
 		createKeyBindingMenu();
-		createBoard();
 		createEscapePanel();
-
-		//add the board's keylistener
-		frame.addKeyListener(board.getPlayerKeyListener());
 
 		this.frame.setContentPane(mainMenuPane);
 		this.frame.setVisible(true);
@@ -57,24 +54,24 @@ public class MainMenu extends JFrame {
 
 	/** starts the board and sets the frame to display it */
 	public void startGame() {
+		isEscapePanelShown = false;
+		board.setMainMenu(this);
+
 		//start game
 		board.initGame();
 		Thread thread = new Thread(new StartGame());
 		thread.start();
 
+		//add the board's keylistener
+		frame.addKeyListener(board.getPlayerKeyListener());
+
 		//give the frame the focus
 		frame.setFocusable(true);
 		frame.setFocusTraversalKeysEnabled(false);
+
 		//displays the game panel
 		frame.setContentPane(board);
 		frame.setVisible(true);
-	}
-
-	/** initiates board */
-	public void createBoard() {
-		isEscapePanelShown = false;
-		board = new Board();
-		board.setMainMenu(this);
 	}
 
 	/** creates the mainMenuJPanel with its component*/
@@ -91,6 +88,7 @@ public class MainMenu extends JFrame {
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
+				board = new Board();
 				startGame();
 			}
 		});
@@ -225,7 +223,7 @@ public class MainMenu extends JFrame {
 			public void actionPerformed(ActionEvent arg0) { 
 				//sets the content pane to the main menu and delete board (game has ended)
 				frame.setContentPane(mainMenuPane);
-				createBoard();
+				board = null;
 			}
 		});
 
