@@ -44,15 +44,11 @@ public class MainMenu extends JFrame {
 		//add the board's keylistener
 		frame.addKeyListener(board.getPlayerKeyListener());
 
-		//########################
-		//uncomment this part and comment the following one to display a menu
-		//the first panel to be displayed is the main menu
 		this.frame.setContentPane(mainMenuPane);
 		this.frame.setVisible(true);
-		//#########################
 
 		//########################
-		//uncomment this part and comment the previous one to not display a menu
+		//uncomment this part to NOT display a menu
 		/*
 		startGame();*/
 		//########################
@@ -91,7 +87,7 @@ public class MainMenu extends JFrame {
 		buttonPane.setPreferredSize(new Dimension(160, 90));
 
 		//start a game
-		JButton playButton = new JButton("Play");
+		JButton playButton = new JButton("PLAY");
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
@@ -100,7 +96,7 @@ public class MainMenu extends JFrame {
 		});
 
 		//open option menu
-		JButton optionButton = new JButton("Options");
+		JButton optionButton = new JButton("OPTIONS");
 		optionButton.setPreferredSize(new Dimension(150, 25));
     	optionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -111,7 +107,7 @@ public class MainMenu extends JFrame {
 		});
 
 		/**closes the app */
-		JButton quitButton = new JButton("Quit");
+		JButton quitButton = new JButton("QUIT");
 		quitButton.setPreferredSize(new Dimension(150, 25));
     	quitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
@@ -152,13 +148,13 @@ public class MainMenu extends JFrame {
 		redPlayerBindings = new KeyBindingMenu("Red player bindings", this);
 		bluePlayerBindings = new KeyBindingMenu("Blue player bindings", this);
 
-		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"), "redKeyBindingsDefault.txt");
-		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "blueKeyBindingsDefault.txt");
+		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"), "KeyBindings/redKeyBindingsDefault.txt");
+		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "KeyBindings/blueKeyBindingsDefault.txt");
 
 		addAllKeySelectingPanels();
 
 		/** save bindings */
-		JButton saveButton = new JButton("Save bindings");
+		JButton saveButton = new JButton("SAVE BINDINGS");
 		saveButton.setPreferredSize(new Dimension(150, 25));
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {   
@@ -166,8 +162,8 @@ public class MainMenu extends JFrame {
 				if (checkUnicity()) {
 					KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
 					KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
-					FileFunctions.saveBindings(redBindings, "redKeyBindings.txt");
-					FileFunctions.saveBindings(blueBindings, "blueKeyBindings.txt");
+					FileFunctions.saveBindings(redBindings, "KeyBindings/redKeyBindings.txt");
+					FileFunctions.saveBindings(blueBindings, "KeyBindings/blueKeyBindings.txt");
 				} else {
 					System.out.println("YOU SHALL NOT PASS");
 				}
@@ -177,7 +173,7 @@ public class MainMenu extends JFrame {
 		});
 
 		/** back to main menu */
-		JButton backButton = new JButton("Back");
+		JButton backButton = new JButton("BACK");
 		backButton.setPreferredSize(new Dimension(150, 25));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
@@ -189,7 +185,7 @@ public class MainMenu extends JFrame {
 		});
 
 		/** reset to default bindings */
-		JButton defaultButton = new JButton("Reset bindings");
+		JButton defaultButton = new JButton("RESET BINDINGS");
 		defaultButton.setPreferredSize(new Dimension(150, 25));
 		defaultButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {        
@@ -271,8 +267,6 @@ public class MainMenu extends JFrame {
 					return false;
 				}
 			}
-			//to decrease complexity by half and avoid testing twice
-			allKeySelectingPanels.remove(keySelectingPanel);
 			//there must be a way to decrease complexity by half and avoid testing twice
 		}
 		return true;

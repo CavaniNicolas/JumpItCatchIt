@@ -12,11 +12,11 @@ public class FileFunctions {
 	/** sets the players bindings to their correct value */
 	public static String getPathFileToUse(String color) {
 		//check if non default key settings exist
-		File f = new File(color + "keyBindings/KeyBindings.txt");
+		File f = new File("KeyBindings/" + color + "KeyBindings.txt");
 		if(!f.exists() || f.isDirectory()) {
-			return "keyBindings/" + color + "KeyBindingsDefault.txt";
+			return "KeyBindings/" + color + "KeyBindingsDefault.txt";
 		}
-		return "keyBindings/" + color + "KeyBindings.txt";
+		return "KeyBindings/" + color + "KeyBindings.txt";
 	}
 
 	/** return a KeyBinding object from a String path to a file */
@@ -64,8 +64,8 @@ public class FileFunctions {
 	/** create default key bindings files in case they're deleted */
 	public static void createDefaultBindings() {
 		deleteNonDefaultBindings();
-		String pathRedKeyBindings = "keyBindings/redKeyBindingsDefault.txt";
-		String pathBlueKeyBindings = "keyBindings/blueKeyBindingsDefault.txt";
+		String pathRedKeyBindings = "KeyBindings/redKeyBindingsDefault.txt";
+		String pathBlueKeyBindings = "KeyBindings/blueKeyBindingsDefault.txt";
 
 		File file = new File(pathRedKeyBindings);
 		if(file.exists() && !file.isDirectory()) {
@@ -101,11 +101,11 @@ public class FileFunctions {
 	}
 
 	public static void deleteNonDefaultBindings() {
-		File f = new File("keyBindings/redKeyBindings.txt");
+		File f = new File("KeyBindings/redKeyBindings.txt");
 		if(f.exists() && !f.isDirectory()) {
 			f.delete();
 		}
-		f = new File("keyBindings/blueKeyBindings.txt");
+		f = new File("KeyBindings/blueKeyBindings.txt");
 		if(f.exists() && !f.isDirectory()) {
 			f.delete();
 		}
