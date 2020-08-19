@@ -83,6 +83,11 @@ public class MainMenu extends JFrame {
 		mainMenuPane.setBorder(BorderFactory.createTitledBorder("JUMP IT AND CATCH IT"));
 		mainMenuPane.setBackground(Color.white);
 
+		//create a panel to contain the buttons
+		JPanel buttonPane = new JPanel();
+		buttonPane.setBackground(Color.white);
+		buttonPane.setPreferredSize(new Dimension(160, 90));
+
 		JButton playButton = new JButton("Play");
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
@@ -109,9 +114,11 @@ public class MainMenu extends JFrame {
 			}
 		});
 
-		mainMenuPane.add(playButton);
-		mainMenuPane.add(optionButton);
-		mainMenuPane.add(quitButton);
+		buttonPane.add(playButton);
+		buttonPane.add(optionButton);
+		buttonPane.add(quitButton);
+
+		mainMenuPane.add(buttonPane);
 	}
 
 
@@ -123,8 +130,15 @@ public class MainMenu extends JFrame {
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
-		optionPane.setBorder(BorderFactory.createTitledBorder("OPTIONS"));
-		optionPane.setBackground(Color.white);
+		JPanel optionPane2 = new JPanel();
+		optionPane2.setBorder(BorderFactory.createTitledBorder("OPTIONS"));
+		optionPane2.setBackground(Color.white);
+		optionPane2.setPreferredSize(new Dimension(630, 320));
+
+		//create a panel to contain the buttons
+		JPanel buttonPane = new JPanel();
+		buttonPane.setBackground(Color.white);
+		buttonPane.setPreferredSize(new Dimension(480, 30));
 
 		//create each player bindings panel
 		redPlayerBindings = new KeyBindingMenu("Red player bindings", this);
@@ -134,10 +148,6 @@ public class MainMenu extends JFrame {
 		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "blueKeyBindingsDefault.txt");
 
 		addAllKeySelectingPanels();
-
-		//add them to main panel
-		optionPane.add(redPlayerBindings);
-		optionPane.add(bluePlayerBindings);
 
 		/** save bindings */
 		JButton saveButton = new JButton("Save bindings");
@@ -182,10 +192,19 @@ public class MainMenu extends JFrame {
 			}
 		});
 
-		//add the buttons
-		optionPane.add(saveButton);
-		optionPane.add(backButton);
-		optionPane.add(defaultButton);
+		//add the buttons to button panel
+		buttonPane.add(saveButton);
+		buttonPane.add(backButton);
+		buttonPane.add(defaultButton);
+
+		//add the player's bindings panels to main panel
+		optionPane2.add(redPlayerBindings);
+		optionPane2.add(bluePlayerBindings);
+		//and the buttons at the bottm
+		//buttonPane.setLocation(10, 500);
+		optionPane2.add(buttonPane);
+
+		optionPane.add(optionPane2);
 	}
 
 	/** creates the panel that opens when pressing escape */
@@ -217,11 +236,11 @@ public class MainMenu extends JFrame {
 	public void handleEscapePanel() {
 		//escape button
 		if (isEscapePanelShown) {
-			System.out.println("unpausing");
+			//System.out.println("unpausing");
 			isEscapePanelShown = false;
 			frame.setContentPane(board);
 		} else {
-			System.out.println("pausing");
+			//System.out.println("pausing");
 			isEscapePanelShown = true;
 			frame.setContentPane(escapePanel);
 		}
