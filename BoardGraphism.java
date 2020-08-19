@@ -17,9 +17,9 @@ public class BoardGraphism {
 
 
 	/**Largeur reelle max du board */
-	private int maxX = 1600;
+	private int maxX = 16_000;
 	/**Hauteur reelle max du board */
-	private int maxY = 1000;
+	private int maxY = 10_000;
 
 
 	/**Largeur du JPanel (Board) */
@@ -32,26 +32,41 @@ public class BoardGraphism {
 	 * Cette methode n'est appelee qu'une seule fois
 	 */
 	public void initRealCoordsAttributes() {
-			// dimensions d'une unite
-			real.oneUnityWidth = 1.0;
-			real.oneUnityHeight = 1.0;
+		// dimensions d'une unite
+		real.oneUnityWidth = 1.0;
+		real.oneUnityHeight = 1.0;
 
-			// dimensions des plateformes
-			real.platformWidth = 500;
-			real.platformHeight = 150;
+		// dimensions des plateformes
+		real.platformWidth = 5_000;
+		real.platformHeight = 1_500;
 
-			// dimensions des personnages
-			real.characterWidth = 160;
-			real.characterHeight = 200;
+		// dimensions des personnages
+		real.characterWidth = 1_600;
+		real.characterHeight = 2_000;
 
-			// positions des personnages en X sur les plateforme
-			real.primaryXcoordLeft = 380;
-			real.primaryXcoordRight = 1220;
-			real.secondaryXcoordLeft = 180;
-			real.secondaryXcoordRight = 1420;
+		// dimensions des projectiles
+		real.projectileWidth = 1_000;
+		real.projectileHeight = 1_000;
 
-			// position au sol en Y
-			real.groundLevelYCoord = 150;
+		// positions des personnages en X sur les plateforme
+		real.primaryXcoordLeft = 3_800;
+		real.primaryXcoordRight = 12_200;
+		real.secondaryXcoordLeft = 1_800;
+		real.secondaryXcoordRight = 14_200;
+
+		// position au sol en Y
+		real.groundLevelYCoord = 1_500;
+
+
+
+		// HUD Character
+		// Coeurs
+		real.heartsXLeft = 500;
+		real.heartsXRight = 15_100; //16_000 - 500 - 400 : maxX - memeDistanceDuBord - largeur
+		real.heartsY = 400;
+		real.heartWidth = 400;
+		real.heartHeight = 800;
+		real.interHearts = 200;
 
 	}
 
@@ -76,6 +91,10 @@ public class BoardGraphism {
 			graphic.characterWidth = (int)(real.characterWidth * graphic.oneUnityWidth);
 			graphic.characterHeight = (int)(real.characterHeight * graphic.oneUnityHeight);
 
+			// dimensions des projectiles
+			graphic.projectileWidth = (int)(real.getProjectileWidth() * graphic.oneUnityWidth);
+			graphic.projectileHeight = (int)(real.getProjectileHeight() * graphic.oneUnityHeight);
+
 			// positions des personnages en X sur les plateforme
 			graphic.primaryXcoordLeft = (int)(real.primaryXcoordLeft * graphic.oneUnityHeight);
 			graphic.primaryXcoordRight = (int)(real.primaryXcoordRight * graphic.oneUnityHeight);
@@ -85,16 +104,20 @@ public class BoardGraphism {
 			// position au sol en Y
 			graphic.groundLevelYCoord = (int)((maxY - real.groundLevelYCoord) * graphic.oneUnityHeight);
 
+
+			// HUD Character
+			// Coeurs
+			graphic.heartsXLeft = (int)(real.heartsXLeft * graphic.oneUnityWidth);
+			graphic.heartsXRight = (int)(real.heartsXRight * graphic.oneUnityWidth);
+			graphic.heartsY = (int)(real.heartsY * graphic.oneUnityHeight);
+			graphic.heartWidth = (int)(real.heartWidth * graphic.oneUnityWidth);
+			graphic.heartHeight = (int)(real.heartHeight * graphic.oneUnityHeight);
+			graphic.interHearts = (int)(real.interHearts * graphic.oneUnityWidth);
+
+
 			// Initialisation terminee
 			this.isGraphicUpdateDone = true;
 		}
-	}
-
-
-	/**Dessine les deux personnages */
-	public void drawCharacters(Graphics g, Character character1, Character character2) {
-		character1.drawCharacter(g, this);
-		character2.drawCharacter(g, this);
 	}
 
 
@@ -163,6 +186,11 @@ public class BoardGraphism {
 		/**Hauteur des personnages*/
 		private int characterHeight;
 
+		/**Largeur des projectiles */
+		private int projectileWidth;
+		/**Hauteur des projectiles */
+		private int projectileHeight;
+
 		/**Coordonnee principale en X du personnage a gauche (position sur la plateforme) */
 		private int primaryXcoordLeft;
 		/**Coordonnee secondaire en X du personnage a gauche (position a l'atterrissage d'un changement de plateforme) */
@@ -175,6 +203,16 @@ public class BoardGraphism {
 
 		/**Coordonnee en Y du niveau du sol reelle */
 		private int groundLevelYCoord;
+
+
+		// HUD Character
+		// Coeurs
+		private int heartsXLeft;
+		private int heartsXRight;
+		private int heartsY;
+		private int heartWidth;
+		private int heartHeight;
+		private int interHearts;
 
 
 		/* ======= */
@@ -224,6 +262,38 @@ public class BoardGraphism {
 		public int getGroundLevelYCoord() {
 			return groundLevelYCoord;
 		}
+
+		public int getProjectileWidth() {
+			return projectileWidth;
+		}
+
+		public int getProjectileHeight() {
+			return projectileHeight;
+		}
+
+
+		// HUD Character
+		// Coeurs
+		public int getHeartsXLeft() {
+			return heartsXLeft;
+		}
+		public int getHeartsXRight() {
+			return heartsXRight;
+		}
+		public int getHeartsY() {
+			return heartsY;
+		}
+		public int getHeartWidth() {
+			return heartWidth;
+		}
+		public int getHeartHeight() {
+			return heartHeight;
+		}
+		public int getInterHearts() {
+			return interHearts;
+		}
+
+
 	}
 
 }
