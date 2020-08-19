@@ -32,10 +32,8 @@ public class MainMenu extends JFrame {
 		this.frame = frame;
 
 		//create the 3 panels to be displayed
-		mainMenuPane = new JPanel();
-		mainMenuPane.setBackground(Color.white);
-		optionPane = new JPanel();
-		optionPane.setBackground(Color.white);
+		mainMenuPane = new BackgroundPanel();
+		optionPane = new BackgroundPanel();
 
 
 		//########################
