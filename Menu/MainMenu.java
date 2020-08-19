@@ -1,3 +1,7 @@
+package Menu;
+
+import Game.Board;
+
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.Color;

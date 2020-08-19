@@ -1,3 +1,5 @@
+package Menu;
+
 import java.io.Serializable;
 
 /** a key + description of what it does in the game */
