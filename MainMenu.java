@@ -31,19 +31,17 @@ public class MainMenu extends JFrame {
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
 
-		//create the 3 panels to be displayed
-		mainMenuPane = new BackgroundPanel();
-		optionPane = new BackgroundPanel();
+		//create the 4 panels to be displayed
+		createMainMenuPanel();
+		createKeyBindingMenu();
+		createBoard();
+		createEscapePanel();
 
+		//add the board's keylistener
+		frame.addKeyListener(board.getPlayerKeyListener());
 
 		//########################
 		//uncomment this part and comment the following one to display a menu
-		createMainMenuPanel();
-		createKeyBindingMenu();
-		createEscapePanel();
-		board = new Board();
-		board.setMainMenu(this);
-
 		//the first panel to be displayed is the main menu
 		this.frame.setContentPane(mainMenuPane);
 		this.frame.setVisible(true);
@@ -52,7 +50,6 @@ public class MainMenu extends JFrame {
 		//########################
 		//uncomment this part and comment the previous one to not display a menu
 		/*
-		board = new Board();
 		startGame();*/
 		//########################
 	}
@@ -64,9 +61,7 @@ public class MainMenu extends JFrame {
 		board.initGame();
 		Thread thread = new Thread(new StartGame());
 		thread.start();
-		//board.startGame();
-		//add the keylistener
-		frame.addKeyListener(board.getPlayerKeyListener());
+
 		//give the frame the focus
 		frame.setFocusable(true);
 		frame.setFocusTraversalKeysEnabled(false);
@@ -75,17 +70,23 @@ public class MainMenu extends JFrame {
 		frame.setVisible(true);
 	}
 
+	/** initiates board */
+	public void createBoard() {
+		isEscapePanelShown = false;
+		board = new Board();
+		board.setMainMenu(this);
+	}
 
 	/** creates the mainMenuJPanel with its component*/
 	public void createMainMenuPanel() {
-		mainMenuPane.setBorder(BorderFactory.createTitledBorder("JUMP IT AND CATCH IT"));
-		mainMenuPane.setBackground(Color.white);
+		mainMenuPane = new BackgroundPanel();
 
 		//create a panel to contain the buttons
 		JPanel buttonPane = new JPanel();
 		buttonPane.setBackground(Color.white);
 		buttonPane.setPreferredSize(new Dimension(160, 90));
 
+		//start a game
 		JButton playButton = new JButton("Play");
 		playButton.setPreferredSize(new Dimension(150, 25));
     	playButton.addActionListener(new ActionListener() {
@@ -94,6 +95,7 @@ public class MainMenu extends JFrame {
 			}
 		});
 
+		//open option menu
 		JButton optionButton = new JButton("Options");
 		optionButton.setPreferredSize(new Dimension(150, 25));
     	optionButton.addActionListener(new ActionListener() {
@@ -104,6 +106,7 @@ public class MainMenu extends JFrame {
 			}
 		});
 
+		/**closes the app */
 		JButton quitButton = new JButton("Quit");
 		quitButton.setPreferredSize(new Dimension(150, 25));
     	quitButton.addActionListener(new ActionListener() {
@@ -128,6 +131,9 @@ public class MainMenu extends JFrame {
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
+		optionPane = new BackgroundPanel();
+
+		//smaller panel so that the options don't take the whole screen
 		JPanel optionPane2 = new JPanel();
 		optionPane2.setBorder(BorderFactory.createTitledBorder("OPTIONS"));
 		optionPane2.setBackground(Color.white);
@@ -210,18 +216,19 @@ public class MainMenu extends JFrame {
 		escapePanel = new JPanel();
 		escapePanel.setBorder(BorderFactory.createTitledBorder("PAUSE"));
 		escapePanel.setBackground(Color.white);
-		escapePanel.setPreferredSize(new Dimension(200, 30));
+		escapePanel.setPreferredSize(new Dimension(220, 90));
 
 		JButton backButton = new JButton("BACK TO MAIN MENU");
-		backButton.setPreferredSize(new Dimension(150, 25));
+		backButton.setPreferredSize(new Dimension(180, 25));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
+				//sets the content pane to the main menu and delete board (game has ended)
 				frame.setContentPane(mainMenuPane);
-				isEscapePanelShown = false;
+				createBoard();
 			}
 		});
 		JButton resumeButton = new JButton("RESUME");
-		resumeButton.setPreferredSize(new Dimension(75, 25));
+		resumeButton.setPreferredSize(new Dimension(180, 25));
 		resumeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				handleEscapePanel();
@@ -234,14 +241,13 @@ public class MainMenu extends JFrame {
 	public void handleEscapePanel() {
 		//escape button
 		if (isEscapePanelShown) {
-			//System.out.println("unpausing");
-			isEscapePanelShown = false;
-			frame.setContentPane(board);
+			System.out.println("not showing");
+			board.remove(escapePanel);
 		} else {
-			//System.out.println("pausing");
-			isEscapePanelShown = true;
-			frame.setContentPane(escapePanel);
+			System.out.println("showing");
+			board.add(escapePanel);
 		}
+		isEscapePanelShown = !isEscapePanelShown;
 		frame.setVisible(true);
 	}
 
