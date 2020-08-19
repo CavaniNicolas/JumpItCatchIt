@@ -35,7 +35,7 @@ public class Board extends JPanel {
 	MainMenu mainMenu;
 
 	/**Booleen, true si le jeu est en cours */
-	private boolean isPlaying = false;
+	private boolean isPlaying;
 
 	/** Personnage rouge (initialement a gauche) */
 	private Character characterRed;
@@ -52,9 +52,8 @@ public class Board extends JPanel {
 	KeyBindings blueKeyBindings; // A supprimer pour en faire des variables locales des methodes
 
 
-	public Board() {
-		gamePlayTimer = new Timer(12, new GamePlayTimerListener());
-		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
+	public Board(MainMenu mainMenu) {
+		this.mainMenu = mainMenu;
 	}
 
 
@@ -86,11 +85,6 @@ public class Board extends JPanel {
 			moveProjectiles();
 		}
 	}
-
-	public void setMainMenu(MainMenu mainMenu) {
-		this.mainMenu = mainMenu;
-	}
-
 
 	/**
 	 * Actualise les coordonnees de collision minimale et maximale de tous les
@@ -176,6 +170,11 @@ public class Board extends JPanel {
 	 * associees serialisees, la ArrayList d'objets
 	 */
 	public void initGame() {
+		isPlaying = false;
+		
+		gamePlayTimer = new Timer(12, new GamePlayTimerListener());
+		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
+
 		// Initialise les coordonnees reelles des objets
 		boardGraphism.initRealCoordsAttributes();
 
@@ -253,13 +252,14 @@ public class Board extends JPanel {
 		public void keyPressed(KeyEvent event) {
 
 			int code = event.getKeyChar();
-			// System.out.print("Code clavier "+ code + "\n ");
+			//System.out.print("Code clavier "+ code + "\n ");
 
-			togglePressedKeys(code, characterRed, true);
-			togglePressedKeys(code, characterBlue, true);
-
+			//escape
 			if (code == 27) {
 				mainMenu.handleEscapePanel();
+			} else {
+				togglePressedKeys(code, characterRed, true);
+				togglePressedKeys(code, characterBlue, true);
 			}
 		}
 
