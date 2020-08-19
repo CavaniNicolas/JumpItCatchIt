@@ -50,7 +50,6 @@ public class KeySelectingPanel extends JPanel {
 		selectingButton.setText(intToString(keyBinding.getKeyValue()));
 	}
 
-	//can sometimes create an infinite loop, haven't found why yet
 	/** changes the color of the button if the bindings are already used */
 	public void checkAvailability() {
 		//if changing to an available state, check the former similar panel to change it as well

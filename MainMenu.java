@@ -2,7 +2,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Dimension;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +17,10 @@ public class MainMenu extends JFrame {
 	private JPanel mainMenuPane;
 	private JPanel optionPane;
 	private Board board;
+	private JPanel escapePanel;
+
+	//boolean handling escape panel
+	private Boolean isEscapePanelShown = false;
 
 	//the frame displaying all the stuff
 	private JFrame frame;
@@ -39,7 +42,9 @@ public class MainMenu extends JFrame {
 		//uncomment this part and comment the following one to display a menu
 		createMainMenuPanel();
 		createKeyBindingMenu();
+		createEscapePanel();
 		board = new Board();
+		board.setMainMenu(this);
 
 		//the first panel to be displayed is the main menu
 		this.frame.setContentPane(mainMenuPane);
@@ -181,6 +186,46 @@ public class MainMenu extends JFrame {
 		optionPane.add(saveButton);
 		optionPane.add(backButton);
 		optionPane.add(defaultButton);
+	}
+
+	/** creates the panel that opens when pressing escape */
+	public void createEscapePanel() {
+		escapePanel = new JPanel();
+		escapePanel.setBorder(BorderFactory.createTitledBorder("PAUSE"));
+		escapePanel.setBackground(Color.white);
+		escapePanel.setPreferredSize(new Dimension(200, 30));
+
+		JButton backButton = new JButton("BACK TO MAIN MENU");
+		backButton.setPreferredSize(new Dimension(150, 25));
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				frame.setContentPane(mainMenuPane);
+				isEscapePanelShown = false;
+			}
+		});
+		JButton resumeButton = new JButton("RESUME");
+		resumeButton.setPreferredSize(new Dimension(75, 25));
+		resumeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				handleEscapePanel();
+			}
+		});
+		escapePanel.add(backButton);
+		escapePanel.add(resumeButton);
+	}
+
+	public void handleEscapePanel() {
+		//escape button
+		if (isEscapePanelShown) {
+			System.out.println("unpausing");
+			isEscapePanelShown = false;
+			frame.setContentPane(board);
+		} else {
+			System.out.println("pausing");
+			isEscapePanelShown = true;
+			frame.setContentPane(escapePanel);
+		}
+		frame.setVisible(true);
 	}
 
 	//create an array list of all KeySelectingPanels

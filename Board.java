@@ -16,6 +16,9 @@ public class Board extends JPanel {
 	/**La classe KeyListener */
 	private PlayerKeyListener playerKeyListener = new PlayerKeyListener();
 
+	/** mainMenu to allow escaping */
+	MainMenu mainMenu;
+
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying = false;
 
@@ -39,6 +42,10 @@ public class Board extends JPanel {
 
 			sleep(12);
 		}
+	}
+
+	public void setMainMenu(MainMenu mainMenu) {
+		this.mainMenu = mainMenu;
 	}
 
 
@@ -70,7 +77,6 @@ public class Board extends JPanel {
 
 	/**Initialise le jeu, creer les deux joueurs avec leurs touches claviers associees serialisees, la ArrayList d'objets */
 	public void initGame() {
-
 		// Initialise les coordonnees reelles des objets
 		boardGraphism.initRealCoordsAttributes();
 
@@ -118,7 +124,6 @@ public class Board extends JPanel {
 		boardGraphism.drawCharacters(g, characterRed, characterBlue);
 	}
 
-
 	/**Delay */
 	public void sleep(int time) {
 		try {
@@ -165,6 +170,9 @@ public class Board extends JPanel {
 			togglePressedKeys(code, characterRed, true);
 			togglePressedKeys(code, characterBlue, true);
 
+			if (code == 27) {
+				mainMenu.handleEscapePanel();
+			}
 		}
 
 
