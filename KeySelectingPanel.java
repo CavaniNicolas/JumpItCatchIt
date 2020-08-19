@@ -45,20 +45,18 @@ public class KeySelectingPanel extends JPanel {
 		this.add(resetButton);
 	}
 
-	public ArrayList<KeySelectingPanel> getSimilarKeySelectingPanels() {
-		return similarKeySelectingPanels;
-	}
-
 	public void setBinding(KeyBinding keyBinding) {
 		label.setText(keyBinding.getKeyActionDescription());
 		selectingButton.setText(intToString(keyBinding.getKeyValue()));
 	}
 
+	//can sometimes create an infinite loop, haven't found why yet
 	/** changes the color of the button if the bindings are already used */
 	public void checkAvailability() {
 		//if changing to an available state, check the former similar panel to change it as well
 		if (similarKeySelectingPanels.size() == 1) {
-			similarKeySelectingPanels.get(0).checkAvailability();
+			similarKeySelectingPanels.get(0).getSimilarKeySelectingPanels().clear();
+			similarKeySelectingPanels.get(0).getButton().setBackground(Color.white);
 		}
 		//resets to available before testing again
 		similarKeySelectingPanels.clear();
@@ -74,11 +72,16 @@ public class KeySelectingPanel extends JPanel {
 			if (keySelectingPanel != this && keySelectingPanel.getButton().getText().equals(this.selectingButton.getText())) {
 				//add the similar panel to the list of similar panels
 				similarKeySelectingPanels.add(keySelectingPanel);
+				keySelectingPanel.getSimilarKeySelectingPanels().add(this);
 				//gives a red color to same bindings
 				selectingButton.setBackground(Color.red);
 				keySelectingPanel.getButton().setBackground(Color.red);
 			}
 		}
+	}
+
+	public ArrayList<KeySelectingPanel> getSimilarKeySelectingPanels() {
+		return similarKeySelectingPanels;
 	}
 
 	/** return selectingButton's text */
