@@ -1,3 +1,5 @@
+package Menu;
+
 import java.io.File;
 import java.awt.Graphics;
 import java.awt.Color;
@@ -13,7 +15,7 @@ import java.io.IOException;
 
 public class BackgroundPanel extends JPanel {
 	//background color/image
-	private String pathToBackground = "background.JPG";
+	private String pathToBackground = "assets/background.JPG";
 	private Image background;
 	private Color backgroundColor = Color.black;
 
@@ -24,7 +26,7 @@ public class BackgroundPanel extends JPanel {
 		//create a font from a file
 		Font font;
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("Stylewars2011.TTF").openStream());  
+			font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("../assets/Stylewars2011.TTF").openStream());  
 			// makesure to derive the size
 			font = font.deriveFont(80f);
 			title.setFont(font);

@@ -1,3 +1,10 @@
+package Game;
+
+import Menu.MainMenu;
+import Menu.KeyBindings;
+import Menu.FileFunctions;
+
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;

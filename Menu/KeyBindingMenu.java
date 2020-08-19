@@ -1,3 +1,5 @@
+package Menu;
+
 import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;

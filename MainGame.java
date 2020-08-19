@@ -1,3 +1,5 @@
+import Menu.MainMenu;
+
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.Dimension;
@@ -8,11 +10,11 @@ import javax.swing.JFrame;
 /**class MyWindow extends JFrame<p>
  * Gere la fenetre et les saisies clavier
 */
-public class MyWindow extends JFrame {
+public class MainGame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private MainMenu mainMenu;
 
-	public MyWindow() {
+	public MainGame() {
 		createWindow();
 	}
 
@@ -51,6 +53,12 @@ public class MyWindow extends JFrame {
 		// this.setUndecorated(true);
 
 		this.setVisible(true);
+	}
+
+
+	/** Le Main principal du jeu */
+	public static void main(String[] args) {
+		new MainGame();
 	}
 
 }

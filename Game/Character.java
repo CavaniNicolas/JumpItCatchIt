@@ -1,3 +1,7 @@
+package Game;
+
+import Menu.KeyBindings;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.util.ArrayList;

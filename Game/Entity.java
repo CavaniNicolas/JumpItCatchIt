@@ -1,3 +1,4 @@
+package Game;
 
 /**Class Entity<p>
  * Tous les objets qui vont pouvoir avoir un mouvement, (vitesse et acceleration)

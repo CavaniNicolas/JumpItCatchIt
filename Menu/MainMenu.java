@@ -1,3 +1,7 @@
+package Menu;
+
+import Game.Board;
+
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -263,12 +267,13 @@ public class MainMenu extends JFrame {
 	public boolean checkUnicity() {
 		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
 			for (KeySelectingPanel keySelectingPanel2 : allKeySelectingPanels) {
-				if (keySelectingPanel == keySelectingPanel2) {
+				if (keySelectingPanel != keySelectingPanel2 && keySelectingPanel.getCurrentKeyBinding().getKeyValue() == keySelectingPanel2.getCurrentKeyBinding().getKeyValue()) {
 					return false;
 				}
 			}
 			//to decrease complexity by half and avoid testing twice
 			allKeySelectingPanels.remove(keySelectingPanel);
+			//there must be a way to decrease complexity by half and avoid testing twice
 		}
 		return true;
 	}
