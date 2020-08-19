@@ -29,6 +29,8 @@ public class Character extends Entity {
 	private boolean isOnLeftPlatform;
 	/** Booleen de position, sur la plateforme de droite */
 	private boolean isOnRightPlatform;
+	/**Si les personnages sont a la meme hauteur ou non */
+	private boolean areOnSameY;
 
 	/** Booleen, true si on est en train de tomber dans le vide */
 	private boolean isFalling;
@@ -115,12 +117,12 @@ public class Character extends Entity {
 
 		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
 		/* Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans) */
-		if (x <= minX) {
-			actionBooleans.canLeft = false;
-		}
-		if (x >= maxX) {
-			actionBooleans.canRight = false;
-		}
+		// if (x <= minX) {
+		// 	actionBooleans.canLeft = false;
+		// }
+		// if (x >= maxX) {
+		// 	actionBooleans.canRight = false;
+		// }
 
 		// On peut resauter quand on est au sol, et on ne peut pas sauter ou switch
 		if (y == minY && isFalling == false) {
@@ -203,6 +205,15 @@ public class Character extends Entity {
 			}
 		}
 
+
+		// Si les personnages sont a la meme hauteur ou pas
+		if ( (y >= otherCharacter.y && y < otherCharacter.y + height) || 
+			(y + height > otherCharacter.y && y + height <= otherCharacter.y + height) ) {
+				areOnSameY = true;
+		} else {
+			areOnSameY = false;
+		}
+
 	}
 
 
@@ -218,24 +229,41 @@ public class Character extends Entity {
 			minY = boardGraphism.getReal().getGroundLevelYCoord();
 		} else {
 			// Si on est pas sur une plateforme il faut tomber
-			minY = -140;
+			minY = -10_000;
 			
 			if (isFalling) {
 				accelY = GRAVITY;
 			}
 		}
 
+
+		if (this.colorCharacter == Color.red) {
+			System.out.println(minX + " " + maxX);
+		}
 		// Collisions Borders selon X
 		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
 		if (isFalling == false) {
-			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
-				minX = halfCharacterWidth;
-				maxX = otherCharacter.x - halfCharacterWidth;
 
+			// Si les personnages sont a la meme hauteur il ne peuvant pas se traverser
+			if (areOnSameY) {
+
+				// Si le personnage est a gauche de l'autre personnage
+				if (isOnLeftSide) {
+					minX = halfCharacterWidth;
+					maxX = otherCharacter.x - halfCharacterWidth;
+				
+				// Sinon le personnage est a droite de l'autre personnage
+				} else {
+					minX = otherCharacter.x + halfCharacterWidth;
+					maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+				}
+
+			// Sinon ils ne sont pas a la meme hauteur, ils peuvent se traverser
 			} else {
-				minX = otherCharacter.x + halfCharacterWidth;
+				minX = halfCharacterWidth;
 				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
 			}
+
 
 			// Supprime la collisions entre les joueurs lors d'un switch d'un des joueurs
 			if (actionBooleans.isSwitching || otherCharacter.getActionBooleans().isSwitching) {
@@ -266,7 +294,44 @@ public class Character extends Entity {
 		checkJump();
 		checkSwitch();
 
-		this.move();
+		moveCharacter(otherCharacter);
+	}
+
+
+	/** Deplace l'entite */
+	@Override
+	public void moveCharacter(Character otherCharacter) {
+		speedX += accelX;
+		speedY += accelY;
+
+		// Collision a gauche, on conserve le max
+		if (minX > x + speedX) {
+			x = minX;
+		} else {
+			x = x + speedX;
+		}
+
+		// Collision a droite, on conserve le min
+		if (maxX < x) {
+			x = maxX;
+		}
+
+
+		// Collision au sol, on conserve le max (on est au sol)
+		if (minY > y + speedY) {
+			y = minY;
+			speedY = 0;
+			accelY = 0;
+
+			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
+			speedX = 0;
+			accelX = 0;
+
+		// Sinon on tombe, on conserve le min
+		} else {
+			y = y + speedY;
+		}
+
 	}
 
 
