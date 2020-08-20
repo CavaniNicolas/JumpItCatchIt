@@ -1,7 +1,8 @@
 package Menu;
 
 import Game.Board;
-
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -25,7 +26,8 @@ public class MainMenu extends JFrame {
 	private BackgroundPanel backgroundPanel;
 
 	//boolean handling escape panel
-	private Boolean isEscapePanelShown = false;
+	private Boolean isDisplayingEscapePanel = false;
+	private Boolean isDisplayingMainMenu;
 
 	//the frame displaying all the stuff
 	private JFrame frame;
@@ -36,6 +38,9 @@ public class MainMenu extends JFrame {
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
 
+		//add a key listener for client related keys (available everywhere)
+		this.frame.addKeyListener(new ClientRelatedKeyListener());
+
 		//create the 5 panels to be displayed (excluding board)
 		backgroundPanel = new BackgroundPanel();
 		createBoard();
@@ -45,25 +50,27 @@ public class MainMenu extends JFrame {
 
 		/** display main menu first*/
 		backgroundPanel.add(mainMenuPanel);
+		isDisplayingMainMenu = true;
 		this.frame.setContentPane(backgroundPanel);
 		this.frame.setVisible(true);
 
 		//########################
 		//uncomment this line to NOT display a menu
-		//startGame();
+		//startGame()
 		//########################
 	}
 
 	/** creates board*/
 	public void createBoard() {
-		board = new Board(this);
+		board = new Board();
 		//add the board's keylistener
 		frame.addKeyListener(board.getPlayerKeyListener());
 	}
 
 	/** starts the board and sets the frame to display it */
 	public void startGame() {
-		isEscapePanelShown = false;
+		isDisplayingEscapePanel = false;
+		isDisplayingMainMenu = false;
 
 		//start game
 		board.initGame();
@@ -84,14 +91,13 @@ public class MainMenu extends JFrame {
 		mainMenuPanel = new JPanel();
 
 		//create a panel to contain the buttons
-		JPanel buttonPane = new JPanel();
-		buttonPane.setBackground(Color.white);
-		buttonPane.setPreferredSize(new Dimension(160, 90));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setPreferredSize(new Dimension(160, 90));
 
 		//start a game
 		JButton playButton = new JButton("PLAY");
 		playButton.setPreferredSize(new Dimension(150, 25));
-    	playButton.addActionListener(new ActionListener() {
+		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				startGame();
 			}
@@ -105,6 +111,7 @@ public class MainMenu extends JFrame {
 				//displays the option panel 
 				backgroundPanel.remove(mainMenuPanel);
 				backgroundPanel.add(optionPanel);
+				isDisplayingMainMenu = false;
 				frame.setContentPane(backgroundPanel);
 				frame.setVisible(true);
 			}
@@ -119,11 +126,11 @@ public class MainMenu extends JFrame {
 			}
 		});
 
-		buttonPane.add(playButton);
-		buttonPane.add(optionButton);
-		buttonPane.add(quitButton);
+		buttonPanel.add(playButton);
+		buttonPanel.add(optionButton);
+		buttonPanel.add(quitButton);
 
-		mainMenuPanel.add(buttonPane);
+		mainMenuPanel.add(buttonPanel);
 	}
 
 
@@ -144,9 +151,9 @@ public class MainMenu extends JFrame {
 		optionPanel2.setPreferredSize(new Dimension(630, 320));
 
 		//create a panel to contain the buttons
-		JPanel buttonPane = new JPanel();
-		buttonPane.setBackground(Color.white);
-		buttonPane.setPreferredSize(new Dimension(480, 30));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setBackground(Color.white);
+		buttonPanel.setPreferredSize(new Dimension(480, 30));
 
 		//create each player bindings panel
 		redPlayerBindings = new KeyBindingMenu("Red player bindings", this);
@@ -181,12 +188,7 @@ public class MainMenu extends JFrame {
 		backButton.setPreferredSize(new Dimension(150, 25));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				//displays the main menu again    
-				backgroundPanel.remove(optionPanel);
-				backgroundPanel.add(mainMenuPanel);
-				frame.setContentPane(backgroundPanel);
-				//cancels changes if they are not saved
-				setBindings();
+				backToMainMenuFromOption();
 			}
 		});
 
@@ -203,16 +205,16 @@ public class MainMenu extends JFrame {
 		});
 
 		//add the buttons to button panel
-		buttonPane.add(saveButton);
-		buttonPane.add(backButton);
-		buttonPane.add(defaultButton);
+		buttonPanel.add(saveButton);
+		buttonPanel.add(backButton);
+		buttonPanel.add(defaultButton);
 
 		//add the player's bindings panels to main panel
 		optionPanel2.add(redPlayerBindings);
 		optionPanel2.add(bluePlayerBindings);
 		//and the buttons at the bottm
-		//buttonPane.setLocation(10, 500);
-		optionPanel2.add(buttonPane);
+		//buttonPanel.setLocation(10, 500);
+		optionPanel2.add(buttonPanel);
 
 		optionPanel.add(optionPanel2);
 	}
@@ -231,6 +233,7 @@ public class MainMenu extends JFrame {
 			public void actionPerformed(ActionEvent arg0) { 
 				//sets the content pane to the main menu and delete board (game has ended)
 				handleEscapePanel();
+				isDisplayingMainMenu = true;
 				frame.setContentPane(backgroundPanel);
 				board.togglePause();
 			}
@@ -250,13 +253,13 @@ public class MainMenu extends JFrame {
 
 	public void handleEscapePanel() {
 		//escape button
-		if (isEscapePanelShown) {
+		if (isDisplayingEscapePanel) {
 			board.remove(escapePanel);
 		} else {
 			board.add(escapePanel);
 		}
 		board.togglePause();
-		isEscapePanelShown = !isEscapePanelShown;
+		isDisplayingEscapePanel = !isDisplayingEscapePanel;
 		frame.setVisible(true);
 	}
 
@@ -280,6 +283,17 @@ public class MainMenu extends JFrame {
 		return true;
 	}
 
+	/** displays main menu and cancel unsaved bindings changes */
+	public void backToMainMenuFromOption() {
+		//displays the main menu again    
+		backgroundPanel.remove(optionPanel);
+		backgroundPanel.add(mainMenuPanel);
+		isDisplayingMainMenu = true;
+		frame.setContentPane(backgroundPanel);
+		//cancels changes if they are not saved
+		setBindings();
+	}
+
 	public Board getBoard() {
 		return board;
 	}
@@ -296,6 +310,28 @@ public class MainMenu extends JFrame {
 	public class StartGame implements Runnable {
 		public void run() {
 			board.togglePause();
+		}
+	}
+
+	public class ClientRelatedKeyListener implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent event) {
+		}
+		@Override
+		public void keyReleased(KeyEvent event) {
+		}
+		@Override
+		public void keyTyped(KeyEvent event) {
+			int code = event.getKeyChar();
+
+			//escape
+			if (code == 27) {
+				if (frame.getContentPane() == backgroundPanel && !isDisplayingMainMenu) {
+					backToMainMenuFromOption();
+				} else if (frame.getContentPane() == board) {
+					handleEscapePanel();
+				}
+			}
 		}
 	}
 }

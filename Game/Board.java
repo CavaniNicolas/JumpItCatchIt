@@ -1,10 +1,7 @@
 package Game;
 
-import Menu.MainMenu;
 import Menu.KeyBindings;
 import Menu.FileFunctions;
-
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -31,9 +28,6 @@ public class Board extends JPanel {
 	/** La classe KeyListener */
 	private PlayerKeyListener playerKeyListener = new PlayerKeyListener();
 
-	/** mainMenu to allow escaping */
-	MainMenu mainMenu;
-
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying;
 
@@ -50,11 +44,6 @@ public class Board extends JPanel {
 	/** each player's key bindings */
 	KeyBindings redKeyBindings;
 	KeyBindings blueKeyBindings; // A supprimer pour en faire des variables locales des methodes
-
-
-	public Board(MainMenu mainMenu) {
-		this.mainMenu = mainMenu;
-	}
 
 	public class GamePlayTimerListener implements ActionListener {
 
@@ -258,10 +247,7 @@ public class Board extends JPanel {
 			//System.out.print("Code clavier "+ code + "\n ");
 
 			//escape
-			if (code == 27) {
-				//isPlaying = !isPlaying;
-				mainMenu.handleEscapePanel();
-			} else if (isPlaying) {
+			if (isPlaying) {
 				togglePressedKeys(code, characterRed, true);
 				togglePressedKeys(code, characterBlue, true);
 			}
