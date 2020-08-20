@@ -129,6 +129,8 @@ public class Character extends Entity {
 		if (isSpawning) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
+
+			actionBooleans.canShoot = false;
 		}
 
 
