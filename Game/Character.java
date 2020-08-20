@@ -76,7 +76,7 @@ public class Character extends Entity {
 	/**Cool Down pour lancer un projectile (en milli secondes) */
 	private long coolDownProjectile = 1_500;
 	/** Moment auquel on lance un projectile */
-	private long startTimeProjectile;
+	private long startTimeProjectile = 0;
 
 
 	/**Constructeur Character */
@@ -602,19 +602,19 @@ public class Character extends Entity {
 		private boolean canJump = true;
 		private boolean canLeft = true;
 		private boolean canRight = true;
-		private boolean canGrab;
-		private boolean canShield;
+		private boolean canGrab = true;
+		private boolean canShield = true;
 		private boolean canShoot = true;
-		private boolean canPush;
-		private boolean canSwitch;
+		private boolean canPush = false;
+		private boolean canSwitch = false;
 
 		/**Booleen permettant dactiver canSwitch (en fonction des pression sur Jump) */
-		private boolean canActivateCanSwitch;
-		private boolean isJumpFirstReleaseDone;
+		private boolean canActivateCanSwitch = false;
+		private boolean isJumpFirstReleaseDone = false;
 
 		// Booleens d'actions en cours
-		private boolean isJumping;
-		private boolean isSwitching;
+		private boolean isJumping = false;
+		private boolean isSwitching = false;
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)
