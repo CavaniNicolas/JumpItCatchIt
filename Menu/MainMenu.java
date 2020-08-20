@@ -31,6 +31,9 @@ public class MainMenu extends JFrame {
 	private Boolean isDisplayingEscapePanel = false;
 	private Boolean isDisplayingMainMenu;
 
+	//boolean to handle unsaved changes in options
+	private Boolean unsavedChanges = false;
+
 	//the frame displaying all the stuff
 	private JFrame frame;
 
@@ -174,6 +177,7 @@ public class MainMenu extends JFrame {
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {   
 				saveOptions();
+				unsavedChanges = false;
 			}
 		});
 
@@ -182,9 +186,12 @@ public class MainMenu extends JFrame {
 		backButton.setPreferredSize(new Dimension(150, 25));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				//backToMainMenuFromOption();
-				backgroundPanel.add(saveQuitOptionsPanel);
-				frame.setVisible(true);
+				if (!unsavedChanges) {
+					backToMainMenuFromOption();
+				} else {
+					backgroundPanel.add(saveQuitOptionsPanel);
+					frame.setVisible(true);
+				}
 			}
 		});
 
@@ -197,6 +204,7 @@ public class MainMenu extends JFrame {
 				FileFunctions.deleteNonDefaultBindings();
 				//recreate the menu with default settings 
 				setBindings();
+				unsavedChanges = false;
 			}
 		});
 
@@ -316,6 +324,8 @@ public class MainMenu extends JFrame {
 
 	/** displays main menu and cancel unsaved bindings changes */
 	public void backToMainMenuFromOption() {
+		//all options are saved
+		unsavedChanges = false;
 		//displays the main menu again    
 		backgroundPanel.remove(optionPanel);
 		backgroundPanel.add(mainMenuPanel);
@@ -336,6 +346,10 @@ public class MainMenu extends JFrame {
 		} else {
 			System.out.println("YOU SHALL NOT PASS");
 		}
+	}
+
+	public void setUnsavedChanges(Boolean bool) {
+		unsavedChanges = bool;
 	}
 
 	public Board getBoard() {

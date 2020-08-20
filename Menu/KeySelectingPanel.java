@@ -119,6 +119,9 @@ public class KeySelectingPanel extends JPanel {
 	
 		public void keyTyped(KeyEvent event) {	
 			String cara = String.valueOf((char)event.getKeyChar());
+			if (!cara.equals(selectingButton.getText())) {
+				mainMenu.setUnsavedChanges(true);
+			}
 			//if (cara in validCaracters) {
 				selectingButton.setText(cara);
 			//}
