@@ -526,6 +526,22 @@ public class Character extends Entity {
 	}
 
 
+	/** Verifie la collision des projectiles et inflige des degats et les fait disparaitre */
+	public void checkProjectilesCollision(Character otherCharacter) {
+		Projectile proj;
+
+		for (int i=0; i<projectiles.size(); i++) {
+			proj = projectiles.get(i);
+
+			// Si les projectiles de ce personnage touchent l'adversaire
+			if (proj.checkCharacterCollision(otherCharacter)) {
+				// Il faut supprimer ce projectile
+				projectiles.remove(i);
+			}
+		}
+	}
+
+
 	/**Dessine le personnage */
 	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {
 		g.setColor(colorCharacter);
@@ -584,7 +600,12 @@ public class Character extends Entity {
 	public ActionBooleans getActionBooleans() {
 		return actionBooleans;
 	}
-
+	public int getLives() {
+		return lives;
+	}
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
 
 	public class ActionBooleans {
 

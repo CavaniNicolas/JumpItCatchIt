@@ -84,6 +84,7 @@ public class Board extends JPanel {
 			checkActions();
 
 			moveProjectiles();
+			checkProjectilesCollision();
 		}
 	}
 
@@ -137,6 +138,13 @@ public class Board extends JPanel {
 	public void moveProjectiles() {
 		characterRed.moveProjectiles();
 		characterBlue.moveProjectiles();
+	}
+
+
+	/** Verifie la collision des projectiles et inflige des degats en faisant disparaitre le projectile */
+	public void checkProjectilesCollision() {
+		characterRed.checkProjectilesCollision(characterBlue);
+		characterBlue.checkProjectilesCollision(characterRed);
 	}
 
 

@@ -46,6 +46,18 @@ public class Projectile extends Entity {
 	}
 
 
+	/** Verifie la collision avec un personnage */
+	public boolean checkCharacterCollision(Character character) {
+		boolean hasTouched = false;
+		// La gestion des collisions entre les projectiles et les personnages utilise des hitbox rondes pour les deux entites
+		if ( Math.pow((double)(x - character.x), 2) + Math.pow((double)(y - (character.y + character.height/2)), 2) < Math.pow((double)(width/2 + character.width/2), 2) ) {
+			character.setLives(character.getLives() - damage);
+			hasTouched = true;
+		}
+		return hasTouched;
+	}
+
+
 	/**Dessine le projectile */
 	public void drawProjectile(Graphics g, BoardGraphism boardGraphism) {
 		g.setColor(colorProjectile);
