@@ -243,19 +243,27 @@ public class Character extends Entity {
 		}
 
 
-		// Si les persos sont a la meme hauteur et qu'il y a une collision forte entre eux selon X
-		// Si le perso est a gauche et est en collision avec l'autre (si on utilise >=, les persos peuvent se repousser en se deplacant)
-		if (areOnSameY && isOnLeftSide && x > otherCharacter.x - hitboxWidth) {
-			areOnSameXCollisions = true;
+		// Si personne ne switch, ou si les deux persos switch en meme temps, on active la collision forte selon X
+		if (actionBooleans.isSwitching == otherCharacter.actionBooleans.isSwitching) {
+			// Si les persos sont a la meme hauteur et qu'il y a une collision forte entre eux selon X
+			// Si le perso est a gauche et est en collision avec l'autre (si on utilise >=, les persos peuvent se repousser en se deplacant)
+			if (areOnSameY && isOnLeftSide && x > otherCharacter.x - hitboxWidth) {
+				areOnSameXCollisions = true;
 
-		// Si le perso est a droite et est en collision avec l'autre (si on utilise <=, les persos peuvent se repousser en se deplacant)
-		} else if (areOnSameY && isOnLeftSide == false && x < otherCharacter.x + hitboxWidth) {
-			areOnSameXCollisions = true;
+			// Si le perso est a droite et est en collision avec l'autre (si on utilise <=, les persos peuvent se repousser en se deplacant)
+			} else if (areOnSameY && isOnLeftSide == false && x < otherCharacter.x + hitboxWidth) {
+				areOnSameXCollisions = true;
 
-		// Sinon les persos ne sont pas en collision
+			// Sinon les persos ne sont pas en collision
+			} else {
+				areOnSameXCollisions = false;
+			}
+
+		// Sinon un des persos est en train de switch, on desactive la collision selon X
 		} else {
 			areOnSameXCollisions = false;
 		}
+
 
 		// Annule la vitesse et l'acceleration en X si les personnages se collisionnent dans les airs (glitch lors des switch)
 		if (areOnSameXCollisions) {
