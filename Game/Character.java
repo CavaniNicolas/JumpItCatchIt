@@ -105,11 +105,15 @@ public class Character extends Entity {
 		checkCoolDowns();
 
 		// Au sol on peut se deplacer, et on est plus en train de spawner
-		if (y == minY && isFalling == false) {
+		if (y == minY && isFalling == false) {			
 			actionBooleans.canLeft = true;
 			actionBooleans.canRight = true;
-
+			
 			isSpawning = false;
+
+			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
+			speedX = 0;
+			accelX = 0;
 		}
 
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas

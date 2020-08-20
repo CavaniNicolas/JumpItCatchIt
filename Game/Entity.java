@@ -74,10 +74,6 @@ public class Entity {
 			speedY = 0;
 			accelY = 0;
 
-			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
-			speedX = 0;
-			accelX = 0;
-
 		// Sinon on tombe, on conserve le min
 		} else {
 			y = y + speedY;
