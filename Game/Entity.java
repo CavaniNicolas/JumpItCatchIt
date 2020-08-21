@@ -38,10 +38,16 @@ public class Entity {
 	}
 
 
-	/** Deplace l'entite */
-	public void move() {
+	/**Deplace l'entite */
+	public void moveXY() {
+		moveX();
+		moveY();
+	}
+
+
+	/** Deplace l'entite selon X*/
+	public void moveX() {
 		speedX += accelX;
-		speedY += accelY;
 
 		// Collision a gauche, on conserve le max
 		if (minX > x + speedX) {
@@ -55,16 +61,18 @@ public class Entity {
 			x = maxX;
 		}
 
+	}
+
+
+	/** Deplace l'entite selon Y*/
+	public void moveY() {
+		speedY += accelY;
 
 		// Collision au sol, on conserve le max (on est au sol)
 		if (minY > y + speedY) {
 			y = minY;
 			speedY = 0;
 			accelY = 0;
-
-			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
-			speedX = 0;
-			accelX = 0;
 
 		// Sinon on tombe, on conserve le min
 		} else {

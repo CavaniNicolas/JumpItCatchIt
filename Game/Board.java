@@ -57,8 +57,8 @@ public class Board extends JPanel {
 				updatePositionAndMoveAll();
 				checkActions();
 
-				moveProjectiles();
-			}
+			moveProjectiles();
+			checkProjectilesCollision();
 		}
 	}
 
@@ -122,6 +122,13 @@ public class Board extends JPanel {
 	}
 
 
+	/** Verifie la collision des projectiles et inflige des degats en faisant disparaitre le projectile */
+	public void checkProjectilesCollision() {
+		characterRed.checkProjectilesCollision(characterBlue);
+		characterBlue.checkProjectilesCollision(characterRed);
+	}
+
+
 	/**
 	 * Fonction d'affichage principale
 	 * <p>
@@ -177,9 +184,9 @@ public class Board extends JPanel {
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
-				boardGraphism.getReal().getGroundLevelYCoord(), Color.red, redKeyBindings, boardGraphism);
+				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redKeyBindings, boardGraphism);
 		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
-				boardGraphism.getReal().getGroundLevelYCoord(), Color.blue, blueKeyBindings, boardGraphism);
+				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueKeyBindings, boardGraphism);
 
 		// On charge les images, et on les met dans les objets (null si elles n'ont pas
 		// reussi)

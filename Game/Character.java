@@ -12,6 +12,9 @@ public class Character extends Entity {
 
 	private KeyBindings keyBindings;
 
+	/** Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
+	private boolean isLeftCharacter; // Pourrait etre remplace par un ID
+
 	/**Nombre de vies max (en moities de coeur) */
 	private int livesMax = 6;
 	/**Nombre de vies actuel */
@@ -29,6 +32,16 @@ public class Character extends Entity {
 	private boolean isOnLeftPlatform;
 	/** Booleen de position, sur la plateforme de droite */
 	private boolean isOnRightPlatform;
+	/**Si les personnages sont a la meme hauteur ou non */
+	private boolean areOnSameY;
+	/**Si les personnages sont l'un dans l'autre en X */
+	private boolean areOnSameXCollisions;
+	/**Vitesse de decollision */
+	private int decollisionSpeed = 30;
+
+
+	/**Largeur de la hitbox selon X */
+	private int hitboxWidth = 800; //this.width / 2;
 
 	/** Booleen, true si on est en train de tomber dans le vide */
 	private boolean isFalling;
@@ -63,12 +76,13 @@ public class Character extends Entity {
 	/**Cool Down pour lancer un projectile (en milli secondes) */
 	private long coolDownProjectile = 1_500;
 	/** Moment auquel on lance un projectile */
-	private long startTimeProjectile;
+	private long startTimeProjectile = 0;
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
 		super(x, y, 0, 0, 0, 0);
+		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
 		this.keyBindings = keyBindings;
@@ -78,8 +92,8 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, Color colorCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
-		this(x, y, colorCharacter, null, keyBindings, boardGraphism);
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
+		this(x, y, isLeftCharacter, colorCharacter, null, keyBindings, boardGraphism);
 	}
 
 
@@ -91,11 +105,15 @@ public class Character extends Entity {
 		checkCoolDowns();
 
 		// Au sol on peut se deplacer, et on est plus en train de spawner
-		if (y == minY && isFalling == false) {
+		if (y == minY && isFalling == false) {			
 			actionBooleans.canLeft = true;
 			actionBooleans.canRight = true;
-
+			
 			isSpawning = false;
+
+			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
+			speedX = 0;
+			accelX = 0;
 		}
 
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
@@ -107,14 +125,17 @@ public class Character extends Entity {
 			actionBooleans.canRight = true;
 		}
 
-		// Pendant quon respawn on ne peut pas bouger
+		// Pendant qu'un perso respawn il ne peut pas bouger
 		if (isSpawning) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
+
+			actionBooleans.canShoot = false;
 		}
 
+
 		// Si on est au bord des collisions, on ne peut pas s'enfoncer plus
-		/* Peut etre pas tres utile ... on verra (c'etait pour essayer de supprimer le tremblement quand les joueurs se foncent dedans) */
+		/* Peut etre pas tres utile ... on verra */
 		if (x <= minX) {
 			actionBooleans.canLeft = false;
 		}
@@ -133,6 +154,15 @@ public class Character extends Entity {
 			actionBooleans.canActivateCanSwitch = true;
 			actionBooleans.isSwitching = false;
 		}
+
+		// Pendant que les persos sont en collision forte, ils ne peuvent pas se deplacer et sauter et switch
+		if (areOnSameXCollisions) {
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
+			actionBooleans.canJump = false;
+			actionBooleans.canSwitch = false;
+		}
+
 
 		// Si on peut activer le canSwitch (gestion des pressions des touches) et qu'il n'a pas encore ete active, on l'active
 		if (actionBooleans.isJumpFirstReleaseDone && actionBooleans.canActivateCanSwitch) {
@@ -174,7 +204,13 @@ public class Character extends Entity {
 	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
 
 		// Si on est a gauche ou a droite de son adversaire
-		if (x < otherCharacter.x) {
+		if (x == otherCharacter.x) {
+			if (isLeftCharacter) {
+				isOnLeftSide = true;
+			} else {
+				isOnLeftSide = false;
+			}
+		} else if (x < otherCharacter.x) {
 			isOnLeftSide = true;
 		} else {
 			isOnLeftSide = false;
@@ -203,6 +239,44 @@ public class Character extends Entity {
 			}
 		}
 
+
+		// Si les personnages sont a la meme hauteur ou pas
+		if ( (y >= otherCharacter.y && y <= otherCharacter.y + height) || 
+			(y + height >= otherCharacter.y && y + height <= otherCharacter.y + height) ) {
+				areOnSameY = true;
+		} else {
+			areOnSameY = false;
+		}
+
+
+		// Si personne ne switch, ou si les deux persos switch en meme temps, on active la collision forte selon X
+		if (actionBooleans.isSwitching == otherCharacter.actionBooleans.isSwitching) {
+			// Si les persos sont a la meme hauteur et qu'il y a une collision forte entre eux selon X
+			// Si le perso est a gauche et est en collision avec l'autre (si on utilise >=, les persos peuvent se repousser en se deplacant)
+			if (areOnSameY && isOnLeftSide && x > otherCharacter.x - hitboxWidth) {
+				areOnSameXCollisions = true;
+
+			// Si le perso est a droite et est en collision avec l'autre (si on utilise <=, les persos peuvent se repousser en se deplacant)
+			} else if (areOnSameY && isOnLeftSide == false && x < otherCharacter.x + hitboxWidth) {
+				areOnSameXCollisions = true;
+
+			// Sinon les persos ne sont pas en collision
+			} else {
+				areOnSameXCollisions = false;
+			}
+
+		// Sinon un des persos est en train de switch, on desactive la collision selon X
+		} else {
+			areOnSameXCollisions = false;
+		}
+
+
+		// Annule la vitesse et l'acceleration en X si les personnages se collisionnent dans les airs (glitch lors des switch)
+		if (areOnSameXCollisions) {
+			speedX = 0;
+			accelX = 0;
+		}
+
 	}
 
 
@@ -218,24 +292,40 @@ public class Character extends Entity {
 			minY = boardGraphism.getReal().getGroundLevelYCoord();
 		} else {
 			// Si on est pas sur une plateforme il faut tomber
-			minY = -140;
+			minY = -10_000;
 			
 			if (isFalling) {
 				accelY = GRAVITY;
 			}
 		}
 
+
 		// Collisions Borders selon X
 		// Les bords principaux sont les murs et le joueur adverse si on est sur la plateforme
 		if (isFalling == false) {
-			if (isOnLeftSide) { // Il faudra peut etre traiter ces cas aussi par rapport a si l'adversaire est sur sa plateforme ou pas
-				minX = halfCharacterWidth;
-				maxX = otherCharacter.x - halfCharacterWidth;
 
+			// Si les personnages sont a la meme hauteur il ne peuvant pas se traverser
+			if (areOnSameY) {
+				// Si le personnage est a gauche de l'autre personnage
+				if (isOnLeftSide) {
+					// Les limites sont le bord gauche du board et l'autre perso
+					minX = halfCharacterWidth;
+					maxX = otherCharacter.x - halfCharacterWidth;
+
+				// Sinon le personnage est a droite de l'autre personnage
+				} else {
+					// Les limites sont le bord droit du board et l'autre perso
+					minX = otherCharacter.x + halfCharacterWidth;
+					maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+				}
+
+			// Sinon ils ne sont pas a la meme hauteur, ils peuvent se traverser
 			} else {
-				minX = otherCharacter.x + halfCharacterWidth;
+				// Les limites sont les bords gauche et droit du board
+				minX = halfCharacterWidth;
 				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
 			}
+
 
 			// Supprime la collisions entre les joueurs lors d'un switch d'un des joueurs
 			if (actionBooleans.isSwitching || otherCharacter.getActionBooleans().isSwitching) {
@@ -262,11 +352,11 @@ public class Character extends Entity {
 			updateCollisionBorders(boardGraphism, otherCharacter);
 		}
 
-		checkMovement();
+		checkMovement(otherCharacter);
 		checkJump();
 		checkSwitch();
 
-		this.move();
+		moveCharacter(otherCharacter);
 	}
 
 
@@ -312,7 +402,7 @@ public class Character extends Entity {
 
 
 	/**Applique la vitesse pour effectuer un deplacement lateral */
-	private void checkMovement() {
+	private void checkMovement(Character otherCharacter) {
 
 		// Applique une vitesse initiale au personnage pour se deplacer lateralement
 		if (actionBooleans.leftPressed && actionBooleans.canLeft) {
@@ -323,6 +413,12 @@ public class Character extends Entity {
 
 		} else {
 			this.speedX = 0;
+		}
+
+
+		// Permet deviter le tremblement des personnages si ils essayent de se deplacer alors quils sont cote a cote mais que leur position ne touche pas leur minX ou maxX
+		if (x + speedX > maxX || x + speedX < minX) {
+			speedX = 0;
 		}
 	}
 
@@ -399,14 +495,53 @@ public class Character extends Entity {
 	}
 
 
+	/**Deplace le personnage */
+	public void moveCharacter(Character otherCharacter) {
+
+		// Si il y a collisions trop importante entre les perso, il faut les ecarter lentement chacun l'un de l'autre
+		if (areOnSameXCollisions) {
+			//Gestion des X
+			if (isOnLeftSide) {
+				x -= decollisionSpeed;
+			} else {
+				x += decollisionSpeed;
+			}
+
+			//Gestion des Y
+			this.moveY();
+
+		// Si les deux perso ne sont pas en collisions, on se deplace normalement
+		} else {
+			this.moveXY();
+		}
+
+	}
+
+
 	/** Deplace les projectiles */
 	public void moveProjectiles() {
 		Projectile proj;
 		for (int i=0; i<projectiles.size(); i++) {
 			proj = projectiles.get(i);
 
-			proj.move();
+			proj.moveX();
 			if (proj.x == proj.minX || proj.x == proj.maxX) {
+				projectiles.remove(i);
+			}
+		}
+	}
+
+
+	/** Verifie la collision des projectiles et inflige des degats et les fait disparaitre */
+	public void checkProjectilesCollision(Character otherCharacter) {
+		Projectile proj;
+
+		for (int i=0; i<projectiles.size(); i++) {
+			proj = projectiles.get(i);
+
+			// Si les projectiles de ce personnage touchent l'adversaire
+			if (proj.checkCharacterCollision(otherCharacter)) {
+				// Il faut supprimer ce projectile
 				projectiles.remove(i);
 			}
 		}
@@ -471,7 +606,12 @@ public class Character extends Entity {
 	public ActionBooleans getActionBooleans() {
 		return actionBooleans;
 	}
-
+	public int getLives() {
+		return lives;
+	}
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
 
 	public class ActionBooleans {
 
@@ -489,19 +629,19 @@ public class Character extends Entity {
 		private boolean canJump = true;
 		private boolean canLeft = true;
 		private boolean canRight = true;
-		private boolean canGrab;
-		private boolean canShield;
+		private boolean canGrab = true;
+		private boolean canShield = true;
 		private boolean canShoot = true;
-		private boolean canPush;
-		private boolean canSwitch;
+		private boolean canPush = false;
+		private boolean canSwitch = false;
 
 		/**Booleen permettant dactiver canSwitch (en fonction des pression sur Jump) */
-		private boolean canActivateCanSwitch;
-		private boolean isJumpFirstReleaseDone;
+		private boolean canActivateCanSwitch = false;
+		private boolean isJumpFirstReleaseDone = false;
 
 		// Booleens d'actions en cours
-		private boolean isJumping;
-		private boolean isSwitching;
+		private boolean isJumping = false;
+		private boolean isSwitching = false;
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)

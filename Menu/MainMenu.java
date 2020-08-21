@@ -56,7 +56,8 @@ public class MainMenu extends JFrame {
 		createSaveQuitOptionsPanel();
 		createSaveFailedPanel();
 
-		/** display main menu first*/
+
+    /** display main menu first*/
 		backgroundPanel.add(mainMenuPanel);
 		isDisplayingMainMenu = true;
 		this.frame.setContentPane(backgroundPanel);
