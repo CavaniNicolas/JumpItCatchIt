@@ -20,6 +20,7 @@ public class MainMenu extends JFrame {
 	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
 
 	//the panels that can be displayed
+	private JPanel saveFailedPanel;
 	private JPanel saveQuitOptionsPanel;
 	private JPanel mainMenuPanel;
 	private JPanel optionPanel;
@@ -53,6 +54,7 @@ public class MainMenu extends JFrame {
 		createKeyBindingMenu();
 		createEscapePanel();
 		createSaveQuitOptionsPanel();
+		createSaveFailedPanel();
 
 		/** display main menu first*/
 		backgroundPanel.add(mainMenuPanel);
@@ -176,7 +178,7 @@ public class MainMenu extends JFrame {
 		saveButton.setPreferredSize(new Dimension(150, 25));
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {   
-				saveOptions();
+				saveOptions(false);
 				unsavedChanges = false;
 			}
 		});
@@ -269,9 +271,7 @@ public class MainMenu extends JFrame {
 		saveQuitButton.setPreferredSize(new Dimension(160, 25));
 		saveQuitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				saveOptions();
-				backgroundPanel.remove(saveQuitOptionsPanel);				
-				backToMainMenuFromOption();
+				saveOptions(true);
 			}
 		});
 
@@ -289,6 +289,30 @@ public class MainMenu extends JFrame {
 		saveQuitOptionsPanel.add(info);
 		saveQuitOptionsPanel.add(saveQuitButton);
 		saveQuitOptionsPanel.add(cancelQuitButton);
+	}
+
+	public void createSaveFailedPanel() {
+		saveFailedPanel = new JPanel();
+		saveFailedPanel.setBorder(BorderFactory.createTitledBorder("WARNING"));
+		saveFailedPanel.setBackground(Color.white);
+		saveFailedPanel.setPreferredSize(new Dimension(275, 85));
+
+		JLabel info = new JLabel("There's a problem with your bindings");
+		info.setPreferredSize(new Dimension(250, 25));
+
+		/** resume game */
+		JButton saveFailedButton = new JButton("OK");
+		saveFailedButton.setPreferredSize(new Dimension(75, 25));
+		saveFailedButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				backgroundPanel.remove(saveFailedPanel);
+				frame.setVisible(true);				
+			}
+		});
+
+		// add all the components
+		saveFailedPanel.add(info);
+		saveFailedPanel.add(saveFailedButton);
 	}
 
 	public void handleEscapePanel() {
@@ -331,20 +355,26 @@ public class MainMenu extends JFrame {
 		backgroundPanel.add(mainMenuPanel);
 		isDisplayingMainMenu = true;
 		frame.setContentPane(backgroundPanel);
+		frame.setVisible(true);
 		//cancels changes if they are not saved
 		setBindings();
 	}
 
 	/** saves options if they are valid */
-	public void saveOptions() {
+	public void saveOptions(Boolean back) {
 		//saves the current (the ones being displayed) keyBindings if they are all unique
 		if (checkUnicity()) {
 			KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
 			KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
 			FileFunctions.saveBindings(redBindings, "KeyBindings/redKeyBindings.txt");
 			FileFunctions.saveBindings(blueBindings, "KeyBindings/blueKeyBindings.txt");
+			if (back) {
+				backgroundPanel.remove(saveQuitOptionsPanel);				
+				backToMainMenuFromOption();
+			}
 		} else {
-			System.out.println("YOU SHALL NOT PASS");
+			backgroundPanel.add(saveFailedPanel);
+			frame.setVisible(true);
 		}
 	}
 
