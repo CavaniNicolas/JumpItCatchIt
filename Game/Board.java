@@ -41,9 +41,6 @@ public class Board extends JPanel {
 	/**Timer d'affichage du jeu */
 	private Timer gameDisplayTimer;
 
-	/** each player's key bindings */
-	KeyBindings redKeyBindings;
-	KeyBindings blueKeyBindings; // A supprimer pour en faire des variables locales des methodes
 
 	public class GamePlayTimerListener implements ActionListener {
 
@@ -57,10 +54,12 @@ public class Board extends JPanel {
 				updatePositionAndMoveAll();
 				checkActions();
 
-			moveProjectiles();
-			checkProjectilesCollision();
+				moveProjectiles();
+				checkProjectilesCollision();
+			}
 		}
 	}
+
 
 	public void togglePause() {
 		isPlaying = !isPlaying;
