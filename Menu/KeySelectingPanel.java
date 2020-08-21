@@ -38,6 +38,7 @@ public class KeySelectingPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) { 
 				String defaultKeyValue = intToString(FileFunctions.getBindings(path).getKeyBindings().get(position).getKeyValue());
 				selectingButton.setText(defaultKeyValue);
+				checkAvailability();
 			}
 		});
 		setBinding(keyBinding);
@@ -57,9 +58,9 @@ public class KeySelectingPanel extends JPanel {
 	/** changes the color of the button if the bindings are already used */
 	public void checkAvailability() {
 		//if changing to an available state, check the former similar panel to change it as well
-		if (similarKeySelectingPanels.size() == 1) {
-			similarKeySelectingPanels.get(0).getSimilarKeySelectingPanels().clear();
-			similarKeySelectingPanels.get(0).getButton().setBackground(Color.white);
+		for (KeySelectingPanel similarKeySelectingPanel : similarKeySelectingPanels) {
+			similarKeySelectingPanel.getSimilarKeySelectingPanels().clear();
+			similarKeySelectingPanel.getButton().setBackground(Color.white);
 		}
 		//resets to available before testing again
 		similarKeySelectingPanels.clear();
@@ -118,6 +119,9 @@ public class KeySelectingPanel extends JPanel {
 	
 		public void keyTyped(KeyEvent event) {	
 			String cara = String.valueOf((char)event.getKeyChar());
+			if (!cara.equals(selectingButton.getText())) {
+				mainMenu.setUnsavedChanges(true);
+			}
 			//if (cara in validCaracters) {
 				selectingButton.setText(cara);
 			//}

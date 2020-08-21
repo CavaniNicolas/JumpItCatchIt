@@ -1,10 +1,7 @@
 package Game;
 
-import Menu.MainMenu;
 import Menu.KeyBindings;
 import Menu.FileFunctions;
-
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -31,11 +28,8 @@ public class Board extends JPanel {
 	/** La classe KeyListener */
 	private PlayerKeyListener playerKeyListener = new PlayerKeyListener();
 
-	/** mainMenu to allow escaping */
-	MainMenu mainMenu;
-
 	/**Booleen, true si le jeu est en cours */
-	private boolean isPlaying = false;
+	private boolean isPlaying;
 
 	/** Personnage rouge (initialement a gauche) */
 	private Character characterRed;
@@ -51,45 +45,32 @@ public class Board extends JPanel {
 	KeyBindings redKeyBindings;
 	KeyBindings blueKeyBindings; // A supprimer pour en faire des variables locales des methodes
 
-
-	public Board() {
-		gamePlayTimer = new Timer(12, new GamePlayTimerListener());
-		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
-	}
-
-
-	/** Le jeu lui meme (la boucle while true) */
-	public void startGame() {
-		this.isPlaying = true;
-
-		gamePlayTimer.start();
-		gameDisplayTimer.start();
-	}
-
-
 	public class GamePlayTimerListener implements ActionListener {
 
 		/**Action a effectuer lorsque le timer renvoie un event */
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			if (isPlaying) {
 
-			if (isPlaying == false) {
-				gamePlayTimer.stop();
-				gameDisplayTimer.stop();
-			}
-
-			updateAllCollisionBorders();
-			updateActionBooleans();
-			updatePositionAndMoveAll();
-			checkActions();
+				updateAllCollisionBorders();
+				updateActionBooleans();
+				updatePositionAndMoveAll();
+				checkActions();
 
 			moveProjectiles();
 			checkProjectilesCollision();
 		}
 	}
 
-	public void setMainMenu(MainMenu mainMenu) {
-		this.mainMenu = mainMenu;
+	public void togglePause() {
+		isPlaying = !isPlaying;
+		if (!isPlaying) {
+			gamePlayTimer.stop();
+		} else {
+			gamePlayTimer = new Timer(12, new GamePlayTimerListener());
+			gamePlayTimer.start();
+			gameDisplayTimer.start();
+		}
 	}
 
 
@@ -184,6 +165,11 @@ public class Board extends JPanel {
 	 * associees serialisees, la ArrayList d'objets
 	 */
 	public void initGame() {
+		isPlaying = false;
+
+		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
+
+
 		// Initialise les coordonnees reelles des objets
 		boardGraphism.initRealCoordsAttributes();
 
@@ -230,6 +216,10 @@ public class Board extends JPanel {
 		}
 	}
 
+	public void setIsPlaying(Boolean bool) {
+		isPlaying = bool;
+	}
+
 	public BoardGraphism getBoardGraphism() {
 		return boardGraphism;
 	}
@@ -261,13 +251,12 @@ public class Board extends JPanel {
 		public void keyPressed(KeyEvent event) {
 
 			int code = event.getKeyChar();
-			// System.out.print("Code clavier "+ code + "\n ");
+			//System.out.print("Code clavier "+ code + "\n ");
 
-			togglePressedKeys(code, characterRed, true);
-			togglePressedKeys(code, characterBlue, true);
-
-			if (code == 27) {
-				mainMenu.handleEscapePanel();
+			//escape
+			if (isPlaying) {
+				togglePressedKeys(code, characterRed, true);
+				togglePressedKeys(code, characterBlue, true);
 			}
 		}
 
@@ -276,8 +265,10 @@ public class Board extends JPanel {
 			int code = event.getKeyChar();
 			// System.out.print("Code clavier "+ code + "\n ");
 
-			togglePressedKeys(code, characterRed, false);
-			togglePressedKeys(code, characterBlue, false);
+			if (isPlaying) {
+				togglePressedKeys(code, characterRed, false);
+				togglePressedKeys(code, characterBlue, false);
+			}
 
 		}
 
@@ -309,7 +300,6 @@ public class Board extends JPanel {
       		}
 			// Gauche (0)
 			if (code == characterKeys.getKeyBindings().get(0).getKeyValue()) {
-
 				character.getActionBooleans().setLeftPressed(toggle);
 			}
 			// Droite (1)
