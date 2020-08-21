@@ -47,14 +47,13 @@ public class MainMenu extends JFrame {
 		//########################
 		//uncomment this part and comment the following one to display a menu
 		//the first panel to be displayed is the main menu
-		this.frame.setContentPane(mainMenuPane);
-		this.frame.setVisible(true);
+		// this.frame.setContentPane(mainMenuPane);
+		// this.frame.setVisible(true);
 		//#########################
 
 		//########################
 		//uncomment this part and comment the previous one to not display a menu
-		/*
-		startGame();*/
+		startGame();
 		//########################
 	}
 
