@@ -28,6 +28,16 @@ public class Entity {
 	protected int accelY;
 
 
+	public Entity() {
+		this.x = 0;
+		this.y = 0;
+		this.speedX = 0;
+		this.speedY = 0;
+		this.accelX = 0;
+		this.accelY = 0;
+	}
+
+
 	public Entity(int x, int y, int speedX, int speedY, int accelX, int accelY) {
 		this.x = x;
 		this.y = y;
