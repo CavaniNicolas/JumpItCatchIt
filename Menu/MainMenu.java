@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
@@ -20,6 +22,9 @@ public class MainMenu extends JFrame {
 	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
 
 	//the panels that can be displayed
+	private JPanel createMultiplayerGamePanel;
+	private JPanel joinMultiplayerGamePanel;
+	private JPanel multiplayerPanel;
 	private JPanel saveFailedPanel;
 	private JPanel saveQuitOptionsPanel;
 	private JPanel mainMenuPanel;
@@ -55,7 +60,9 @@ public class MainMenu extends JFrame {
 		createEscapePanel();
 		createSaveQuitOptionsPanel();
 		createSaveFailedPanel();
-
+		createMultiplayerPanel();
+		createCreateMultiplayerGamePanel();
+		createJoinMultiplayerGamePanel();
 
     /** display main menu first*/
 		backgroundPanel.add(mainMenuPanel);
@@ -101,7 +108,7 @@ public class MainMenu extends JFrame {
 
 		//create a panel to contain the buttons
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setPreferredSize(new Dimension(160, 90));
+		buttonPanel.setPreferredSize(new Dimension(160, 130));
 
 		//start a game
 		JButton playButton = new JButton("PLAY");
@@ -109,6 +116,17 @@ public class MainMenu extends JFrame {
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				startGame();
+			}
+		});
+
+		//multiplayer menu
+		JButton multiplayerButton = new JButton("MULTIPLAYER");
+		multiplayerButton.setPreferredSize(new Dimension(150, 25));
+		multiplayerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				backgroundPanel.remove(mainMenuPanel);
+				backgroundPanel.add(multiplayerPanel);
+				reloadDisplay();
 			}
 		});
 
@@ -121,8 +139,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.remove(mainMenuPanel);
 				backgroundPanel.add(optionPanel);
 				isDisplayingMainMenu = false;
-				frame.setContentPane(backgroundPanel);
-				frame.setVisible(true);
+				reloadDisplay();
 			}
 		});
 
@@ -136,6 +153,7 @@ public class MainMenu extends JFrame {
 		});
 
 		buttonPanel.add(playButton);
+		buttonPanel.add(multiplayerButton);
 		buttonPanel.add(optionButton);
 		buttonPanel.add(quitButton);
 
@@ -192,8 +210,9 @@ public class MainMenu extends JFrame {
 				if (!unsavedChanges) {
 					backToMainMenuFromOption();
 				} else {
+					backgroundPanel.remove(optionPanel);
 					backgroundPanel.add(saveQuitOptionsPanel);
-					frame.setVisible(true);
+					reloadDisplay();
 				}
 			}
 		});
@@ -272,6 +291,9 @@ public class MainMenu extends JFrame {
 		saveQuitButton.setPreferredSize(new Dimension(160, 25));
 		saveQuitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
+				backgroundPanel.remove(saveQuitOptionsPanel);
+				backgroundPanel.add(optionPanel);
+				reloadDisplay();
 				saveOptions(true);
 			}
 		});
@@ -306,14 +328,138 @@ public class MainMenu extends JFrame {
 		saveFailedButton.setPreferredSize(new Dimension(75, 25));
 		saveFailedButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
+				//displays the option panel
 				backgroundPanel.remove(saveFailedPanel);
-				frame.setVisible(true);				
+				backgroundPanel.add(optionPanel);
+				reloadDisplay();				
 			}
 		});
 
 		// add all the components
 		saveFailedPanel.add(info);
 		saveFailedPanel.add(saveFailedButton);
+	}
+
+	/** creates the multiplayerJPanel with its component*/
+	public void createMultiplayerPanel() {
+		multiplayerPanel = new JPanel();
+		multiplayerPanel.setBorder(BorderFactory.createTitledBorder("MULTIPLAYER"));
+		multiplayerPanel.setBackground(Color.white);
+		multiplayerPanel.setPreferredSize(new Dimension(130, 120));
+
+		//create a joinable game
+		JButton createButton = new JButton("CREATE GAME");
+		createButton.setPreferredSize(new Dimension(120, 25));
+		createButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				//displays the creatingGame panel 
+				backgroundPanel.remove(multiplayerPanel);
+				backgroundPanel.add(createMultiplayerGamePanel);
+				reloadDisplay();
+			}
+		});
+
+		//join an existing game
+		JButton joinButton = new JButton("JOIN GAME");
+		joinButton.setPreferredSize(new Dimension(120, 25));
+		joinButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				//displays the joiningGame panel 
+				backgroundPanel.remove(multiplayerPanel);
+				backgroundPanel.add(joinMultiplayerGamePanel);
+				reloadDisplay();			
+			}
+		});
+
+		//back to main menu
+		JButton backButton = new JButton("BACK");
+		backButton.setPreferredSize(new Dimension(120, 25));
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the mainMenu panel 
+				backgroundPanel.remove(multiplayerPanel);
+				backgroundPanel.add(mainMenuPanel);
+				reloadDisplay();
+			}
+		});
+
+		multiplayerPanel.add(createButton);
+		multiplayerPanel.add(joinButton);
+		multiplayerPanel.add(backButton);
+	}
+
+	/** creates the createMultiplayerGamePanel with its component*/
+	public void createCreateMultiplayerGamePanel() {
+		createMultiplayerGamePanel = new JPanel();
+		createMultiplayerGamePanel.setBorder(BorderFactory.createTitledBorder("CREATING A GAME"));
+		createMultiplayerGamePanel.setBackground(Color.white);
+		createMultiplayerGamePanel.setPreferredSize(new Dimension(320, 120));
+
+		//create a joinable game
+		JLabel gameAvailable = new JLabel("Your game is available on : ");
+		gameAvailable.setPreferredSize(new Dimension(300, 25));
+
+		//join an existing game
+		JLabel waiting = new JLabel("Waiting for your great enemy");
+		waiting.setPreferredSize(new Dimension(300, 25));
+
+		//back to main menu
+		JButton backButton = new JButton("BACK");
+		backButton.setPreferredSize(new Dimension(70, 25));
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the mainMenu panel 
+				backgroundPanel.remove(createMultiplayerGamePanel);
+				backgroundPanel.add(multiplayerPanel);
+				reloadDisplay();
+			}
+		});
+
+		createMultiplayerGamePanel.add(gameAvailable);
+		createMultiplayerGamePanel.add(waiting);
+		createMultiplayerGamePanel.add(backButton);
+	}
+
+	/** creates the joinMultiplayerGamePanel with its component*/
+	public void createJoinMultiplayerGamePanel() {
+		joinMultiplayerGamePanel = new JPanel();
+		joinMultiplayerGamePanel.setBorder(BorderFactory.createTitledBorder("JOIN A GAME"));
+		joinMultiplayerGamePanel.setBackground(Color.white);
+		joinMultiplayerGamePanel.setPreferredSize(new Dimension(550, 120));
+
+		//create a joinable game
+		JLabel enterIP = new JLabel("Enter your great enemy's server IP : ");
+		enterIP.setPreferredSize(new Dimension(300, 25));
+
+		//join an existing game
+		JTextField enemyIP = new JTextField();
+		enemyIP.setPreferredSize(new Dimension(500, 25));
+
+		//back to main menu
+		JButton joinButton = new JButton("JOIN");
+		joinButton.setPreferredSize(new Dimension(70, 25));
+		joinButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("joining");
+			}
+		});
+
+		//back to main menu
+		JButton backButton = new JButton("BACK");
+		backButton.setPreferredSize(new Dimension(70, 25));
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the multiplayer panel 
+				backgroundPanel.remove(joinMultiplayerGamePanel);
+				backgroundPanel.add(multiplayerPanel);
+				reloadDisplay();
+			}
+		});
+
+		joinMultiplayerGamePanel.add(enterIP);
+		joinMultiplayerGamePanel.add(enemyIP);
+		joinMultiplayerGamePanel.add(joinButton);
+		joinMultiplayerGamePanel.add(backButton);
 	}
 
 	public void handleEscapePanel() {
@@ -325,6 +471,12 @@ public class MainMenu extends JFrame {
 		}
 		board.togglePause();
 		isDisplayingEscapePanel = !isDisplayingEscapePanel;
+		frame.setVisible(true);
+	}
+
+	/** reloads the displays (avoid former panels to be displayed) */
+	public void reloadDisplay() {
+		frame.setContentPane(backgroundPanel);
 		frame.setVisible(true);
 	}
 
@@ -355,8 +507,7 @@ public class MainMenu extends JFrame {
 		backgroundPanel.remove(optionPanel);
 		backgroundPanel.add(mainMenuPanel);
 		isDisplayingMainMenu = true;
-		frame.setContentPane(backgroundPanel);
-		frame.setVisible(true);
+		reloadDisplay();
 		//cancels changes if they are not saved
 		setBindings();
 	}
@@ -370,12 +521,12 @@ public class MainMenu extends JFrame {
 			FileFunctions.saveBindings(redBindings, "KeyBindings/redKeyBindings.txt");
 			FileFunctions.saveBindings(blueBindings, "KeyBindings/blueKeyBindings.txt");
 			if (back) {
-				backgroundPanel.remove(saveQuitOptionsPanel);				
 				backToMainMenuFromOption();
 			}
 		} else {
+			backgroundPanel.remove(optionPanel);
 			backgroundPanel.add(saveFailedPanel);
-			frame.setVisible(true);
+			reloadDisplay();
 		}
 	}
 
