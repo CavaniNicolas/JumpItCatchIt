@@ -1,6 +1,7 @@
-package Game.Item;
+package Game.Items;
 
 import Game.BoardGraphism;
+import Game.Items.Item.*;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -104,6 +105,12 @@ System.out.println(allExistingBalls.get(0).getNbItem());
 
 		// PlusOneBall
 		allExistingBalls.add(new PlusOneBall(4, 30, Color.green, null));
+
+		// SpeedProjectileBall
+		allExistingBalls.add(new SpeedProjectileBall(2, 15, Color.magenta, null));
+
+		// HealBall
+		allExistingBalls.add(new HealBall(1, 70, Color.red, null));
 	}
 
 

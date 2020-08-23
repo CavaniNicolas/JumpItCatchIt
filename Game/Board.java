@@ -1,6 +1,6 @@
 package Game;
 
-import Game.Item.ItemBalls;
+import Game.Items.ItemBalls;
 
 import Menu.KeyBindings;
 import Menu.FileFunctions;

@@ -1,4 +1,6 @@
-package Game.Item;
+package Game.Items.Item;
+
+import Game.Items.ItemBall;
 
 import java.awt.Color;
 import java.awt.Image;

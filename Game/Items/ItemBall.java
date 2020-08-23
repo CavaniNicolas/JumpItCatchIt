@@ -1,4 +1,4 @@
-package Game.Item;
+package Game.Items;
 
 import Game.Entity;
 import Game.BoardGraphism;
