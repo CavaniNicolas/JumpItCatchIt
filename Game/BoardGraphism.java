@@ -59,6 +59,12 @@ public class BoardGraphism {
 		real.groundLevelYCoord = 1_500;
 
 
+		// Items
+		real.itemWidth = 1_200;
+		real.itemHeight = 1_200;
+		real.itemFirstX = maxX / 2;
+		real.itemFirstY = maxY + real.itemHeight / 2;
+
 
 		// HUD Character
 		// Coeurs
@@ -97,13 +103,20 @@ public class BoardGraphism {
 			graphic.projectileHeight = (int)(real.getProjectileHeight() * graphic.oneUnityHeight);
 
 			// positions des personnages en X sur les plateforme
-			graphic.primaryXcoordLeft = (int)(real.primaryXcoordLeft * graphic.oneUnityHeight);
-			graphic.primaryXcoordRight = (int)(real.primaryXcoordRight * graphic.oneUnityHeight);
-			graphic.secondaryXcoordLeft = (int)(real.secondaryXcoordLeft * graphic.oneUnityHeight);
-			graphic.secondaryXcoordRight = (int)(real.secondaryXcoordRight * graphic.oneUnityHeight);
+			graphic.primaryXcoordLeft = (int)(real.primaryXcoordLeft * graphic.oneUnityWidth);
+			graphic.primaryXcoordRight = (int)(real.primaryXcoordRight * graphic.oneUnityWidth);
+			graphic.secondaryXcoordLeft = (int)(real.secondaryXcoordLeft * graphic.oneUnityWidth);
+			graphic.secondaryXcoordRight = (int)(real.secondaryXcoordRight * graphic.oneUnityWidth);
 
 			// position au sol en Y
 			graphic.groundLevelYCoord = (int)((maxY - real.groundLevelYCoord) * graphic.oneUnityHeight);
+
+
+			// Items
+			graphic.itemWidth = (int)(real.itemWidth * graphic.oneUnityWidth);
+			graphic.itemHeight = (int)(real.itemHeight * graphic.oneUnityHeight);
+			graphic.itemFirstX = (int)(real.itemFirstX * graphic.oneUnityWidth);
+			graphic.itemFirstY = (int)(real.itemFirstY * graphic.oneUnityHeight);
 
 
 			// HUD Character
@@ -206,6 +219,13 @@ public class BoardGraphism {
 		private int groundLevelYCoord;
 
 
+		// Items
+		private int itemWidth;
+		private int itemHeight;
+		private int itemFirstX;
+		private int itemFirstY;
+
+
 		// HUD Character
 		// Coeurs
 		private int heartsXLeft;
@@ -270,6 +290,21 @@ public class BoardGraphism {
 
 		public int getProjectileHeight() {
 			return projectileHeight;
+		}
+
+
+		// Items
+		public int getItemWidth() {
+			return itemWidth;
+		}
+		public int getItemHeight() {
+			return itemHeight;
+		}
+		public int getItemFirstX() {
+			return itemFirstX;
+		}
+		public int getItemFirstY() {
+			return itemFirstY;
 		}
 
 
