@@ -6,6 +6,9 @@ import java.awt.Image;
 
 public class ItemBall extends Entity {
 
+	/** Quantite de cet Item actif en jeu */
+	private int nbItem = 0;
+
 	// Attributs d'initialisation des Items
 	private int nbMaxItem;
 	private int percentItem;
@@ -63,4 +66,11 @@ public class ItemBall extends Entity {
 		return imageItem;
 	}
 
+
+	public int getNbItem() {
+		return nbItem;
+	}
+	public void setNbItem(int newNbItem) {
+		nbItem = newNbItem;
+	}
 }

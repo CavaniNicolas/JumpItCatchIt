@@ -36,10 +36,18 @@ public class ItemBalls {
 		
 		// Le premier Item du jeu a tomber sera toujours un PlusOneBall
 		if (nbItems == 0) {
-			System.out.println("LA");
 			itemBalls.add(new PlusOneBall(x, y, width, height));
 
-		// Ensuite lors du jeu :
+			ItemBall ib = itemBalls.get(0);
+			ItemBall aeb;
+			for (int j=0; j<allExistingBalls.size(); j++) {
+				aeb = allExistingBalls.get(j);
+				if (ib.getClass().getName() == aeb.getClass().getName()) {
+					aeb.setNbItem(aeb.getNbItem() + 3);
+				}
+			}
+
+			// Ensuite lors du jeu :
 		} else {
 			// Calculer les probas et choisir de creer un Item
 
@@ -54,15 +62,22 @@ public class ItemBalls {
 	/** Deplace les items */
 	public void moveItems() {
 		ItemBall ib;
+System.out.println(allExistingBalls.get(0).getNbItem());
 		for (int i=0; i<itemBalls.size(); i++) {
 			ib = itemBalls.get(i);
-
 			ib.moveY();
 			// Si l'item est tombe en bas de l'ecran, on le supprime
 			if (ib.y == ib.minY) {
+				
+				ItemBall aeb;
+				for (int j=0; j<allExistingBalls.size(); j++) {
+					aeb = allExistingBalls.get(j);
+					if (ib.getClass().getName() == aeb.getClass().getName()) {
+						aeb.setNbItem(aeb.getNbItem() - 1);
+					}
+				}
+				
 				itemBalls.remove(ib);
-				//ib.getClass().setNbItem(ib.getClass().getNbItem() - 1);
-				System.out.println(ib.getClass());
 			}
 		}
 	}
