@@ -3,75 +3,86 @@ package Network;
 import java.io.*;
 import java.net.*;
 
+import Game.Board;
+import Menu.MainMenu;
+
 public class Client {
-    private Boolean connected = false;
-    private Boolean inGame = false;
+    private Boolean connected;
+    private Boolean inGame;
     private ObjectOutputStream objectOutput;
     private ObjectInputStream objectInput;
     private Socket socket;
+    private MainMenu mainMenu;
 
 	public static void main(String [] args) {
 		new Client();
 	}
-	
+    
     public Client() {
-        String serverHostname = "2a01:e0a:40c:8ff0:f023:ce59:eb8f:f2c"; // L'adresse du serveur
+        this("2a01:e0a:40c:8ff0:f023:ce59:eb8f:f2c");
+    }
+
+    public Client(String serverHostName) {
         int portNumber = 5000; // Le port du serveur
         
         socket = null; // Un Socket TCP
 
         try {
             // Creation du socket et des flux d'entree/sortie
-            socket = new Socket(serverHostname, portNumber);
+            socket = new Socket(serverHostName, portNumber);
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectInput = new ObjectInputStream(socket.getInputStream());
             System.out.println("CONNECTION STARTED");
             connected = true;
+            inGame = false;
 
-			// Recuperation et affichage de la reponse du serveur
-			String str = "";
-			while (!str.equals("CONNECTION CLOSED")) {
-				try {
-                    str = (String)objectInput.readObject();
-                    System.out.println(str);
-				} catch (ClassNotFoundException exc) {
-					exc.printStackTrace();
-				}
-			}
+            inputObject();
         
             // closing flux and socket (output before input)
             objectOutput.close();
             objectInput.close();
             socket.close();
         } catch (UnknownHostException e) {
-            System.err.println("Hote inconnu: " + serverHostname);
+            System.err.println("Hote inconnu: " + serverHostName);
             System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
+
+    public void setMainMenu(MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
+    }
     
-    public class InputProcessor extends Thread {
-        public void run() {
+    public void inputObject() {
+        while (connected) {
             try {
-                objectInput = new ObjectInputStream(socket.getInputStream());
-                while (connected) {
-                    try {
-                        Object obj = objectInput.readObject();
-                        if (obj instanceof String) {
-                            if (((String)obj).equals("START GAME")) {
-                                inGame = true;
-                            }
+                Object obj = objectInput.readObject();
+                if (!inGame) {
+                    if (obj instanceof String) {
+                        if (((String)obj).equals("START GAME")) {
+                            inGame = true;
                         }
-                    } catch (ClassNotFoundException exc) {
-                        exc.printStackTrace();
+                    }
+                } else {
+                    if (obj instanceof Board) {
+                        mainMenu.setBoard((Board)obj);
                     }
                 }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-                System.exit(1);
-            }   
+            }
+        }
+    }
+
+    public void outputObject(Object obj) {
+        try {
+            objectOutput.writeObject(obj);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
