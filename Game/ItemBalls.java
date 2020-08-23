@@ -17,6 +17,9 @@ public class ItemBalls {
 	/** Somme des probabilites de tous les items */
 	private int sumAllProbas = 0;
 
+	/**Espace entre deux Items */
+	private int interItems = 50; // a mettre dans boardGraphism et a initialiser
+
 
 	public ItemBalls() {
 		createAllExistingBalls();
@@ -38,23 +41,34 @@ public class ItemBalls {
 		if (nbItems == 0) {
 			itemBalls.add(new PlusOneBall(x, y, width, height));
 
-			ItemBall ib = itemBalls.get(0);
-			ItemBall aeb;
-			for (int j=0; j<allExistingBalls.size(); j++) {
-				aeb = allExistingBalls.get(j);
-				if (ib.getClass().getName() == aeb.getClass().getName()) {
-					aeb.setNbItem(aeb.getNbItem() + 3);
-				}
-			}
+								ItemBall ib = itemBalls.get(0);
+								ItemBall aeb;
+								for (int j=0; j<allExistingBalls.size(); j++) {
+									aeb = allExistingBalls.get(j);
+									if (ib.getClass().getName() == aeb.getClass().getName()) {
+										aeb.setNbItem(aeb.getNbItem() + 1);
+									}
+								}
 
 			// Ensuite lors du jeu :
 		} else {
 			// Calculer les probas et choisir de creer un Item
 
 			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe
-			if (true) {
-
+			ItemBall lastSpawnedItem = itemBalls.get(itemBalls.size() - 1);
+			if (lastSpawnedItem.y < boardGraphism.getMaxY() - lastSpawnedItem.height + interItems) {
+				itemBalls.add(new PlusOneBall(x, y, width, height));
+				
+								ItemBall ib = itemBalls.get(0);
+								ItemBall aeb;
+								for (int j=0; j<allExistingBalls.size(); j++) {
+									aeb = allExistingBalls.get(j);
+									if (ib.getClass().getName() == aeb.getClass().getName()) {
+										aeb.setNbItem(aeb.getNbItem() + 1);
+									}
+								}
 			}
+				
 		}
 	}
 
@@ -69,13 +83,13 @@ System.out.println(allExistingBalls.get(0).getNbItem());
 			// Si l'item est tombe en bas de l'ecran, on le supprime
 			if (ib.y == ib.minY) {
 				
-				ItemBall aeb;
-				for (int j=0; j<allExistingBalls.size(); j++) {
-					aeb = allExistingBalls.get(j);
-					if (ib.getClass().getName() == aeb.getClass().getName()) {
-						aeb.setNbItem(aeb.getNbItem() - 1);
-					}
-				}
+						ItemBall aeb;
+						for (int j=0; j<allExistingBalls.size(); j++) {
+							aeb = allExistingBalls.get(j);
+							if (ib.getClass().getName() == aeb.getClass().getName()) {
+								aeb.setNbItem(aeb.getNbItem() - 1);
+							}
+						}
 				
 				itemBalls.remove(ib);
 			}
