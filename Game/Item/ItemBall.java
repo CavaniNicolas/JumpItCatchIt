@@ -1,4 +1,7 @@
-package Game;
+package Game.Item;
+
+import Game.Entity;
+import Game.BoardGraphism;
 
 import java.awt.Graphics;
 import java.awt.Color;

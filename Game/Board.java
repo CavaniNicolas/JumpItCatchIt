@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Item.ItemBalls;
+
 import Menu.KeyBindings;
 import Menu.FileFunctions;
 import java.awt.Color;

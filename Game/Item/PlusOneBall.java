@@ -1,4 +1,4 @@
-package Game;
+package Game.Item;
 
 import java.awt.Color;
 import java.awt.Image;

@@ -1,4 +1,6 @@
-package Game;
+package Game.Item;
+
+import Game.BoardGraphism;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -56,7 +58,7 @@ public class ItemBalls {
 
 			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe
 			ItemBall lastSpawnedItem = itemBalls.get(itemBalls.size() - 1);
-			if (lastSpawnedItem.y < boardGraphism.getMaxY() - lastSpawnedItem.height + interItems) {
+			if (lastSpawnedItem.getY() < boardGraphism.getMaxY() - lastSpawnedItem.getHeight() + interItems) {
 				itemBalls.add(new PlusOneBall(x, y, width, height));
 				
 								ItemBall ib = itemBalls.get(0);
@@ -81,7 +83,7 @@ System.out.println(allExistingBalls.get(0).getNbItem());
 			ib = itemBalls.get(i);
 			ib.moveY();
 			// Si l'item est tombe en bas de l'ecran, on le supprime
-			if (ib.y == ib.minY) {
+			if (ib.getY() == ib.getMinY()) {
 				
 						ItemBall aeb;
 						for (int j=0; j<allExistingBalls.size(); j++) {

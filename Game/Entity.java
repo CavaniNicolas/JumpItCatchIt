@@ -107,4 +107,49 @@ public class Entity {
 		this.speedX = speedX;
 		this.speedY = speedY;
 	}
+
+
+	public int getMinX() {
+		return minX;
+	}
+	public void setMinX(int minX) {
+		this.minX = minX;
+	}
+	public int getMaxX() {
+		return maxX;
+	}
+	public void setMaxX(int maxX) {
+		this.maxX = maxX;
+	}
+	public int getMinY() {
+		return minY;
+	}
+	public void setMinY(int minY) {
+		this.minY = minY;
+	}
+	public int getWidth() {
+		return width;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	public int getHeight() {
+		return height;
+	}
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+
 }
