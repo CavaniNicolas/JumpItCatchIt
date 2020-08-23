@@ -28,23 +28,25 @@ public class Entity {
 	protected int accelY;
 
 
-	public Entity() {
-		this.x = 0;
-		this.y = 0;
-		this.speedX = 0;
-		this.speedY = 0;
-		this.accelX = 0;
-		this.accelY = 0;
-	}
-
-
-	public Entity(int x, int y, int speedX, int speedY, int accelX, int accelY) {
+	public Entity(int x, int y, int speedX, int speedY, int accelX, int accelY, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.accelX = accelX;
 		this.accelY = accelY;
+		this.width = width;
+		this.height = height;
+	}
+
+
+	public Entity(int x, int y, int speedX, int speedY, int accelX, int accelY) {
+		this(x, y, speedX, speedY, accelX, accelY, 0, 0);
+	}
+
+
+	public Entity() {
+		this(0, 0, 0, 0, 0, 0, 0, 0);
 	}
 
 

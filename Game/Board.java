@@ -36,6 +36,9 @@ public class Board extends JPanel {
 	/** Personnage bleu (initialement a droite) */
 	private Character characterBlue;
 
+	/** Items du jeu, tombant entre les deux plateformes lors du jeu */
+	private ItemBalls itemBalls;
+
 	/**Timer du jeu */
 	private Timer gamePlayTimer;
 	/**Timer d'affichage du jeu */
@@ -49,13 +52,19 @@ public class Board extends JPanel {
 		public void actionPerformed(ActionEvent event) {
 			if (isPlaying) {
 
+				// Characters
 				updateAllCollisionBorders();
 				updateActionBooleans();
 				updatePositionAndMoveAll();
 				checkActions();
 
+				// Projectiles
 				moveProjectiles();
 				checkProjectilesCollision();
+
+				// Items
+				createItems();
+				moveItems();
 			}
 		}
 	}
@@ -128,6 +137,17 @@ public class Board extends JPanel {
 	}
 
 
+	/** Creer les items qui tombent au milieu du plateau */
+	public void createItems() {
+		itemBalls.createItems(boardGraphism);
+	}
+
+
+	public void moveItems() {
+		itemBalls.moveItems();
+	}
+
+
 	/**
 	 * Fonction d'affichage principale
 	 * <p>
@@ -145,17 +165,20 @@ public class Board extends JPanel {
 		// Affiche les plateformes
 		boardGraphism.displayPlatforms(g);
 
+		// Affiche les items
+		itemBalls.drawItems(g, boardGraphism);
+
 		// Affiche les personnages
 		characterRed.drawCharacter(g, boardGraphism);
 		characterBlue.drawCharacter(g, boardGraphism);
 
-		// Affiche la vie des joueurs
-		characterRed.displayCharacterHUD(g, boardGraphism);
-		characterBlue.displayCharacterHUD(g, boardGraphism);
-
 		// Affiche les projectiles
 		characterRed.drawProjectiles(g, boardGraphism);
 		characterBlue.drawProjectiles(g, boardGraphism);
+
+		// Affiche la vie des joueurs
+		characterRed.displayCharacterHUD(g, boardGraphism);
+		characterBlue.displayCharacterHUD(g, boardGraphism);
 	}
 
 
@@ -190,6 +213,9 @@ public class Board extends JPanel {
 		// On charge les images, et on les met dans les objets (null si elles n'ont pas
 		// reussi)
 		loadAndSetAllImages();
+
+		// init ItemBalls
+		itemBalls = new ItemBalls();
 	}
 
 
