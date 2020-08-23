@@ -9,15 +9,8 @@ import java.awt.Image;
 
 public class ItemBall extends Entity {
 
-	/** Quantite de cet Item actif en jeu */
-	private int nbItem = 0;
-
-	// Attributs d'initialisation des Items
-	private int nbMaxItem;
-	private int percentItem;
 	protected Color colorItem;
 	private Image imageItem = null;
-
 
 	/** Constructeur pour creer un item lors du jeu */
 	public ItemBall(int x, int y, int width, int height) {
@@ -26,15 +19,6 @@ public class ItemBall extends Entity {
 		this.minY = - height;
 	}
 
-
-	/** Constructeur pour la liste d'initialisation des items */
-	public ItemBall(int nbMaxItem, int percentItem, Color colorItem, Image imageItem) {
-		super();
-		this.nbMaxItem = nbMaxItem;
-		this.percentItem = percentItem;
-		this.colorItem = colorItem;
-		this.imageItem = imageItem;
-	}
 
 
 	/** Effets qu'applique cet Item, cette methode sera Override pour chaque Item */
@@ -56,12 +40,6 @@ public class ItemBall extends Entity {
 	/* Getters */
 	/* ======= */
 
-	public int getNbMaxItem() {
-		return nbMaxItem;
-	}
-	public int getPercentItem() {
-		return percentItem;
-	}
 	public Color getColorItem() {
 		return colorItem;
 	}
@@ -69,11 +47,4 @@ public class ItemBall extends Entity {
 		return imageItem;
 	}
 
-
-	public int getNbItem() {
-		return nbItem;
-	}
-	public void setNbItem(int newNbItem) {
-		nbItem = newNbItem;
-	}
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ItemBalls {
 
 	/** Tableau contenant les valeurs constantes de chaque Item, ces valeurs sont utiles a la generation des items et a leur initialisation */
-	private ArrayList<ItemBall> allExistingBalls = new ArrayList<ItemBall>();
+	private ArrayList<ItemBall> allExistingBalls = new ArrayList<ItemBall>(); // remplacer par 'ItemBallProba'
 
 
 	/** Tableau contenant les items actuellement sur le plateau */
@@ -57,6 +57,7 @@ public class ItemBalls {
 		} else {
 			// Calculer les probas et choisir de creer un Item
 
+			createNewItemBall();
 			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe
 			ItemBall lastSpawnedItem = itemBalls.get(itemBalls.size() - 1);
 			if (lastSpawnedItem.getY() < boardGraphism.getMaxY() - lastSpawnedItem.getHeight() + interItems) {
@@ -73,6 +74,11 @@ public class ItemBalls {
 			}
 				
 		}
+	}
+
+
+	public void createNewItemBall() {
+
 	}
 
 
