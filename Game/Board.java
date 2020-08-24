@@ -1,23 +1,18 @@
 package Game;
 
 import Game.Items.ItemBalls;
-
 import Menu.KeyBindings;
 import Menu.FileFunctions;
+
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+
 
 /**
  * class Board extends JPanel
  * <p>
  * Gere le jeu
  */
-public class Board extends JPanel {
-	private static final long serialVersionUID = 2L;
+public class Board {
 
 	/**
 	 * Les attributs graphiques et les fonctions d'affichage (les attributs sont
@@ -26,7 +21,7 @@ public class Board extends JPanel {
 	private BoardGraphism boardGraphism = new BoardGraphism();
 
 	/**Booleen, true si le jeu est en cours */
-	private boolean isPlaying;
+	private boolean isPlaying; // Mnt dans GameLoop
 
 	/** Personnage rouge (initialement a gauche) */
 	private Character characterRed;
@@ -35,9 +30,6 @@ public class Board extends JPanel {
 
 	/** Items du jeu, tombant entre les deux plateformes lors du jeu */
 	private ItemBalls itemBalls;
-
-	/**Timer d'affichage du jeu */
-	private Timer gameDisplayTimer;
 
 
 
@@ -72,6 +64,7 @@ public class Board extends JPanel {
 		characterRed.updatePosition(boardGraphism, characterBlue);
 		characterBlue.updatePosition(boardGraphism, characterRed);
 	}
+
 
 	/** Verifie et Lance les actions a effectuer (grab shield shoot push) */
 	public void checkActions() {
@@ -108,47 +101,11 @@ public class Board extends JPanel {
 
 
 	/**
-	 * Fonction d'affichage principale
-	 * <p>
-	 * Appelee a l'aide de repaint().
-	 * <p>
-	 * Les fonctions drawTruc sont pour les objets en mouvement Lesfonctions
-	 * displayTruc sont pour les objets fixes
-	 */
-	public void paintComponent(Graphics g) {
-		// Initialisation des attributs graphiques, effectuee a chaque
-		// redimensionnement de la fenetre
-		boardGraphism.updateGraphicCoordsAttributes(boardGraphism.getMaxX(), boardGraphism.getMaxY(), this.getWidth(),
-				this.getHeight());
-
-		// Affiche les plateformes
-		boardGraphism.displayPlatforms(g);
-
-		// Affiche les items
-		itemBalls.drawItems(g, boardGraphism);
-
-		// Affiche les personnages
-		characterRed.drawCharacter(g, boardGraphism);
-		characterBlue.drawCharacter(g, boardGraphism);
-
-		// Affiche les projectiles
-		characterRed.drawProjectiles(g, boardGraphism);
-		characterBlue.drawProjectiles(g, boardGraphism);
-
-		// Affiche la vie des joueurs
-		characterRed.displayCharacterHUD(g, boardGraphism);
-		characterBlue.displayCharacterHUD(g, boardGraphism);
-	}
-
-
-	/**
 	 * Initialise le jeu, creer les deux joueurs avec leurs touches claviers
 	 * associees serialisees, la ArrayList d'objets
 	 */
 	public void initGame() {
 		isPlaying = false;
-
-		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
 
 
 		// Initialise les coordonnees reelles des objets
@@ -168,25 +125,18 @@ public class Board extends JPanel {
 				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redKeyBindings, boardGraphism);
 		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
 				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueKeyBindings, boardGraphism);
-
-		// On charge les images, et on les met dans les objets (null si elles n'ont pas
-		// reussi)
-		loadAndSetAllImages();
-
+				
 		// init ItemBalls
 		itemBalls = new ItemBalls();
+
+		// On charge les images, et on les met dans les objets (null si elles n'ont pas reussi)
+		loadAndSetAllImages();
 	}
 
 
 	/** Charge toutes les images du jeu et les ajoute aux objets */
 	public void loadAndSetAllImages() {
 
-	}
-
-
-	/**Actualise l'affichage graphique */
-	public void updateWindow() {
-		repaint();
 	}
 
 
@@ -200,36 +150,32 @@ public class Board extends JPanel {
 		}
 	}
 
+
+
+	/* ======= */
+	/* Getters */
+	/* ======= */
+
+
 	public void setIsPlaying(Boolean bool) {
 		isPlaying = bool;
 	}
-
-	public BoardGraphism getBoardGraphism() {
-		return boardGraphism;
-	}
-
 	public boolean getIsPlaying() {
 		return isPlaying;
 	}
 
+
+	public BoardGraphism getBoardGraphism() {
+		return boardGraphism;
+	}
 	public Character getCharacterRed() {
 		return characterRed;
 	}
-
 	public Character getCharacterBlue() {
 		return characterBlue;
 	}
-
-
-	public class GameDisplayTimerListener implements ActionListener {
-
-		/**Action a effectuer lorsque le timer renvoie un event */
-		@Override
-		public void actionPerformed(ActionEvent event) {
-
-			updateWindow();
-
-		}
+	public ItemBalls getItemBalls() {
+		return itemBalls;
 	}
 
 }
