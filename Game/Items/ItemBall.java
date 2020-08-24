@@ -8,8 +8,8 @@ import java.awt.Color;
 import java.awt.Image;
 
 /** Class ItemBall <p>
- * Item du jeu
- */
+ * Item du jeu <p>
+ * La position (x,y) de ItemBall est au centre du cercle */
 public class ItemBall extends Entity {
 	private static final long serialVersionUID = 1L;
 

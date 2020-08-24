@@ -4,9 +4,13 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
 
+/**Class Projectile <p>
+ * La position (x,y) du Projectile est au centre du cercle */
 public class Projectile extends Entity {
+	private static final long serialVersionUID = 1L;
 
-	/**Position initiale en X */
+
+	/** Position initiale en X */
 	private transient int initX;
 	/**Range du projetctile */
 	private transient int rangeX;

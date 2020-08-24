@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 
 /** Class Character <p>
- * contient le personnage, toutes ses actions, positions, etats... */
+ * contient le personnage, toutes ses actions, positions, etats... <p>
+ * La position (x,y) du Character est en bas au milieu du rectangle */
 public class Character extends Entity {
 	private static final long serialVersionUID = 1L;
 
@@ -73,12 +74,29 @@ public class Character extends Entity {
 	private transient int damageProjectile = 1;
 	/**Couleur des projectiles */
 	private Color colorProjectile = Color.orange; // Sera a initialiser
+	/**Image des projectiles */
 	private transient Image imageProjectile = null;
 
 	/**Cool Down pour lancer un projectile (en milli secondes) */
 	private transient long coolDownProjectile = 1_500;
 	/** Moment auquel on lance un projectile */
 	private transient long startTimeProjectile = 0;
+
+
+	/**Classe contenant le grab du joueur */
+	private transient GrabSpell grabSpell = new GrabSpell();
+	/**Vitesse du grab */
+	private transient int speedGrab = 300;
+	/**Range du grab */
+	private transient int rangeGrab = 5_000;
+	/**Image du grab */
+	private transient Image imageGrab = null;
+
+	/**Cool Down pour le grab (en milli secondes) */
+	private transient long coolDownGrab = 2_000;
+	/** Moment auquel on effectue un grab */
+	private transient long startTimeGrab = 0;
+
 
 
 	/**Constructeur Character */
