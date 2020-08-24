@@ -23,6 +23,9 @@ public class Character extends Entity {
 	/** Booleens d'actions */
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
+	/** Booleens d'Input */
+	private InputActions inputActions;
+
 	/** HUD du personnage */
 	private HUDCharacter hudCharacter;
 
@@ -117,7 +120,7 @@ public class Character extends Entity {
 		}
 
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
-		if (actionBooleans.leftPressed && actionBooleans.rightPressed) {
+		if (inputActions.getLeftPressed() && inputActions.getRightPressed()) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
 		} else {
@@ -405,10 +408,10 @@ public class Character extends Entity {
 	private void checkMovement(Character otherCharacter) {
 
 		// Applique une vitesse initiale au personnage pour se deplacer lateralement
-		if (actionBooleans.leftPressed && actionBooleans.canLeft) {
+		if (inputActions.getLeftPressed() && actionBooleans.canLeft) {
 			this.speedX = - this.speedLateral;
 
-		} else if (actionBooleans.rightPressed && actionBooleans.canRight) {
+		} else if (inputActions.getRightPressed() && actionBooleans.canRight) {
 			this.speedX = this.speedLateral;
 
 		} else {
@@ -427,7 +430,7 @@ public class Character extends Entity {
 	private void checkJump() {
 
 		// Applique une vitesse et une acceleration initiales au personnage pour sauter
-		if (actionBooleans.jumpPressed && actionBooleans.canJump && isFalling == false) {
+		if (inputActions.getJumpPressed() && actionBooleans.canJump && isFalling == false) {
 			// Vitesse initiale du saut
 			this.speedY = this.speedVertical;
 			// Gravite
@@ -446,7 +449,7 @@ public class Character extends Entity {
 	private void checkSwitch() {
 
 		// Si on appuie sur sauter pendant qu'on est en l'air, on switch
-		if (actionBooleans.isJumping && actionBooleans.jumpPressed && actionBooleans.canSwitch && isFalling == false) {
+		if (actionBooleans.isJumping && inputActions.getJumpPressed() && actionBooleans.canSwitch && isFalling == false) {
 
 			// Gravite
 			this.accelY = GRAVITY;
@@ -476,7 +479,7 @@ public class Character extends Entity {
 	public void checkShoot(BoardGraphism boardGraphism) {
 
 		/**Si on appuie sur Shoot et qu'on peut shoot */
-		if (actionBooleans.shootPushPressed && actionBooleans.canShoot) {
+		if (inputActions.getShootPushPressed() && actionBooleans.canShoot) {
 
 			// Tire vers la droite
 			if (isOnLeftSide) {
@@ -616,12 +619,6 @@ public class Character extends Entity {
 	public class ActionBooleans {
 
 		// Booleens de pression sur les touches / (de demande d'actions)
-		private boolean jumpPressed = false;
-		private boolean leftPressed = false;
-		private boolean rightPressed = false;
-		private boolean grabPressed = false;
-		private boolean shieldPressed = false;
-		private boolean shootPushPressed = false;
 		private boolean switchPressed = false;
 
 
@@ -645,48 +642,13 @@ public class Character extends Entity {
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)
-		public boolean isJumpPressed() {
-			return jumpPressed;
-		}
-		public void setJumpPressed(boolean jumpPressed) {
-			this.jumpPressed = jumpPressed;
-		}
-		public boolean isLeftPressed() {
-			return leftPressed;
-		}
-		public void setLeftPressed(boolean leftPressed) {
-			this.leftPressed = leftPressed;
-		}
-		public boolean isRightPressed() {
-			return rightPressed;
-		}
-		public void setRightPressed(boolean rightPressed) {
-			this.rightPressed = rightPressed;
-		}
-		public boolean isGrabPressed() {
-			return grabPressed;
-		}
-		public void setGrabPressed(boolean grabPressed) {
-			this.grabPressed = grabPressed;
-		}
-		public boolean isShieldPressed() {
-			return shieldPressed;
-		}
-		public void setShieldPressed(boolean shieldPressed) {
-			this.shieldPressed = shieldPressed;
-		}
-		public boolean isShootPushPressed() {
-			return shootPushPressed;
-		}
-		public void setShootPushPressed(boolean shootPushPressed) {
-			this.shootPushPressed = shootPushPressed;
-		}
 		public boolean isSwitchPressed() {
 			return switchPressed;
 		}
 		public void setSwitchPressed(boolean switchPressed) {
 			this.switchPressed = switchPressed;
 		}
+
 		public boolean isCanActivateCanSwitch() {
 			return canActivateCanSwitch;
 		}

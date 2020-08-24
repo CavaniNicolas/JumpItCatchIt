@@ -1,6 +1,6 @@
 package Game;
 
-public class InputAction {
+public class InputActions {
 	// Booleens de pression sur les touches / (de demande d'actions)
 	private boolean jumpPressed = false;
 	private boolean leftPressed = false;
