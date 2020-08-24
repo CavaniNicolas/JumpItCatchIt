@@ -18,11 +18,6 @@ public class Projectile extends Entity {
 	/**Degats */
 	private transient int damage;
 
-	/**Personnage cible du projectile */
-	private transient Character aimedCharacter;
-
-	/**Le Personnage qui a tire le projectile */
-
 	/**Le projectile est actif, si il touche sa cible il appliquera des degats et deviendra inactif */
 	private transient boolean isActive;
 
@@ -32,12 +27,11 @@ public class Projectile extends Entity {
 
 
 	/**Constructeur du projectile */
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, BoardGraphism boardGraphism, int rangeX, int damage, Character aimedCharacter, Color colorProjectile) {
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, BoardGraphism boardGraphism, int rangeX, int damage, Color colorProjectile) {
 		super(x, y, speedX, speedY, accelX, accelY);
 		this.initX = x;
 		this.rangeX = rangeX;
 		this.damage = damage;
-		this.aimedCharacter = aimedCharacter;
 		this.isActive = true;
 		this.colorProjectile = colorProjectile;
 		initGraphicAttributes(boardGraphism);
@@ -45,8 +39,8 @@ public class Projectile extends Entity {
 
 
 	/**Constructeur pour un projectile horizontal */
-	public Projectile(int x, int y, int speedX, BoardGraphism boardGraphism, int range, int damage, Character aimedCharacter, Color colorProjectile) {
-		this(x, y, speedX, 0, 0, 0, boardGraphism, range, damage, aimedCharacter, colorProjectile);
+	public Projectile(int x, int y, int speedX, BoardGraphism boardGraphism, int range, int damage, Color colorProjectile) {
+		this(x, y, speedX, 0, 0, 0, boardGraphism, range, damage, colorProjectile);
 	}
 
 

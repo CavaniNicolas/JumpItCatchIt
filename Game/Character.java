@@ -504,11 +504,11 @@ public class Character extends Entity {
 			// Tire vers la droite
 			if (isOnLeftSide) {
 				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
-									boardGraphism, rangeProjectile, damageProjectile, this, colorProjectile) );
+									boardGraphism, rangeProjectile, damageProjectile, colorProjectile) );
 			// Tire vers la gauche
 			} else {
 				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), - speedProjectile,
-									boardGraphism, rangeProjectile, damageProjectile, this, colorProjectile) );
+									boardGraphism, rangeProjectile, damageProjectile, colorProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite
