@@ -1,6 +1,8 @@
 package Game;
 
-public class InputActions {
+import java.io.Serializable;
+
+public class InputActions implements Serializable {
 	// Booleens de pression sur les touches / (de demande d'actions)
 	private boolean jumpPressed = false;
 	private boolean leftPressed = false;
@@ -64,5 +66,12 @@ public class InputActions {
 	}
 	public void setShootPushPressed(boolean shootPushPressed) {
 		this.shootPushPressed = shootPushPressed;
+	}
+
+	@Override
+	public String toString() {
+		return "InputActions [character=" + character + ", grabPressed=" + grabPressed + ", jumpPressed=" + jumpPressed
+				+ ", leftPressed=" + leftPressed + ", rightPressed=" + rightPressed + ", shieldPressed=" + shieldPressed
+				+ ", shootPushPressed=" + shootPushPressed + "]";
 	}
 }
