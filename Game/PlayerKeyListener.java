@@ -12,16 +12,24 @@ public class PlayerKeyListener implements KeyListener {
 	private BoardIO boardIO;
 	private InputAction inputAction;
 
+	public PlayerKeyListener(KeyBindings keyBindings, BoardIO boardIO, InputAction inputAction) {
+		this.keyBindings = keyBindings;
+		this.boardIO = boardIO;
+		this.inputAction = inputAction;
+	}
+
 	@Override
 	public void keyPressed(KeyEvent event) {
 		String action = getKeyActionDescription(event.getKeyChar());
 		inputAction.togglePressedKeys(action, true);
+		boardIO.handleAction(inputAction);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event) {
 		String action = getKeyActionDescription(event.getKeyChar());
 		inputAction.togglePressedKeys(action, false);
+		boardIO.handleAction(inputAction);
 	}
 
 	@Override
