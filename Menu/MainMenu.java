@@ -2,6 +2,7 @@ package Menu;
 
 import Game.Board;
 import Game.BoardGraphism;
+import Game.BoardServer;
 import Game.GameLoop;
 
 import java.awt.event.KeyListener;
@@ -24,6 +25,10 @@ public class MainMenu extends JFrame {
 	
 	/**Contient le jeu */
 	private Board board;
+
+	/** server si multi */
+	private BoardServer boardServer;
+
 	/**Contient la boucle principale de calcul du jeu */
 	private GameLoop gameLoop;
 	
@@ -421,6 +426,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(createMultiplayerGamePanel);
 				reloadDisplay();
+				boardServer = new BoardServer(board);
 			}
 		});
 
@@ -462,7 +468,7 @@ public class MainMenu extends JFrame {
 		createMultiplayerGamePanel.setPreferredSize(new Dimension(320, 120));
 
 		//create a joinable game
-		JLabel gameAvailable = new JLabel("Your game is available on : ");
+		JLabel gameAvailable = new JLabel("Your game is available on : " + boardServer.getPublicIPAddress());
 		gameAvailable.setPreferredSize(new Dimension(300, 25));
 
 		//join an existing game

@@ -23,7 +23,7 @@ public class BoardServer {
 	private int currentPlayerNumber = 0;
 	private int connectionNumber = 0;
 
-	//server socket
+	//server socket and address
 	private ServerSocket serverSocket = null;
 
 	//object streams
@@ -37,13 +37,27 @@ public class BoardServer {
 		//start online server"
         try { 
             int portNumber = 5000;
-			serverSocket = new ServerSocket(portNumber); 
+			serverSocket = new ServerSocket(portNumber);
 			new Thread(new HandleServer());
         }  catch (IOException e) { 
 			e.printStackTrace();
 			isRunning = false;
         } 
 	} 
+
+	/** Find public IP address */
+	public String getPublicIPAddress() {
+		try { 
+			URL url_name = new URL("http://bot.whatismyipaddress.com"); 
+	
+			BufferedReader sc = new BufferedReader(new InputStreamReader(url_name.openStream())); 
+	
+			// reads system IPAddress 
+			return sc.readLine().trim(); 
+		} catch (Exception e) { 
+			return "COULD NOT FIND ADDRESS"; 
+		} 
+	}
 	
  	/**Le server tourne dans un thread a part*/
 	 public class HandleServer extends Thread {
@@ -162,5 +176,5 @@ public class BoardServer {
 				e.printStackTrace();
 			}
 		}
-    }
+	}
 }
