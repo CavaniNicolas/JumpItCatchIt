@@ -17,8 +17,8 @@ public class BoardLocal extends BoardIO {
 		super(boardGraphism);
 		this.board = board;
 		gameLoop = new GameLoop(this.board);
-		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, redPlayerInputActions);
-		bluePlayerKeyListener = new PlayerKeyListener(bluePlayerBindings, this, bluePlayerInputActions);
+		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, board.getCharacterRed().getInputActions());
+		bluePlayerKeyListener = new PlayerKeyListener(bluePlayerBindings, this, board.getCharacterBlue().getInputActions());
 	}
 
 	/** uses directly the input action to change the course of the game */

@@ -620,6 +620,14 @@ public class Character extends Entity {
 		this.lives = lives;
 	}
 
+	public InputActions getInputActions() {
+		return inputActions;
+	}
+
+	public void setInputActions(InputActions inputActions) {
+		this.inputActions = inputActions;
+	}
+
 
 	/** Verifie le relachement de la touche saut lorsqu'on est en l'air pour autoriser le switch sur un autre appuie de la touche saut */
 	public void checkKeyToUpdateCanSwitch() {
@@ -638,7 +646,6 @@ public class Character extends Entity {
 
 		// Booleens de pression sur les touches / (de demande d'actions)
 		private boolean switchPressed = false;
-
 
 		// Booleens d'autorisation d'actions
 		private boolean canJump = true;

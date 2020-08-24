@@ -6,9 +6,10 @@ import java.net.*;
 
 /** handles the key listener for online game */
 public class BoardClient extends BoardIO {
+    //client input related
 	private KeyBindings playerBindings;
 	private PlayerKeyListener playerKeyListener;
-	private InputActions playerInputActions;
+	private InputActions playerInputActions = new InputActions();
 
 	//waiting for everyone or playing
 	private Boolean connected;
@@ -21,8 +22,9 @@ public class BoardClient extends BoardIO {
 	//client socket
     private Socket socket;
 
-	public BoardClient(BoardGraphism boardGraphism) {
-		super(boardGraphism);
+	public BoardClient(KeyBindings playerBindings, BoardGraphism boardGraphism) {
+        super(boardGraphism);
+        this.playerBindings = playerBindings;
 		playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
 	}
 
@@ -76,7 +78,7 @@ public class BoardClient extends BoardIO {
                     }
                 } else {
                     if (obj instanceof Board) {
-						BoardGraphism.setBoard((Board)obj);
+						boardGraphism.setBoard((Board)obj);
 					}
                 }
             } catch (ClassNotFoundException e) {

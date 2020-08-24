@@ -2,7 +2,7 @@ package Game;
 
 /** mother class of boardClient and boardLocal */
 public class BoardIO {
-	private BoardGraphism boardGraphism;
+	protected BoardGraphism boardGraphism;
 
 	public BoardIO(BoardGraphism boardGraphism) {
 		this.boardGraphism = boardGraphism;

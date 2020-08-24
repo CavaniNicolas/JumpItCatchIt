@@ -140,9 +140,9 @@ public class BoardServer {
 					Object obj = objectInputs[number].readObject();
 					if (obj instanceof InputActions) {
 						if (number == 0) {
-							board.inputActionRedPlayer(obj);
+							board.getCharacterRed().setInputActions((InputActions)obj);;
 						} else {
-							board.inputActionBluePlayer(obj);
+							board.getCharacterBlue().setInputActions((InputActions)obj);;
 						}
 					}
 				} catch (ClassNotFoundException e) {

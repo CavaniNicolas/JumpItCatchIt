@@ -217,6 +217,10 @@ public class BoardGraphism extends JPanel {
 		this.isGraphicUpdateDone = isGraphicUpdateDone;
 	}
 
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+
 	/* ======= */
 	/* Getters */
 	/* ======= */
