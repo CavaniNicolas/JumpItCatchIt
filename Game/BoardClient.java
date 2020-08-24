@@ -14,6 +14,6 @@ public class BoardClient extends BoardIO {
 	}
 
 	/** send the input action object to the server */
-	public void handleAction(String action, Boolean toggle) {
+	public void handleAction(InputActions inputActions) {
 	}
 }

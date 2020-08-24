@@ -22,6 +22,6 @@ public class BoardLocal extends BoardIO {
 	}
 
 	/** uses directly the input action to change the course of the game */
-	public void handleAction(String action, Boolean toggle) {
+	public void handleAction(InputActions inputActions) {
 	}
 }
