@@ -21,22 +21,34 @@ import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 4L;
-	//attributes relative to the option menu
-	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
+	
+	/**Contient le jeu */
+	private Board board;
+	/**Contient la boucle principale de calcul du jeu */
+	private GameLoop gameLoop;
+	
+	//main menu panels
+	private JPanel mainMenuPanel;
+	private JPanel optionPanel;
+	private BackgroundPanel backgroundPanel;
 
-	//the panels that can be displayed
+	//attributes relative to the option menu
+	private KeyBindingMenu redPlayerBindings;
+	private KeyBindingMenu bluePlayerBindings;
+	private JPanel saveQuitOptionsPanel;
+	private JPanel saveFailedPanel;
+	
+	/**Contient l'affichage du jeu */
+	private BoardGraphism boardGraphism;
+
+	// Multiplayer panels
 	private JPanel createMultiplayerGamePanel;
 	private JPanel joinMultiplayerGamePanel;
 	private JPanel multiplayerPanel;
-	private JPanel saveFailedPanel;
-	private JPanel saveQuitOptionsPanel;
-	private JPanel mainMenuPanel;
-	private JPanel optionPanel;
-	private Board board;
-	private BoardGraphism boardGraphism;
-	private GameLoop gameLoop;
+
+	/**escape panel*/
 	private JPanel escapePanel;
-	private BackgroundPanel backgroundPanel;
+
 
 	//boolean handling escape panel
 	private Boolean isDisplayingEscapePanel = false;
@@ -61,7 +73,8 @@ public class MainMenu extends JFrame {
 		backgroundPanel = new BackgroundPanel();
 		createBoard();
 		createBoardGraphism();
-		createGameLoop();
+
+		board.setBoardGraphism(boardGraphism);
 
 		createMainMenuPanel();
 
@@ -92,6 +105,8 @@ public class MainMenu extends JFrame {
 		isDisplayingEscapePanel = false;
 		isDisplayingMainMenu = false;
 
+		createGameLoop();
+
 		//start game
 		board.initGame();
 		Thread thread = new Thread(new StartGame());
@@ -107,21 +122,21 @@ public class MainMenu extends JFrame {
 	}
 
 
+	/** creates board */
+	public void createBoard() {
+		board = new Board();
+	}
+
+
 	/** creates boardGraphism */
 	public void createBoardGraphism() {
-		boardGraphism = new BoardGraphism();
+		boardGraphism = new BoardGraphism(board);
 	}
 
 
 	/** creates gameLoop */
 	public void createGameLoop() {
 		gameLoop = new GameLoop(board);
-	}
-
-
-	/** creates board */
-	public void createBoard() {
-		board = new Board();
 	}
 
 

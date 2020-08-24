@@ -18,7 +18,7 @@ public class Board {
 	 * Les attributs graphiques et les fonctions d'affichage (les attributs sont
 	 * initialises au premier appel de paintComponent()
 	 */
-	private BoardGraphism boardGraphism = new BoardGraphism();
+	private BoardGraphism boardGraphism;
 
 	/**Booleen, true si le jeu est en cours */
 	private boolean isPlaying; // Mnt dans GameLoop
@@ -135,13 +135,20 @@ public class Board {
 		KeyBindings redKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
 		KeyBindings blueKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
 
+		// Les InputActions des deux joueurs
+		InputActions redCharacterInputActions = new InputActions();
+		InputActions blueCharacterInputActions = new InputActions();
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
-				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redKeyBindings, boardGraphism);
+				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redKeyBindings, redCharacterInputActions, boardGraphism);
 		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
-				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueKeyBindings, boardGraphism);
-				
+				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueKeyBindings, blueCharacterInputActions, boardGraphism);
+
+		// met les characters dans les objets inputActions correspondants
+		redCharacterInputActions.setCharacter(characterRed);
+		blueCharacterInputActions.setCharacter(characterBlue);
+
 		// init ItemBalls
 		itemBalls = new ItemBalls();
 
@@ -194,4 +201,7 @@ public class Board {
 		return itemBalls;
 	}
 
+	public void setBoardGraphism(BoardGraphism boardGraphism) {
+		this.boardGraphism = boardGraphism;
+	}
 }

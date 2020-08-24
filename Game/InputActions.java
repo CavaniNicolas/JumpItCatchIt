@@ -3,6 +3,8 @@ package Game;
 import java.io.Serializable;
 
 public class InputActions implements Serializable {
+	private static final long serialVersionUID = 5L;
+
 	// Booleens de pression sur les touches / (de demande d'actions)
 	private boolean jumpPressed = false;
 	private boolean leftPressed = false;
