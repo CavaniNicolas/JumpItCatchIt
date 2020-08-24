@@ -6,11 +6,12 @@ import Game.BoardGraphism;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Image;
+import java.io.Serializable;
 
-public class ItemBall extends Entity {
+public class ItemBall extends Entity implements Serializable {
 
 	protected Color colorItem;
-	private Image imageItem = null;
+	private transient Image imageItem = null;
 
 	/** Constructeur pour creer un item lors du jeu */
 	public ItemBall(int x, int y, int width, int height) {

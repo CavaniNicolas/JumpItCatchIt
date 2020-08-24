@@ -1,34 +1,44 @@
-package Network;
+package Game;
 
-import Game.Board;
-import Game.InputActions;
 import java.net.*;
 import java.io.*;
 
-public class Server {
-	private Boolean inGame = false;
+public class BoardServer {
+	//gameLoop
+	private GameLoopServer gameLoopServer;
+
+	//inputActions
+	private InputActions redPlayerInputActions;
+	private InputActions bluePlayerInputActions;
+
+	//board
 	private Board board;
-	private int playerNumber = 2;
-	private int currentPlayerNumber;
-	private Boolean isRunning;
-	private ServerSocket serverSocket = null;
+
+	//waiting for everyone or playing
+	private Boolean isRunning = true;
+	private Boolean inGame = false;
+
+	//player number management
+	private int playerNumber = 1;
+	private int currentPlayerNumber = 0;
 	private int connectionNumber = 0;
+
+	//server socket and address
+	private ServerSocket serverSocket = null;
+
+	//object streams
 	private ObjectOutputStream[] objectOutputs;
 	private ObjectInputStream[] objectInputs;
 
-
-	public static void main(String [] args) {
-		new Server();
-	}
-
-	public Server()  { 
+	public BoardServer(Board board) {
+		this.board = board;
+		gameLoopServer = new GameLoopServer(this.board, this);
+		
+		//start online server"
         try { 
-			int portNumber = 5000;
-			//System.out.println(getPublicIPAddress());
-			serverSocket = new ServerSocket(portNumber); 
-			isRunning = true;
-			Thread t = new Thread(new HandleServer());
-			t.start();
+            int portNumber = 5000;
+			serverSocket = new ServerSocket(portNumber);
+			new Thread(new HandleServer());
         }  catch (IOException e) { 
 			e.printStackTrace();
 			isRunning = false;
@@ -41,9 +51,9 @@ public class Server {
 			objectOutputs = new ObjectOutputStream[playerNumber];
 			objectInputs = new ObjectInputStream[playerNumber];
 
+			//loop keeping the server alive
 			while (isRunning == true){
 				//wait for the 2 connections
-				currentPlayerNumber = 0;
 				while (currentPlayerNumber < playerNumber) {
 					System.out.println("waiting for " + (playerNumber - currentPlayerNumber) + " players");
 					System.out.println("Current player number " + currentPlayerNumber);
@@ -61,6 +71,8 @@ public class Server {
 				}
 				System.out.println("Starting game");
 				inGame = true;
+				gameLoopServer.togglePause();
+
 			}
 			try {
 				serverSocket.close();
@@ -90,7 +102,7 @@ public class Server {
 				objectOutputs[number] = new ObjectOutputStream(clientSocket.getOutputStream());
 				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
 
-				Thread thread = new Thread(new InputProcessor(number));
+				new Thread(new InputProcessor(number));
 
 				while (isRunning) {	
 					if (!inGame) {
@@ -127,7 +139,11 @@ public class Server {
 				try {
 					Object obj = objectInputs[number].readObject();
 					if (obj instanceof InputActions) {
-						//board.useInputActions(number, obj);
+						if (number == 0) {
+							board.getCharacterRed().setInputActions((InputActions)obj);;
+						} else {
+							board.getCharacterBlue().setInputActions((InputActions)obj);;
+						}
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -147,19 +163,4 @@ public class Server {
 			}
 		}
 	}
-
-	/** Find public IP address */
-	public String getPublicIPAddress() {
-		try { 
-			URL url_name = new URL("http://bot.whatismyipaddress.com"); 
-	
-			BufferedReader sc = 
-			new BufferedReader(new InputStreamReader(url_name.openStream())); 
-	
-			// reads system IPAddress 
-			return sc.readLine().trim(); 
-		} catch (Exception e) { 
-			return "COULD NOT FIND ADDRESS"; 
-		} 
-	}
-} 
+}

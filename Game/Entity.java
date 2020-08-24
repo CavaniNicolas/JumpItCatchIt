@@ -1,17 +1,22 @@
 package Game;
 
-/**Class Entity<p>
- * Tous les objets qui vont pouvoir avoir un mouvement, (vitesse et acceleration)
+import java.io.Serializable;
+
+/**
+ * Class Entity
+ * <p>
+ * Tous les objets qui vont pouvoir avoir un mouvement, (vitesse et
+ * acceleration)
  */
-public class Entity {
+public class Entity implements Serializable {
 
 	/**Gravite */
-	protected final int GRAVITY = -20;
+	protected transient final int GRAVITY = -20;
 
 	// Coordonnees de collisions minimales et maximales
-	protected int minX;
-	protected int maxX;
-	protected int minY;
+	protected transient int minX;
+	protected transient int maxX;
+	protected transient int minY;
 
 	// Largeur et Hauteur de l'entite	
 	protected int width;
@@ -21,11 +26,11 @@ public class Entity {
 	protected int x;
 	protected int y;
 	// Vitesses de l'entite
-	protected int speedX;
-	protected int speedY;
+	protected transient int speedX;
+	protected transient int speedY;
 	// Accelerations de l'entite
-	protected int accelX;
-	protected int accelY;
+	protected transient int accelX;
+	protected transient int accelY;
 
 
 	public Entity(int x, int y, int speedX, int speedY, int accelX, int accelY, int width, int height) {

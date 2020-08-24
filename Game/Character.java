@@ -1,19 +1,15 @@
 package Game;
 
-import Menu.KeyBindings;
-
 import java.awt.Color;
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.awt.Graphics;
 
-public class Character extends Entity {
-
-	private KeyBindings keyBindings;
-
+public class Character extends Entity implements Serializable {
 	/** Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
-	private boolean isLeftCharacter; // Pourrait etre remplace par un ID
+	private transient boolean isLeftCharacter; // Pourrait etre remplace par un ID
 
 	/**Nombre de vies max (en moities de coeur) */
 	private int livesMax = 6;
@@ -23,77 +19,80 @@ public class Character extends Entity {
 	/** Booleens d'actions */
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
+	/** Booleens d'Input */
+	private transient InputActions inputActions;
+
 	/** HUD du personnage */
-	private HUDCharacter hudCharacter;
+	private transient HUDCharacter hudCharacter;
 
 	/** Booleen de position, a gauche ou a droite de son adversaire */
-	private boolean isOnLeftSide;
+	private transient boolean isOnLeftSide;
 	/** Booleen de position, sur la plateforme de gauche */
-	private boolean isOnLeftPlatform;
+	private transient boolean isOnLeftPlatform;
 	/** Booleen de position, sur la plateforme de droite */
-	private boolean isOnRightPlatform;
+	private transient boolean isOnRightPlatform;
 	/**Si les personnages sont a la meme hauteur ou non */
-	private boolean areOnSameY;
+	private transient boolean areOnSameY;
 	/**Si les personnages sont l'un dans l'autre en X */
-	private boolean areOnSameXCollisions;
+	private transient boolean areOnSameXCollisions;
 	/**Vitesse de decollision */
-	private int decollisionSpeed = 30;
+	private transient int decollisionSpeed = 30;
 
 
 	/**Largeur de la hitbox selon X */
-	private int hitboxWidth = 800; //this.width / 2;
+	private transient int hitboxWidth = 800; //this.width / 2;
 
 	/** Booleen, true si on est en train de tomber dans le vide */
-	private boolean isFalling;
+	private transient boolean isFalling;
 	/** Booleen, true si on est en train de respawn */
-	private boolean isSpawning;
+	private transient boolean isSpawning;
 
 	// Couleur et image du personnage
 	private Color colorCharacter;
-	private Image imageCharacter = null;
+	private transient Image imageCharacter = null;
 
 
 	/** Vitesse Laterale Constante */
-	protected int speedLateral = 40;
+	protected transient int speedLateral = 40;
 	/** Vitesse Horizontale Constante */
-	protected int speedVertical = 450;
+	protected transient int speedVertical = 450;
 	/** Vitesse a appliquer a speedX pour le switch */
-	protected int switchSpeed = 275;
+	protected transient int switchSpeed = 275;
 
 
 	/**Projectiles du joueur */
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	/**Vitesse des projectiles */
-	private int speedProjectile = 100;
+	private transient int speedProjectile = 100;
 	/**Range des projectiles */
-	private int rangeProjectile = 12_000; // Peut etre mieux de la calculer en pourcentage par rapport a la taille maxX du board
+	private transient int rangeProjectile = 12_000; // Peut etre mieux de la calculer en pourcentage par rapport a la taille maxX du board
 	/**Degats des projectiles */
-	private int damageProjectile = 1;
+	private transient int damageProjectile = 1;
 	/**Couleur des projectiles */
 	private Color colorProjectile = Color.orange; // Sera a initialiser
-	private Image imageProjectile = null;
+	private transient Image imageProjectile = null;
 
 	/**Cool Down pour lancer un projectile (en milli secondes) */
-	private long coolDownProjectile = 1_500;
+	private transient long coolDownProjectile = 1_500;
 	/** Moment auquel on lance un projectile */
-	private long startTimeProjectile = 0;
+	private transient long startTimeProjectile = 0;
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, BoardGraphism boardGraphism) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
-		this.keyBindings = keyBindings;
+		this.inputActions = inputActions;
 		initGraphicAttributes(boardGraphism);
 		initHUDCharacter(boardGraphism);
 	}
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
-		this(x, y, isLeftCharacter, colorCharacter, null, keyBindings, boardGraphism);
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, BoardGraphism boardGraphism) {
+		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, boardGraphism);
 	}
 
 
@@ -101,6 +100,9 @@ public class Character extends Entity {
 	/** Actualise les booleens d'actions */
 	public void updateActionBooleans(Character otherCharacter) {
 		
+		// Verifie le relachement de la touche saut lorsqu'on est en l'air pour autoriser le switch sur un autre appuie de la touche saut
+		checkKeyToUpdateCanSwitch();
+
 		// On verifie les coolDown des sorts
 		checkCoolDowns();
 
@@ -117,7 +119,7 @@ public class Character extends Entity {
 		}
 
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
-		if (actionBooleans.leftPressed && actionBooleans.rightPressed) {
+		if (inputActions.getLeftPressed() && inputActions.getRightPressed()) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
 		} else {
@@ -405,10 +407,10 @@ public class Character extends Entity {
 	private void checkMovement(Character otherCharacter) {
 
 		// Applique une vitesse initiale au personnage pour se deplacer lateralement
-		if (actionBooleans.leftPressed && actionBooleans.canLeft) {
+		if (inputActions.getLeftPressed() && actionBooleans.canLeft) {
 			this.speedX = - this.speedLateral;
 
-		} else if (actionBooleans.rightPressed && actionBooleans.canRight) {
+		} else if (inputActions.getRightPressed() && actionBooleans.canRight) {
 			this.speedX = this.speedLateral;
 
 		} else {
@@ -427,7 +429,7 @@ public class Character extends Entity {
 	private void checkJump() {
 
 		// Applique une vitesse et une acceleration initiales au personnage pour sauter
-		if (actionBooleans.jumpPressed && actionBooleans.canJump && isFalling == false) {
+		if (inputActions.getJumpPressed() && actionBooleans.canJump && isFalling == false) {
 			// Vitesse initiale du saut
 			this.speedY = this.speedVertical;
 			// Gravite
@@ -446,7 +448,7 @@ public class Character extends Entity {
 	private void checkSwitch() {
 
 		// Si on appuie sur sauter pendant qu'on est en l'air, on switch
-		if (actionBooleans.isJumping && actionBooleans.jumpPressed && actionBooleans.canSwitch && isFalling == false) {
+		if (actionBooleans.isJumping && inputActions.getJumpPressed() && actionBooleans.canSwitch && isFalling == false) {
 
 			// Gravite
 			this.accelY = GRAVITY;
@@ -476,7 +478,7 @@ public class Character extends Entity {
 	public void checkShoot(BoardGraphism boardGraphism) {
 
 		/**Si on appuie sur Shoot et qu'on peut shoot */
-		if (actionBooleans.shootPushPressed && actionBooleans.canShoot) {
+		if (inputActions.getShootPushPressed() && actionBooleans.canShoot) {
 
 			// Tire vers la droite
 			if (isOnLeftSide) {
@@ -600,9 +602,6 @@ public class Character extends Entity {
 	/* Getters */
 	/* ======= */
 
-	public KeyBindings getKeyBindings() {
-		return keyBindings;
-	}
 	public ActionBooleans getActionBooleans() {
 		return actionBooleans;
 	}
@@ -613,17 +612,32 @@ public class Character extends Entity {
 		this.lives = lives;
 	}
 
+	public InputActions getInputActions() {
+		return inputActions;
+	}
+
+	public void setInputActions(InputActions inputActions) {
+		this.inputActions = inputActions;
+	}
+
+
+	/** Verifie le relachement de la touche saut lorsqu'on est en l'air pour autoriser le switch sur un autre appuie de la touche saut */
+	public void checkKeyToUpdateCanSwitch() {
+		// Si bouton sauter est relache
+		if (inputActions.getJumpPressed() == false) {
+			// Active le booleens qui permet dactiver le canSwitch si on est dans les airs et qu'on
+			// relache le bouton sauter (pour pouvoir rappuyer dessus dans les airs pour switch)
+			if (actionBooleans.isJumping == true && actionBooleans.isJumpFirstReleaseDone == false) {
+				actionBooleans.isJumpFirstReleaseDone = true;
+			}
+		}
+	}
+
+
 	public class ActionBooleans {
 
 		// Booleens de pression sur les touches / (de demande d'actions)
-		private boolean jumpPressed = false;
-		private boolean leftPressed = false;
-		private boolean rightPressed = false;
-		private boolean grabPressed = false;
-		private boolean shieldPressed = false;
-		private boolean shootPushPressed = false;
 		private boolean switchPressed = false;
-
 
 		// Booleens d'autorisation d'actions
 		private boolean canJump = true;
@@ -645,48 +659,13 @@ public class Character extends Entity {
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)
-		public boolean isJumpPressed() {
-			return jumpPressed;
-		}
-		public void setJumpPressed(boolean jumpPressed) {
-			this.jumpPressed = jumpPressed;
-		}
-		public boolean isLeftPressed() {
-			return leftPressed;
-		}
-		public void setLeftPressed(boolean leftPressed) {
-			this.leftPressed = leftPressed;
-		}
-		public boolean isRightPressed() {
-			return rightPressed;
-		}
-		public void setRightPressed(boolean rightPressed) {
-			this.rightPressed = rightPressed;
-		}
-		public boolean isGrabPressed() {
-			return grabPressed;
-		}
-		public void setGrabPressed(boolean grabPressed) {
-			this.grabPressed = grabPressed;
-		}
-		public boolean isShieldPressed() {
-			return shieldPressed;
-		}
-		public void setShieldPressed(boolean shieldPressed) {
-			this.shieldPressed = shieldPressed;
-		}
-		public boolean isShootPushPressed() {
-			return shootPushPressed;
-		}
-		public void setShootPushPressed(boolean shootPushPressed) {
-			this.shootPushPressed = shootPushPressed;
-		}
 		public boolean isSwitchPressed() {
 			return switchPressed;
 		}
 		public void setSwitchPressed(boolean switchPressed) {
 			this.switchPressed = switchPressed;
 		}
+
 		public boolean isCanActivateCanSwitch() {
 			return canActivateCanSwitch;
 		}
