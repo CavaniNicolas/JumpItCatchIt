@@ -3,6 +3,10 @@ package Game;
 public class BoardIO {
 	private BoardGraphism boardGraphism;
 
-	public void handleAction(String action, Boolean toggle) {
+	public BoardIO(BoardGraphism boardGraphism) {
+		this.boardGraphism = boardGraphism;
+	}
+
+	public void handleAction(InputAction inputAction) {
 	}
 }

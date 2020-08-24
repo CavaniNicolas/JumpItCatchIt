@@ -1,5 +1,5 @@
 package Game;
 
-public class BoardClient {
+public class BoardClient extends BoardIO {
 	
 }

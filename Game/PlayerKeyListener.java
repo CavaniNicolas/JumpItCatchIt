@@ -10,16 +10,18 @@ import java.awt.event.KeyListener;
 public class PlayerKeyListener implements KeyListener {
 	private KeyBindings keyBindings;
 	private BoardIO boardIO;
+	private InputAction inputAction;
+
 	@Override
 	public void keyPressed(KeyEvent event) {
 		String action = getKeyActionDescription(event.getKeyChar());
-		boardIO.handleAction(action, true);
+		inputAction.togglePressedKeys(action, true);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event) {
 		String action = getKeyActionDescription(event.getKeyChar());
-		boardIO.handleAction(action, false);
+		inputAction.togglePressedKeys(action, false);
 	}
 
 	@Override
