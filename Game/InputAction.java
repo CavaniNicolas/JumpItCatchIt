@@ -29,37 +29,37 @@ public class InputAction {
 	}
 
 	// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)
-	public boolean isJumpPressed() {
+	public boolean getJumpPressed() {
 		return jumpPressed;
 	}
 	public void setJumpPressed(boolean jumpPressed) {
 		this.jumpPressed = jumpPressed;
 	}
-	public boolean isLeftPressed() {
+	public boolean getLeftPressed() {
 		return leftPressed;
 	}
 	public void setLeftPressed(boolean leftPressed) {
 		this.leftPressed = leftPressed;
 	}
-	public boolean isRightPressed() {
+	public boolean getRightPressed() {
 		return rightPressed;
 	}
 	public void setRightPressed(boolean rightPressed) {
 		this.rightPressed = rightPressed;
 	}
-	public boolean isGrabPressed() {
+	public boolean getGrabPressed() {
 		return grabPressed;
 	}
 	public void setGrabPressed(boolean grabPressed) {
 		this.grabPressed = grabPressed;
 	}
-	public boolean isShieldPressed() {
+	public boolean getShieldPressed() {
 		return shieldPressed;
 	}
 	public void setShieldPressed(boolean shieldPressed) {
 		this.shieldPressed = shieldPressed;
 	}
-	public boolean isShootPushPressed() {
+	public boolean getShootPushPressed() {
 		return shootPushPressed;
 	}
 	public void setShootPushPressed(boolean shootPushPressed) {
