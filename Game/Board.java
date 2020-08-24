@@ -41,47 +41,9 @@ public class Board extends JPanel {
 	/** Items du jeu, tombant entre les deux plateformes lors du jeu */
 	private ItemBalls itemBalls;
 
-	/**Timer du jeu */
-	private Timer gamePlayTimer;
 	/**Timer d'affichage du jeu */
 	private Timer gameDisplayTimer;
 
-
-	public class GamePlayTimerListener implements ActionListener {
-
-		/**Action a effectuer lorsque le timer renvoie un event */
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			if (isPlaying) {
-
-				// Characters
-				updateAllCollisionBorders();
-				updateActionBooleans();
-				updatePositionAndMoveAll();
-				checkActions();
-
-				// Projectiles
-				moveProjectiles();
-				checkProjectilesCollision();
-
-				// Items
-				createItems();
-				moveItems();
-			}
-		}
-	}
-
-
-	public void togglePause() {
-		isPlaying = !isPlaying;
-		if (!isPlaying) {
-			gamePlayTimer.stop();
-		} else {
-			gamePlayTimer = new Timer(12, new GamePlayTimerListener());
-			gamePlayTimer.start();
-			gameDisplayTimer.start();
-		}
-	}
 
 
 	/**
