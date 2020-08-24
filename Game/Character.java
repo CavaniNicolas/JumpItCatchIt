@@ -2,13 +2,16 @@ package Game;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.awt.Graphics;
 
-public class Character extends Entity implements Serializable {
-	/** Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
+/** Class Character <p>
+ * contient le personnage, toutes ses actions, positions, etats... */
+public class Character extends Entity {
+	private static final long serialVersionUID = 1L;
+
+	/**Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
 	private transient boolean isLeftCharacter; // Pourrait etre remplace par un ID
 
 	/**Nombre de vies max (en moities de coeur) */

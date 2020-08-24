@@ -6,12 +6,18 @@ import Game.BoardGraphism;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Image;
-import java.io.Serializable;
 
-public class ItemBall extends Entity implements Serializable {
+/** Class ItemBall <p>
+ * Item du jeu
+ */
+public class ItemBall extends Entity {
+	private static final long serialVersionUID = 1L;
 
-	protected Color colorItem;
+	/** Couleur de l'Item, chaque item a une couleur par defaut */
+	protected transient Color colorItem;
+	/** Image de l'Item */
 	private transient Image imageItem = null;
+
 
 	/** Constructeur pour creer un item lors du jeu */
 	public ItemBall(int x, int y, int width, int height) {
@@ -19,7 +25,6 @@ public class ItemBall extends Entity implements Serializable {
 		super(x, y, 0, -50, 0, 0, width, height);
 		this.minY = - height;
 	}
-
 
 
 	/** Effets qu'applique cet Item, cette methode sera Override pour chaque Item */

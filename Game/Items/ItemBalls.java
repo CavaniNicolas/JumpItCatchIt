@@ -4,17 +4,14 @@ import Game.BoardGraphism;
 import Game.Items.Item.*;
 
 import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ItemBalls implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** Tableau contenant les valeurs constantes de chaque Item, ces valeurs sont utiles a la generation des items et a leur initialisation */
-
-	private transient ArrayList<ItemBallInit> allExistingBalls = new ArrayList<ItemBallInit>(); // remplacer par 'ItemBallProba'
-
+	private transient ArrayList<ItemBallInit> allExistingBalls = new ArrayList<ItemBallInit>();
 
 	/** Tableau contenant les items actuellement sur le plateau */
 	private ArrayList<ItemBall> itemBalls = new ArrayList<ItemBall>();
@@ -22,7 +19,7 @@ public class ItemBalls implements Serializable {
 	/** Somme des probabilites de tous les items */
 	private transient int sumAllProbas = 0;
 
-	/**Espace entre deux Items */
+	/** Espace entre deux Items */
 	private transient int interItems = 50; // a mettre dans boardGraphism et a initialiser
 
 
