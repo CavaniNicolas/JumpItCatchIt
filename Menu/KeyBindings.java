@@ -26,13 +26,12 @@ public class KeyBindings implements Serializable {
 		return keyBindings;
 	}
 
-	//toString
+	@Override
 	public String toString() {
-		String str = "";
+		String str = "KeyBindings [";
 		for (KeyBinding keyBinding : keyBindings) {
 			str += keyBinding;
 		}
-		return str;
+		return str + "]";
 	}
-
 }
