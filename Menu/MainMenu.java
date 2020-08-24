@@ -1,6 +1,7 @@
 package Menu;
 
 import Game.Board;
+import Game.BoardClient;
 import Game.BoardGraphism;
 import Game.BoardServer;
 import Game.GameLoop;
@@ -426,6 +427,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.add(createMultiplayerGamePanel);
 				reloadDisplay();
 				new BoardServer(board);
+				new BoardClient(boardGraphism, getPublicIPAddress());
 			}
 		});
 

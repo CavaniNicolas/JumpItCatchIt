@@ -1,5 +1,6 @@
 package Game;
 
+import Menu.FileFunctions;
 import Menu.KeyBindings;
 import java.io.*;
 import java.net.*;
@@ -10,7 +11,6 @@ public class BoardClient extends BoardIO {
     protected BoardGraphism boardGraphism;
 
     //client input related
-	private KeyBindings playerBindings;
 	private PlayerKeyListener playerKeyListener;
 	private InputActions playerInputActions = new InputActions();
 
@@ -25,20 +25,17 @@ public class BoardClient extends BoardIO {
 	//client socket
     private Socket socket;
 
-	public BoardClient(KeyBindings playerBindings, BoardGraphism boardGraphism) {
+	public BoardClient(BoardGraphism boardGraphism, String address) {
         this.boardGraphism = boardGraphism;
-        this.playerBindings = playerBindings;
-		playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
+		KeyBindings playerBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+        playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
+        connect(address);
 	}
 
 	/** send the input action object to the server */
 	public void handleAction(InputActions inputActions) {
 		outputObject(inputActions);
 	}
-
-	public void connect() {
-        connect("2a01:e0a:40c:8ff0:f023:ce59:eb8f:f2c");
-    }
 
     public void connect(String serverHostName) {
         int portNumber = 5000; // Le port du serveur
