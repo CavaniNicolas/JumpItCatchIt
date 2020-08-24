@@ -427,7 +427,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.add(createMultiplayerGamePanel);
 				reloadDisplay();
 				new BoardServer(board);
-				new BoardClient(boardGraphism, getPublicIPAddress());
+				//new BoardClient(boardGraphism, getPublicIPAddress());
 			}
 		});
 
@@ -514,7 +514,8 @@ public class MainMenu extends JFrame {
 		joinButton.setPreferredSize(new Dimension(70, 25));
 		joinButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("joining");
+				new BoardClient(boardGraphism, enemyIP.getText());
+				frame.setContentPane(boardGraphism);
 			}
 		});
 
