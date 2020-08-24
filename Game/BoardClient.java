@@ -6,6 +6,9 @@ import java.net.*;
 
 /** handles the key listener for online game */
 public class BoardClient extends BoardIO {
+    //board graphism
+    protected BoardGraphism boardGraphism;
+
     //client input related
 	private KeyBindings playerBindings;
 	private PlayerKeyListener playerKeyListener;
@@ -23,7 +26,7 @@ public class BoardClient extends BoardIO {
     private Socket socket;
 
 	public BoardClient(KeyBindings playerBindings, BoardGraphism boardGraphism) {
-        super(boardGraphism);
+        this.boardGraphism = boardGraphism;
         this.playerBindings = playerBindings;
 		playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
 	}

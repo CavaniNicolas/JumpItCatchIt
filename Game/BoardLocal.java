@@ -5,15 +5,21 @@ import Menu.KeyBindings;
 
 /** handles the key listeners and game for local game */
 public class BoardLocal extends BoardIO {
+	//game loop
 	private GameLoop gameLoop;
+
+	//keylisteners for both players
 	private PlayerKeyListener redPlayerKeyListener;
 	private PlayerKeyListener bluePlayerKeyListener;
+
+	//input actions for both players
 	private InputActions redPlayerInputActions;
 	private InputActions bluePlayerInputActions;
+
+	//the board to be modified
 	private Board board;
 
-	public BoardLocal(Board board, BoardGraphism boardGraphism) {
-		super(boardGraphism);
+	public BoardLocal(Board board) {
 		this.board = board;
 		gameLoop = new GameLoop(this.board);
 
