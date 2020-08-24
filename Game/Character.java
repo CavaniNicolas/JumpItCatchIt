@@ -1,7 +1,5 @@
 package Game;
 
-import Menu.KeyBindings;
-
 import java.awt.Color;
 import java.awt.Image;
 import java.io.Serializable;
@@ -10,9 +8,6 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 
 public class Character extends Entity implements Serializable {
-
-	private transient KeyBindings keyBindings;
-
 	/** Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
 	private transient boolean isLeftCharacter; // Pourrait etre remplace par un ID
 
@@ -84,12 +79,11 @@ public class Character extends Entity implements Serializable {
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, InputActions inputActions, BoardGraphism boardGraphism) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, BoardGraphism boardGraphism) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
-		this.keyBindings = keyBindings;
 		this.inputActions = inputActions;
 		initGraphicAttributes(boardGraphism);
 		initHUDCharacter(boardGraphism);
@@ -97,8 +91,8 @@ public class Character extends Entity implements Serializable {
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, KeyBindings keyBindings, InputActions inputActions, BoardGraphism boardGraphism) {
-		this(x, y, isLeftCharacter, colorCharacter, null, keyBindings, inputActions, boardGraphism);
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, BoardGraphism boardGraphism) {
+		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, boardGraphism);
 	}
 
 
@@ -608,9 +602,6 @@ public class Character extends Entity implements Serializable {
 	/* Getters */
 	/* ======= */
 
-	public KeyBindings getKeyBindings() {
-		return keyBindings;
-	}
 	public ActionBooleans getActionBooleans() {
 		return actionBooleans;
 	}

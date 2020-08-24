@@ -132,19 +132,15 @@ public class Board implements Serializable {
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles
 		// existent, des carres sinon
 
-		// On récupère les keyBindings des joueurs
-		KeyBindings redKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
-		KeyBindings blueKeyBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
-
 		// Les InputActions des deux joueurs
 		InputActions redCharacterInputActions = new InputActions();
 		InputActions blueCharacterInputActions = new InputActions();
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
-				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redKeyBindings, redCharacterInputActions, boardGraphism);
+				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redCharacterInputActions, boardGraphism);
 		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
-				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueKeyBindings, blueCharacterInputActions, boardGraphism);
+				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueCharacterInputActions, boardGraphism);
 
 		// met les characters dans les objets inputActions correspondants
 		redCharacterInputActions.setCharacter(characterRed);

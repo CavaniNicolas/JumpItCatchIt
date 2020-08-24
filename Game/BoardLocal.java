@@ -1,12 +1,11 @@
 package Game;
 
+import Menu.FileFunctions;
 import Menu.KeyBindings;
 
 /** handles the key listeners and game for local game */
 public class BoardLocal extends BoardIO {
 	private GameLoop gameLoop;
-	private KeyBindings redPlayerBindings;
-	private KeyBindings bluePlayerBindings;
 	private PlayerKeyListener redPlayerKeyListener;
 	private PlayerKeyListener bluePlayerKeyListener;
 	private InputActions redPlayerInputActions;
@@ -17,6 +16,12 @@ public class BoardLocal extends BoardIO {
 		super(boardGraphism);
 		this.board = board;
 		gameLoop = new GameLoop(this.board);
+
+		// On récupère les keyBindings des joueurs
+		KeyBindings redPlayerBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+		KeyBindings bluePlayerBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("blue"));
+
+		//on crée les listeners correspondant
 		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, board.getCharacterRed().getInputActions());
 		bluePlayerKeyListener = new PlayerKeyListener(bluePlayerBindings, this, board.getCharacterBlue().getInputActions());
 	}
