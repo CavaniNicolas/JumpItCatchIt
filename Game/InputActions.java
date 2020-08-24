@@ -70,6 +70,12 @@ public class InputActions implements Serializable {
 		this.shootPushPressed = shootPushPressed;
 	}
 
+
+	public void setCharacter(Character character) {
+		this.character = character;
+	}
+
+
 	@Override
 	public String toString() {
 		return "InputActions [character=" + character + ", grabPressed=" + grabPressed + ", jumpPressed=" + jumpPressed
