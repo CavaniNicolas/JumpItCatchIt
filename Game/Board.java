@@ -32,6 +32,22 @@ public class Board {
 	private ItemBalls itemBalls;
 
 
+	/** Actualise le jeu */
+	public void updateAll() {
+		// Characters
+		updateAllCollisionBorders();
+		updateActionBooleans();
+		updatePositionAndMoveAll();
+		checkActions();
+
+		// Projectiles
+		moveProjectiles();
+		checkProjectilesCollision();
+		
+		// Items
+		createItems();
+		moveItems();
+	}
 
 	/**
 	 * Actualise les coordonnees de collision minimale et maximale de tous les

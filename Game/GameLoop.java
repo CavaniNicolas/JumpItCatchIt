@@ -27,26 +27,16 @@ public class GameLoop{
 		}
 	}
 
+	public void sendBoardToClients() {}
+
 	/** updates all entities */
 	public class GamePlayTimerListener implements ActionListener {
 		/**Action a effectuer lorsque le timer renvoie un event */
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			if (isPlaying) {
-
-				// Characters
-				board.updateAllCollisionBorders();
-				board.updateActionBooleans();
-				board.updatePositionAndMoveAll();
-				board.checkActions();
-
-				// Projectiles
-				board.moveProjectiles();
-				board.checkProjectilesCollision();
-				
-				// Items
-				board.createItems();
-				board.moveItems();
+				board.updateAll();
+				sendBoardToClients();
 			}
 		}
 	}
