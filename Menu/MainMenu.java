@@ -5,6 +5,8 @@ import Game.BoardGraphism;
 import Game.BoardServer;
 import Game.GameLoop;
 
+import java.io.*;
+import java.net.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
@@ -25,9 +27,6 @@ public class MainMenu extends JFrame {
 	
 	/**Contient le jeu */
 	private Board board;
-
-	/** server si multi */
-	private BoardServer boardServer;
 
 	/**Contient la boucle principale de calcul du jeu */
 	private GameLoop gameLoop;
@@ -426,7 +425,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(createMultiplayerGamePanel);
 				reloadDisplay();
-				boardServer = new BoardServer(board);
+				new BoardServer(board);
 			}
 		});
 
@@ -468,7 +467,7 @@ public class MainMenu extends JFrame {
 		createMultiplayerGamePanel.setPreferredSize(new Dimension(320, 120));
 
 		//create a joinable game
-		JLabel gameAvailable = new JLabel("Your game is available on : " + boardServer.getPublicIPAddress());
+		JLabel gameAvailable = new JLabel("Your game is available on : " + getPublicIPAddress());
 		gameAvailable.setPreferredSize(new Dimension(300, 25));
 
 		//join an existing game
@@ -590,6 +589,19 @@ public class MainMenu extends JFrame {
 		setBindings();
 	}
 
+	/** Find public IP address */
+	public String getPublicIPAddress() {
+		try { 
+			URL url_name = new URL("http://bot.whatismyipaddress.com"); 
+	
+			BufferedReader sc = new BufferedReader(new InputStreamReader(url_name.openStream())); 
+	
+			// reads system IPAddress 
+			return sc.readLine().trim(); 
+		} catch (Exception e) { 
+			return "COULD NOT FIND ADDRESS"; 
+		} 
+	}
 
 	public void setUnsavedChanges(Boolean bool) {
 		unsavedChanges = bool;
