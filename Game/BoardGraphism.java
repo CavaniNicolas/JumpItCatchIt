@@ -42,7 +42,8 @@ public class BoardGraphism extends JPanel {
 	private Timer gameDisplayTimer;
 
 
-	public BoardGraphism() {
+	public BoardGraphism(Board board) {
+		this.board = board;
 		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
 	}
 

@@ -24,7 +24,7 @@ public class Character extends Entity {
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
 	/** Booleens d'Input */
-	private InputActions inputActions; // A INITIALISER DANS LE CONSTRUCTEUR
+	private InputActions inputActions;
 
 	/** HUD du personnage */
 	private HUDCharacter hudCharacter;
@@ -83,20 +83,21 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, KeyBindings keyBindings, InputActions inputActions, BoardGraphism boardGraphism) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
 		this.keyBindings = keyBindings;
+		this.inputActions = inputActions;
 		initGraphicAttributes(boardGraphism);
 		initHUDCharacter(boardGraphism);
 	}
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, KeyBindings keyBindings, BoardGraphism boardGraphism) {
-		this(x, y, isLeftCharacter, colorCharacter, null, keyBindings, boardGraphism);
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, KeyBindings keyBindings, InputActions inputActions, BoardGraphism boardGraphism) {
+		this(x, y, isLeftCharacter, colorCharacter, null, keyBindings, inputActions, boardGraphism);
 	}
 
 
