@@ -12,40 +12,53 @@ public class ItemBallInit {  //Item Ball Proba
 	// Attributs d'initialisation des Items
 	private int nbMaxItem;
 	private int percentItem;
-	private Color colorItem;
+	private int addedPercentItem;
 	private Image imageItem = null;
 
 	private String name;
 
 	/** Constructeur pour la liste d'initialisation des items */
-	public ItemBallInit(int nbMaxItem, int percentItem, Color colorItem, Image imageItem, String name) {
+	public ItemBallInit(String name, int nbMaxItem, int percentItem, int addedPercentItem, Image imageItem) {
+		this.name = name;
 		this.nbMaxItem = nbMaxItem;
 		this.percentItem = percentItem;
-		this.colorItem = colorItem;
+		this.addedPercentItem = addedPercentItem;
 		this.imageItem = imageItem;
-		this.name = name;
 	}
 
 
+	/**Ajoute 1 au nombre d'instances en jeu de cet Item */
+	public void addOneNbItem() {
+		this.nbItem += 1;
+	}
+
+	/**Enleve 1 au nombre d'instances en jeu de cet Item */
+	public void removeOneNbItem() {
+		this.nbItem -= 1;
+	}
+
+
+	/* ======= */
+	/* Getters */
+	/* ======= */
+
+	public String getName() {
+		return name;
+	}
 	public int getNbMaxItem() {
 		return nbMaxItem;
 	}
 	public int getPercentItem() {
 		return percentItem;
 	}
-	public Color getColorItem() {
-		return colorItem;
+	public int getAddedPercentItem() {
+		return addedPercentItem;
 	}
 	public Image getImageItem() {
 		return imageItem;
 	}
-
-
 	public int getNbItem() {
 		return nbItem;
-	}
-	public void setNbItem(int newNbItem) {
-		nbItem = newNbItem;
 	}
 
 }

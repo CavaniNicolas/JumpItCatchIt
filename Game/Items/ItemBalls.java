@@ -11,14 +11,14 @@ import java.util.ArrayList;
 public class ItemBalls {
 
 	/** Tableau contenant les valeurs constantes de chaque Item, ces valeurs sont utiles a la generation des items et a leur initialisation */
-	private ArrayList<ItemBall> allExistingBalls = new ArrayList<ItemBall>(); // remplacer par 'ItemBallProba'
+	private ArrayList<ItemBallInit> allExistingBalls = new ArrayList<ItemBallInit>(); // remplacer par 'ItemBallProba'
+
+	/** Somme des probabilites de tous les items */
+	private int sumAllProbas = 0;
 
 
 	/** Tableau contenant les items actuellement sur le plateau */
 	private ArrayList<ItemBall> itemBalls = new ArrayList<ItemBall>();
-
-	/** Somme des probabilites de tous les items */
-	private int sumAllProbas = 0;
 
 	/**Espace entre deux Items */
 	private int interItems = 50; // a mettre dans boardGraphism et a initialiser
@@ -26,7 +26,6 @@ public class ItemBalls {
 
 	public ItemBalls() {
 		createAllExistingBalls();
-		initSumAllProbas();
 	}
 
 
@@ -35,103 +34,186 @@ public class ItemBalls {
 
 		int nbItems = itemBalls.size();
 
+		ItemBall newItem;
+		
+		// Le premier Item du jeu a tomber
+		if (nbItems == 0) {
+			
+			// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
+			newItem = createNewItemBall(boardGraphism);
+			// L'ajoute a la liste des Items en jeu
+			itemBalls.add(newItem);
+
+		// Ensuite lors du jeu :
+		} else {
+			
+			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe (celui qui precede est le dernier Item de la liste itemsBalls non null)
+			ItemBall lastSpawnedItem;
+
+			// On se place sur l'item precedent non null
+			int i = 1;
+			do {
+				lastSpawnedItem = itemBalls.get(nbItems - i);
+				i++;
+			} while (lastSpawnedItem == null && i <= nbItems);
+
+			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe
+			if (lastSpawnedItem.getY() < boardGraphism.getMaxY() - lastSpawnedItem.getHeight() + interItems) {
+				
+				// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
+				newItem = createNewItemBall(boardGraphism);
+				// L'ajoute a la liste des Items en jeu
+				itemBalls.add(newItem);
+			}
+
+		}
+
+	}
+
+
+	/** Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree */
+	public ItemBall createNewItemBall(BoardGraphism boardGraphism) {
+		// Position et dimensions d'une nouvel Item
 		int x = boardGraphism.getReal().getItemFirstX();
 		int y = boardGraphism.getReal().getItemFirstY();
 		int width = boardGraphism.getReal().getItemWidth();
 		int height = boardGraphism.getReal().getItemHeight();
-		
-		// Le premier Item du jeu a tomber sera toujours un PlusOneBall
-		if (nbItems == 0) {
-			itemBalls.add(new PlusOneBall(x, y, width, height));
 
-								ItemBall ib = itemBalls.get(0);
-								ItemBall aeb;
-								for (int j=0; j<allExistingBalls.size(); j++) {
-									aeb = allExistingBalls.get(j);
-									if (ib.getClass().getName() == aeb.getClass().getName()) {
-										aeb.setNbItem(aeb.getNbItem() + 1);
-									}
-								}
+		ItemBall newItem = null;
+		ItemBallInit newItemInit = null;
 
-			// Ensuite lors du jeu :
+		int proba;
+
+		// Recalcul une proba tant qu'on n'a pas cree un Item que l'on est autorise a creer (en fonction du nombre present actuellement en jeu)
+		do {
+
+			// Generation dun nombre aleatoire
+			proba = (int)(Math.random() * (double)sumAllProbas);
+			
+			// Recherche quel type d'Item est a creer en fonction du nombre aleatoire obtenu
+			int i = 0;
+			do {
+				newItemInit = allExistingBalls.get(i);
+				i++;
+			} while (i < allExistingBalls.size() && newItemInit.getAddedPercentItem() <= proba);
+
+
+		} while (newItemInit.getNbItem() >= newItemInit.getNbMaxItem());
+
+		// Ajoute +1 au nombre present en jeu du type du nouvel Item
+		newItemInit.addOneNbItem();
+
+		// Cree le nouvel Item
+		if (newItemInit.getName() == "PlusOneBall") {
+			newItem = new PlusOneBall(x, y, width, height);
+
+		} else if (newItemInit.getName() == "SpeedProjectileBall") {
+			newItem = new SpeedProjectileBall(x, y, width, height);
+			
+		} else if (newItemInit.getName() == "HealBall") {
+			newItem = new HealBall(x, y, width, height);
+			
+		} else if (newItemInit.getName() == "ShieldBreakBall") {
+			newItem = new ShieldBreakBall(x, y, width, height);
+
+		// Si aucun type ne correspond, aucun Item n'est cree, il faut enlever 1 au nombre d'instances en jeu du type d'item
 		} else {
-			// Calculer les probas et choisir de creer un Item
-
-			createNewItemBall();
-			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe
-			ItemBall lastSpawnedItem = itemBalls.get(itemBalls.size() - 1);
-			if (lastSpawnedItem.getY() < boardGraphism.getMaxY() - lastSpawnedItem.getHeight() + interItems) {
-				itemBalls.add(new PlusOneBall(x, y, width, height));
-				
-								ItemBall ib = itemBalls.get(0);
-								ItemBall aeb;
-								for (int j=0; j<allExistingBalls.size(); j++) {
-									aeb = allExistingBalls.get(j);
-									if (ib.getClass().getName() == aeb.getClass().getName()) {
-										aeb.setNbItem(aeb.getNbItem() + 1);
-									}
-								}
-			}
-				
+			System.out.println("ItemBalls.createNewItemBall() : Erreur, le nom du type de l'Item cree ne correspond a aucune Class d'Item lors de la creation de : '" + newItemInit.getName() + "'");
+			newItemInit.removeOneNbItem();
 		}
-	}
 
-
-	public void createNewItemBall() {
-
+		// Return le nouvel Item cree
+		return newItem;
 	}
 
 
 	/** Deplace les items */
 	public void moveItems() {
-		ItemBall ib;
-System.out.println(allExistingBalls.get(0).getNbItem());
+		ItemBall ib = null;
+
 		for (int i=0; i<itemBalls.size(); i++) {
 			ib = itemBalls.get(i);
-			ib.moveY();
-			// Si l'item est tombe en bas de l'ecran, on le supprime
-			if (ib.getY() == ib.getMinY()) {
-				
-						ItemBall aeb;
-						for (int j=0; j<allExistingBalls.size(); j++) {
-							aeb = allExistingBalls.get(j);
-							if (ib.getClass().getName() == aeb.getClass().getName()) {
-								aeb.setNbItem(aeb.getNbItem() - 1);
-							}
-						}
-				
-				itemBalls.remove(ib);
+
+			if (ib != null) {
+				// Deplace l'Item
+				ib.moveY();
+
+				// Si l'item est tombe en bas de l'ecran, on le supprime
+				if (ib.getY() == ib.getMinY()) {
+
+					findDeletedItemAndRemoveOneNbItem(ib);
+
+					// Supprime l'Item
+					itemBalls.remove(ib);
+				}
 			}
 		}
+
 	}
 
 
-	/** Creer en dur la liste de tous les items disponibles du jeu, avec les valeurs necessaires a l'initialisation des items */
+	/** Recherche le type de l'item qui sort du jeu et enleve 1 a son nombre d'instances en jeu */
+	public void findDeletedItemAndRemoveOneNbItem(ItemBall deletedItem) {
+		ItemBallInit deletedItemType;
+
+		if (deletedItem != null) {
+			int i = 0;
+			do {
+				deletedItemType = allExistingBalls.get(i);
+				i++;
+			} while (deletedItem.getClass().getName().contains(deletedItemType.getName()) == false && i < allExistingBalls.size());
+
+			// Si on a trouve le type de l'Item qui est supprime
+			if (deletedItem.getClass().getName().contains(deletedItemType.getName())) {
+				// Enleve 1 au nombre d'instances en jeu de ce type d'Item
+				deletedItemType.removeOneNbItem();
+			} else {
+				System.out.println("ItemBalls.findDeletedItemAndRemoveOneNbItem() : Error, deleted Item was not found in allExistingBalls");
+			}
+		}
+
+	}
+
+
+	/**Creer en dur la liste de tous les items disponibles du jeu, avec les valeurs necessaires a l'initialisation des items
+	 * et Initialise sumAllProbas en sommant toutes les probabilites d'apparition des Items
+	 */
 	public void createAllExistingBalls() {
+		int proba;
+		int addedProbas = 0;
 
 		// PlusOneBall
-		allExistingBalls.add(new PlusOneBall(4, 30, Color.green, null));
+		proba = 30;
+		addedProbas += proba;
+		allExistingBalls.add(new ItemBallInit("PlusOneBall", 4, proba, addedProbas, null));
 
 		// SpeedProjectileBall
-		allExistingBalls.add(new SpeedProjectileBall(2, 15, Color.magenta, null));
+		proba = 20;
+		addedProbas += proba;
+		allExistingBalls.add(new ItemBallInit("SpeedProjectileBall", 2, proba, addedProbas, null));
 
 		// HealBall
-		allExistingBalls.add(new HealBall(1, 70, Color.red, null));
-	}
+		proba = 60;
+		addedProbas += proba;
+		allExistingBalls.add(new ItemBallInit("HealBall", 1, proba, addedProbas, null));
 
+		// ShieldBreakBall
+		proba = 30;
+		addedProbas += proba;
+		allExistingBalls.add(new ItemBallInit("ShieldBreakBall", 2, proba, addedProbas, null));
 
-	/**Initialise sumAllProbas en sommant toutes les probabilites d'apparition des Items */
-	public void initSumAllProbas() {
-		for (ItemBall ib : allExistingBalls) {
-			sumAllProbas += ib.getPercentItem();
-		}
+		sumAllProbas = addedProbas;
 	}
 
 
 	/** Affiche les items */
 	public void drawItems(Graphics g, BoardGraphism boardGraphism) {
+		ItemBall ib = null;
 		for (int i=0; i<itemBalls.size(); i++) {
-			itemBalls.get(i).drawItem(g, boardGraphism);
+			ib = itemBalls.get(i);
+			if (ib != null) {
+				itemBalls.get(i).drawItem(g, boardGraphism);
+			}
 		}
 	}
 
