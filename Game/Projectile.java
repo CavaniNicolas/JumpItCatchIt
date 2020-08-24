@@ -7,24 +7,24 @@ import java.awt.Color;
 public class Projectile extends Entity {
 
 	/**Position initiale en X */
-	private int initX;
+	private transient int initX;
 	/**Range du projetctile */
-	private int rangeX;
+	private transient int rangeX;
 
 	/**Degats */
-	private int damage;
+	private transient int damage;
 
 	/**Personnage cible du projectile */
-	private Character aimedCharacter;
+	private transient Character aimedCharacter;
 
 	/**Le Personnage qui a tire le projectile */
 
 	/**Le projectile est actif, si il touche sa cible il appliquera des degats et deviendra inactif */
-	private boolean isActive;
+	private transient boolean isActive;
 
 	/**Couleur et image du projectile */
 	private Color colorProjectile;
-	private Image imageProjectile = null;
+	private transient Image imageProjectile = null;
 
 
 	/**Constructeur du projectile */

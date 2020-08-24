@@ -4,16 +4,17 @@ import Menu.KeyBindings;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.awt.Graphics;
 
-public class Character extends Entity {
+public class Character extends Entity implements Serializable {
 
-	private KeyBindings keyBindings;
+	private transient KeyBindings keyBindings;
 
 	/** Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
-	private boolean isLeftCharacter; // Pourrait etre remplace par un ID
+	private transient boolean isLeftCharacter; // Pourrait etre remplace par un ID
 
 	/**Nombre de vies max (en moities de coeur) */
 	private int livesMax = 6;
@@ -24,62 +25,62 @@ public class Character extends Entity {
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
 	/** Booleens d'Input */
-	private InputActions inputActions;
+	private transient InputActions inputActions;
 
 	/** HUD du personnage */
-	private HUDCharacter hudCharacter;
+	private transient HUDCharacter hudCharacter;
 
 	/** Booleen de position, a gauche ou a droite de son adversaire */
-	private boolean isOnLeftSide;
+	private transient boolean isOnLeftSide;
 	/** Booleen de position, sur la plateforme de gauche */
-	private boolean isOnLeftPlatform;
+	private transient boolean isOnLeftPlatform;
 	/** Booleen de position, sur la plateforme de droite */
-	private boolean isOnRightPlatform;
+	private transient boolean isOnRightPlatform;
 	/**Si les personnages sont a la meme hauteur ou non */
-	private boolean areOnSameY;
+	private transient boolean areOnSameY;
 	/**Si les personnages sont l'un dans l'autre en X */
-	private boolean areOnSameXCollisions;
+	private transient boolean areOnSameXCollisions;
 	/**Vitesse de decollision */
-	private int decollisionSpeed = 30;
+	private transient int decollisionSpeed = 30;
 
 
 	/**Largeur de la hitbox selon X */
-	private int hitboxWidth = 800; //this.width / 2;
+	private transient int hitboxWidth = 800; //this.width / 2;
 
 	/** Booleen, true si on est en train de tomber dans le vide */
-	private boolean isFalling;
+	private transient boolean isFalling;
 	/** Booleen, true si on est en train de respawn */
-	private boolean isSpawning;
+	private transient boolean isSpawning;
 
 	// Couleur et image du personnage
 	private Color colorCharacter;
-	private Image imageCharacter = null;
+	private transient Image imageCharacter = null;
 
 
 	/** Vitesse Laterale Constante */
-	protected int speedLateral = 40;
+	protected transient int speedLateral = 40;
 	/** Vitesse Horizontale Constante */
-	protected int speedVertical = 450;
+	protected transient int speedVertical = 450;
 	/** Vitesse a appliquer a speedX pour le switch */
-	protected int switchSpeed = 275;
+	protected transient int switchSpeed = 275;
 
 
 	/**Projectiles du joueur */
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	/**Vitesse des projectiles */
-	private int speedProjectile = 100;
+	private transient int speedProjectile = 100;
 	/**Range des projectiles */
-	private int rangeProjectile = 12_000; // Peut etre mieux de la calculer en pourcentage par rapport a la taille maxX du board
+	private transient int rangeProjectile = 12_000; // Peut etre mieux de la calculer en pourcentage par rapport a la taille maxX du board
 	/**Degats des projectiles */
-	private int damageProjectile = 1;
+	private transient int damageProjectile = 1;
 	/**Couleur des projectiles */
 	private Color colorProjectile = Color.orange; // Sera a initialiser
-	private Image imageProjectile = null;
+	private transient Image imageProjectile = null;
 
 	/**Cool Down pour lancer un projectile (en milli secondes) */
-	private long coolDownProjectile = 1_500;
+	private transient long coolDownProjectile = 1_500;
 	/** Moment auquel on lance un projectile */
-	private long startTimeProjectile = 0;
+	private transient long startTimeProjectile = 0;
 
 
 	/**Constructeur Character */

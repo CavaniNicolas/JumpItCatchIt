@@ -5,6 +5,7 @@ import Menu.KeyBindings;
 import Menu.FileFunctions;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 
 /**
@@ -12,16 +13,16 @@ import java.awt.Color;
  * <p>
  * Gere le jeu
  */
-public class Board {
+public class Board implements Serializable {
 
 	/**
 	 * Les attributs graphiques et les fonctions d'affichage (les attributs sont
 	 * initialises au premier appel de paintComponent()
 	 */
-	private BoardGraphism boardGraphism;
+	private transient BoardGraphism boardGraphism;
 
 	/**Booleen, true si le jeu est en cours */
-	private boolean isPlaying; // Mnt dans GameLoop
+	private transient boolean isPlaying; // Mnt dans GameLoop
 
 	/** Personnage rouge (initialement a gauche) */
 	private Character characterRed;
