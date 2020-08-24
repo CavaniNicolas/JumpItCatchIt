@@ -2,6 +2,7 @@ package Game;
 
 import Menu.KeyBindings;
 
+/** handles the key listeners and game for local game */
 public class BoardLocal extends BoardIO {
 	private GameLoop gameLoop;
 	private KeyBindings redPlayerBindings;
@@ -20,6 +21,7 @@ public class BoardLocal extends BoardIO {
 		bluePlayerKeyListener = new PlayerKeyListener(bluePlayerBindings, this, bluePlayerInputActions);
 	}
 
+	/** uses directly the input action to change the course of the game */
 	public void handleAction(String action, Boolean toggle) {
 	}
 }

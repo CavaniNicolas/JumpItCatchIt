@@ -6,7 +6,7 @@ import Menu.KeyBinding;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-
+/** keylistener for each player */
 public class PlayerKeyListener implements KeyListener {
 	private KeyBindings keyBindings;
 	private BoardIO boardIO;
@@ -36,6 +36,7 @@ public class PlayerKeyListener implements KeyListener {
 	public void keyTyped(KeyEvent event) {
 	}
 
+	/** returns the action relative to the keyBinding used */
 	public String getKeyActionDescription(int code) {
 		for (KeyBinding keyBinding : keyBindings.getKeyBindings()) {
 			if (code == keyBinding.getKeyValue()) {
