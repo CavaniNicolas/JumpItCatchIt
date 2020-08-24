@@ -8,16 +8,16 @@ public class BoardLocal extends BoardIO {
 	private KeyBindings bluePlayerBindings;
 	private PlayerKeyListener redPlayerKeyListener;
 	private PlayerKeyListener bluePlayerKeyListener;
-	private InputAction redPlayerInputAction;
-	private InputAction bluePlayerInputAction;
+	private InputActions redPlayerInputActions;
+	private InputActions bluePlayerInputActions;
 	private Board board;
 
 	public BoardLocal(Board board, BoardGraphism boardGraphism) {
 		super(boardGraphism);
 		this.board = board;
 		gameLoop = new GameLoop(this.board);
-		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, redPlayerInputAction);
-		bluePlayerKeyListener = new PlayerKeyListener(bluePlayerBindings, this, bluePlayerInputAction);
+		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, redPlayerInputActions);
+		bluePlayerKeyListener = new PlayerKeyListener(bluePlayerBindings, this, bluePlayerInputActions);
 	}
 
 	public void handleAction(String action, Boolean toggle) {

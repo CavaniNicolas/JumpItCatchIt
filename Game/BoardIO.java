@@ -7,6 +7,6 @@ public class BoardIO {
 		this.boardGraphism = boardGraphism;
 	}
 
-	public void handleAction(InputAction inputAction) {
+	public void handleAction(InputActions inputActions) {
 	}
 }
