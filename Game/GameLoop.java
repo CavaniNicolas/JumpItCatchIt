@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 public class GameLoop{
+	private final int updateEveryDt = 12;
 	private Board board;
 	private Timer gamePlayTimer;
 	private Boolean isPlaying = false;
@@ -19,7 +20,7 @@ public class GameLoop{
 		if (!isPlaying) {
 			gamePlayTimer.stop();
 		} else {
-			gamePlayTimer = new Timer(12, gamePlayTimerListener);
+			gamePlayTimer = new Timer(updateEveryDt, gamePlayTimerListener);
 			gamePlayTimer.start();
 		}
 	}
@@ -30,13 +31,19 @@ public class GameLoop{
 		public void actionPerformed(ActionEvent event) {
 			if (isPlaying) {
 
+				// Characters
 				board.updateAllCollisionBorders();
 				board.updateActionBooleans();
 				board.updatePositionAndMoveAll();
 				board.checkActions();
 
+				// Projectiles
 				board.moveProjectiles();
 				board.checkProjectilesCollision();
+				
+				// Items
+				board.createItems();
+				board.moveItems();
 			}
 		}
 	}
