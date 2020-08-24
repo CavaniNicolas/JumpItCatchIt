@@ -27,6 +27,7 @@ public class GameLoop {
 		}
 	}
 
+	/** functiun to be modified in extended classes */
 	public void sendBoardToClients() {}
 
 	/** updates all entities */

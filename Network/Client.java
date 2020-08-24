@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 
 import Game.Board;
-import Menu.MainMenu;
 
 public class Client {
     private Boolean connected;
@@ -12,7 +11,6 @@ public class Client {
     private ObjectOutputStream objectOutput;
     private ObjectInputStream objectInput;
     private Socket socket;
-    private MainMenu mainMenu;
 
 	public static void main(String [] args) {
 		new Client();
@@ -50,10 +48,6 @@ public class Client {
             System.exit(1);
         }
     }
-
-    public void setMainMenu(MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
-    }
     
     public void inputObject() {
         while (connected) {
@@ -66,9 +60,7 @@ public class Client {
                         }
                     }
                 } else {
-                    if (obj instanceof Board) {
-                        mainMenu.setBoard((Board)obj);
-                    }
+
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

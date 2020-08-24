@@ -1,6 +1,7 @@
 package Network;
 
 import Game.Board;
+import Game.InputActions;
 import java.net.*;
 import java.io.*;
 
@@ -34,8 +35,8 @@ public class Server {
 	} 
 	
  	/**Le server tourne dans un thread a part*/
-	 public class HandleServer implements Runnable {
-		public void run() {
+	 public class HandleServer extends Thread {
+		public HandleServer() {
 			objectOutputs = new ObjectOutputStream[playerNumber];
 			objectInputs = new ObjectInputStream[playerNumber];
 
@@ -95,6 +96,8 @@ public class Server {
 				objectOutputs[number] = new ObjectOutputStream(clientSocket.getOutputStream());
 				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
 
+				Thread thread = new Thread(new InputProcessor(number));
+
 				while (isRunning) {	
 					if (!inGame) {
 						try {
@@ -109,13 +112,7 @@ public class Server {
 					} else {
 						objectOutputs[connectionNumber].writeObject("Starting game");
 						objectOutputs[connectionNumber].flush();
-						try {
-
-						} catch (ClassNotFoundException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						gameLoop.togglePause();
 					}			
 				}
 				objectOutputs[number].writeObject("CONNECTION CLOSED");
@@ -136,20 +133,8 @@ public class Server {
 			while (isRunning) {
 				try {
 					Object obj = objectInputs[number].readObject();
-					if (!inGame) {
-						if (obj instanceof String) {
-							if (((String)obj).equals("START GAME")) {
-								inGame = true;
-							}
-						}
-					} else {
-						if (obj instanceof String) {
-							if (number == 0) {
-								board.togglePressedKeys(board.getCharacterRed(), (String)obj);
-							} else {
-								board.togglePressedKeys(board.getCharacterBlue(), (String)obj);
-							}
-						}
+					if (obj instanceof InputActions) {
+						//board.useInputActions(number, obj);
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -160,9 +145,7 @@ public class Server {
 		}
     }
 
-	
-
-	public void outputObject() {
+	public void outputBoard() {
 		for (ObjectOutputStream objectOutput : objectOutputs) {
 			try {
 				objectOutput.writeObject(board);
