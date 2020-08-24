@@ -96,4 +96,8 @@ public class BoardClient extends BoardIO {
             e.printStackTrace();
         }
     }
+
+    public PlayerKeyListener getPlayerKeyListener() {
+        return playerKeyListener;
+    }
 }

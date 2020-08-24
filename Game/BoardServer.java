@@ -19,7 +19,7 @@ public class BoardServer {
 	private Boolean inGame = false;
 
 	//player number management
-	private int playerNumber = 2;
+	private int playerNumber = 1;
 	private int currentPlayerNumber = 0;
 	private int connectionNumber = 0;
 

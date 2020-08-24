@@ -139,12 +139,16 @@ public class MainMenu extends JFrame {
 
 		//init game
 		board.initGame();
-		BoardLocal boardLocal = new BoardLocal(board, boardGraphism);
+		BoardServer boardServer = new BoardServer(board);
+
+		//BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1");
+		//BoardClient boardClient2 = new BoardClient(boardGraphism, "127.0.0.1");
+
 		boardGraphism.startDisplaying();
 
 		//add the key listeners
-		frame.addKeyListener(boardLocal.getRedPlayerKeyListener());
-		frame.addKeyListener(boardLocal.getBluePlayerKeyListener());
+		//frame.addKeyListener(boardClient.getPlayerKeyListener());
+		//frame.addKeyListener(boardClient2.getPlayerKeyListener());
 
 		//start game
 		Thread thread = new Thread(new StartGame());
@@ -158,6 +162,35 @@ public class MainMenu extends JFrame {
 		frame.setContentPane(boardGraphism);
 		frame.setVisible(true);
 	}
+
+	/** starts the online board and sets the frame to display it */
+	public void joinOnlineGame(String address) {
+		isDisplayingEscapePanel = false;
+		isDisplayingMainMenu = false;
+
+		//init game
+		board.initGame();
+
+		BoardClient boardClient = new BoardClient(boardGraphism, address);
+
+		boardGraphism.startDisplaying();
+
+		//add the key listeners
+		frame.addKeyListener(boardClient.getPlayerKeyListener());
+
+		//start game
+		Thread thread = new Thread(new StartGame());
+		thread.start();
+
+		//give the frame the focus
+		frame.setFocusable(true);
+		frame.setFocusTraversalKeysEnabled(false);
+
+		//displays the game panel
+		frame.setContentPane(boardGraphism);
+		frame.setVisible(true);
+	}
+
 
 
 	/** creates the mainMenuJPanel with its component */
@@ -441,8 +474,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(createMultiplayerGamePanel);
 				reloadDisplay();
-				new BoardServer(board);
-				//new BoardClient(boardGraphism, getPublicIPAddress());
+				startOnlineGame();
 			}
 		});
 
@@ -529,8 +561,7 @@ public class MainMenu extends JFrame {
 		joinButton.setPreferredSize(new Dimension(70, 25));
 		joinButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new BoardClient(boardGraphism, enemyIP.getText());
-				frame.setContentPane(boardGraphism);
+				joinOnlineGame(enemyIP.getText());
 			}
 		});
 
