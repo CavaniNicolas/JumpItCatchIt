@@ -1,6 +1,14 @@
 package Menu;
 
 import Game.Board;
+import Game.BoardClient;
+import Game.BoardGraphism;
+import Game.BoardLocal;
+import Game.BoardServer;
+import Game.GameLoop;
+
+import java.io.*;
+import java.net.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
@@ -18,20 +26,35 @@ import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 4L;
-	//attributes relative to the option menu
-	private KeyBindingMenu redPlayerBindings, bluePlayerBindings;
+	
+	/**Contient le jeu */
+	private Board board;
 
-	//the panels that can be displayed
+	/**Contient la boucle principale de calcul du jeu */
+	private GameLoop gameLoop;
+	
+	//main menu panels
+	private JPanel mainMenuPanel;
+	private JPanel optionPanel;
+	private BackgroundPanel backgroundPanel;
+
+	//attributes relative to the option menu
+	private KeyBindingMenu redPlayerBindings;
+	private KeyBindingMenu bluePlayerBindings;
+	private JPanel saveQuitOptionsPanel;
+	private JPanel saveFailedPanel;
+	
+	/**Contient l'affichage du jeu */
+	private BoardGraphism boardGraphism;
+
+	// Multiplayer panels
 	private JPanel createMultiplayerGamePanel;
 	private JPanel joinMultiplayerGamePanel;
 	private JPanel multiplayerPanel;
-	private JPanel saveFailedPanel;
-	private JPanel saveQuitOptionsPanel;
-	private JPanel mainMenuPanel;
-	private JPanel optionPanel;
-	private Board board;
+
+	/**escape panel*/
 	private JPanel escapePanel;
-	private BackgroundPanel backgroundPanel;
+
 
 	//boolean handling escape panel
 	private Boolean isDisplayingEscapePanel = false;
@@ -54,42 +77,47 @@ public class MainMenu extends JFrame {
 
 		//create the 5 panels to be displayed (excluding board)
 		backgroundPanel = new BackgroundPanel();
-		createBoard();
+		board = new Board();
+		boardGraphism = new BoardGraphism(board);
+
+		board.setBoardGraphism(boardGraphism);
+
 		createMainMenuPanel();
+
 		createKeyBindingMenu();
 		createEscapePanel();
 		createSaveQuitOptionsPanel();
 		createSaveFailedPanel();
+
 		createMultiplayerPanel();
 		createCreateMultiplayerGamePanel();
 		createJoinMultiplayerGamePanel();
 
-    /** display main menu first*/
+    	/** display main menu*/
 		backgroundPanel.add(mainMenuPanel);
 		isDisplayingMainMenu = true;
 		this.frame.setContentPane(backgroundPanel);
 		this.frame.setVisible(true);
-
-		//########################
-		//uncomment this line to NOT display a menu
-		//startGame()
-		//########################
 	}
 
-	/** creates board*/
-	public void createBoard() {
-		board = new Board();
-		//add the board's keylistener
-		frame.addKeyListener(board.getPlayerKeyListener());
-	}
 
-	/** starts the board and sets the frame to display it */
-	public void startGame() {
+	/** starts the local board and sets the frame to display it */
+	public void startLocalGame() {
 		isDisplayingEscapePanel = false;
 		isDisplayingMainMenu = false;
 
-		//start game
+		gameLoop = new GameLoop(board);
+
+		//init game
 		board.initGame();
+		BoardLocal boardLocal = new BoardLocal(board, boardGraphism);
+		boardGraphism.startDisplaying();
+
+		//add the key listeners
+		frame.addKeyListener(boardLocal.getRedPlayerKeyListener());
+		frame.addKeyListener(boardLocal.getBluePlayerKeyListener());
+
+		//start game
 		Thread thread = new Thread(new StartGame());
 		thread.start();
 
@@ -98,11 +126,74 @@ public class MainMenu extends JFrame {
 		frame.setFocusTraversalKeysEnabled(false);
 
 		//displays the game panel
-		frame.setContentPane(board);
+		frame.setContentPane(boardGraphism);
 		frame.setVisible(true);
 	}
 
-	/** creates the mainMenuJPanel with its component*/
+	/** starts the online board and sets the frame to display it */
+	public void startOnlineGame() {
+		isDisplayingEscapePanel = false;
+		isDisplayingMainMenu = false;
+
+		gameLoop = new GameLoop(board);
+
+		//init game
+		board.initGame();
+		BoardServer boardServer = new BoardServer(board);
+
+		//BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1");
+		//BoardClient boardClient2 = new BoardClient(boardGraphism, "127.0.0.1");
+
+		boardGraphism.startDisplaying();
+
+		//add the key listeners
+		//frame.addKeyListener(boardClient.getPlayerKeyListener());
+		//frame.addKeyListener(boardClient2.getPlayerKeyListener());
+
+		//start game
+		Thread thread = new Thread(new StartGame());
+		thread.start();
+
+		//give the frame the focus
+		frame.setFocusable(true);
+		frame.setFocusTraversalKeysEnabled(false);
+
+		//displays the game panel
+		frame.setContentPane(boardGraphism);
+		frame.setVisible(true);
+	}
+
+	/** starts the online board and sets the frame to display it */
+	public void joinOnlineGame(String address) {
+		isDisplayingEscapePanel = false;
+		isDisplayingMainMenu = false;
+
+		//init game
+		board.initGame();
+
+		BoardClient boardClient = new BoardClient(boardGraphism, address);
+
+		boardGraphism.startDisplaying();
+
+		//add the key listeners
+		frame.addKeyListener(boardClient.getPlayerKeyListener());
+
+		//start game
+		Thread thread = new Thread(new StartGame());
+		thread.start();
+
+		//give the frame the focus
+		frame.setFocusable(true);
+		frame.setFocusTraversalKeysEnabled(false);
+
+		//displays the game panel
+		frame.setContentPane(boardGraphism);
+		frame.setVisible(true);
+	}
+
+
+
+	/** creates the mainMenuJPanel with its component */
 	public void createMainMenuPanel() {
 		mainMenuPanel = new JPanel();
 
@@ -114,8 +205,8 @@ public class MainMenu extends JFrame {
 		JButton playButton = new JButton("PLAY");
 		playButton.setPreferredSize(new Dimension(150, 25));
 		playButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				startGame();
+			public void actionPerformed(ActionEvent arg0) {
+				startLocalGame();
 			}
 		});
 
@@ -159,6 +250,7 @@ public class MainMenu extends JFrame {
 
 		mainMenuPanel.add(buttonPanel);
 	}
+
 
 
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
@@ -245,6 +337,15 @@ public class MainMenu extends JFrame {
 		optionPanel.add(optionPanel2);
 	}
 
+
+	//create an array list of all KeySelectingPanels
+	public void addAllKeySelectingPanels() {
+		allKeySelectingPanels.addAll(redPlayerBindings.getKeySelectingPanels());
+		allKeySelectingPanels.addAll(bluePlayerBindings.getKeySelectingPanels());
+	}
+
+
+
 	/** creates the panel that opens when pressing escape */
 	public void createEscapePanel() {
 		escapePanel = new JPanel();
@@ -261,7 +362,7 @@ public class MainMenu extends JFrame {
 				handleEscapePanel();
 				isDisplayingMainMenu = true;
 				frame.setContentPane(backgroundPanel);
-				board.togglePause();
+				gameLoop.togglePause();
 			}
 		});
 
@@ -276,6 +377,21 @@ public class MainMenu extends JFrame {
 		escapePanel.add(backButton);
 		escapePanel.add(resumeButton);
 	}
+
+
+	public void handleEscapePanel() {
+		//escape button
+		if (isDisplayingEscapePanel) {
+			boardGraphism.remove(escapePanel);
+		} else {
+			boardGraphism.add(escapePanel);
+		}
+		gameLoop.togglePause();
+		isDisplayingEscapePanel = !isDisplayingEscapePanel;
+		frame.setVisible(true);
+	}
+
+
 
 	public void createSaveQuitOptionsPanel() {
 		saveQuitOptionsPanel = new JPanel();
@@ -314,6 +430,7 @@ public class MainMenu extends JFrame {
 		saveQuitOptionsPanel.add(cancelQuitButton);
 	}
 
+
 	public void createSaveFailedPanel() {
 		saveFailedPanel = new JPanel();
 		saveFailedPanel.setBorder(BorderFactory.createTitledBorder("WARNING"));
@@ -340,6 +457,7 @@ public class MainMenu extends JFrame {
 		saveFailedPanel.add(saveFailedButton);
 	}
 
+
 	/** creates the multiplayerJPanel with its component*/
 	public void createMultiplayerPanel() {
 		multiplayerPanel = new JPanel();
@@ -356,6 +474,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(createMultiplayerGamePanel);
 				reloadDisplay();
+				startOnlineGame();
 			}
 		});
 
@@ -388,6 +507,7 @@ public class MainMenu extends JFrame {
 		multiplayerPanel.add(backButton);
 	}
 
+
 	/** creates the createMultiplayerGamePanel with its component*/
 	public void createCreateMultiplayerGamePanel() {
 		createMultiplayerGamePanel = new JPanel();
@@ -396,7 +516,7 @@ public class MainMenu extends JFrame {
 		createMultiplayerGamePanel.setPreferredSize(new Dimension(320, 120));
 
 		//create a joinable game
-		JLabel gameAvailable = new JLabel("Your game is available on : ");
+		JLabel gameAvailable = new JLabel("Your game is available on : " + getPublicIPAddress());
 		gameAvailable.setPreferredSize(new Dimension(300, 25));
 
 		//join an existing game
@@ -420,6 +540,7 @@ public class MainMenu extends JFrame {
 		createMultiplayerGamePanel.add(backButton);
 	}
 
+
 	/** creates the joinMultiplayerGamePanel with its component*/
 	public void createJoinMultiplayerGamePanel() {
 		joinMultiplayerGamePanel = new JPanel();
@@ -440,7 +561,7 @@ public class MainMenu extends JFrame {
 		joinButton.setPreferredSize(new Dimension(70, 25));
 		joinButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("joining");
+				joinOnlineGame(enemyIP.getText());
 			}
 		});
 
@@ -462,17 +583,7 @@ public class MainMenu extends JFrame {
 		joinMultiplayerGamePanel.add(backButton);
 	}
 
-	public void handleEscapePanel() {
-		//escape button
-		if (isDisplayingEscapePanel) {
-			board.remove(escapePanel);
-		} else {
-			board.add(escapePanel);
-		}
-		board.togglePause();
-		isDisplayingEscapePanel = !isDisplayingEscapePanel;
-		frame.setVisible(true);
-	}
+
 
 	/** reloads the displays (avoid former panels to be displayed) */
 	public void reloadDisplay() {
@@ -480,37 +591,6 @@ public class MainMenu extends JFrame {
 		frame.setVisible(true);
 	}
 
-	//create an array list of all KeySelectingPanels
-	public void addAllKeySelectingPanels() {
-		allKeySelectingPanels.addAll(redPlayerBindings.getKeySelectingPanels());
-		allKeySelectingPanels.addAll(bluePlayerBindings.getKeySelectingPanels());
-	}
-
-	/** check if every binding is unique */
-	public boolean checkUnicity() {
-		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
-			for (KeySelectingPanel keySelectingPanel2 : allKeySelectingPanels) {
-				if (keySelectingPanel != keySelectingPanel2 && keySelectingPanel.getCurrentKeyBinding().getKeyValue() == keySelectingPanel2.getCurrentKeyBinding().getKeyValue()) {
-					return false;
-				}
-			}
-			//there must be a way to decrease complexity by half and avoid testing twice
-		}
-		return true;
-	}
-
-	/** displays main menu and cancel unsaved bindings changes */
-	public void backToMainMenuFromOption() {
-		//all options are saved
-		unsavedChanges = false;
-		//displays the main menu again    
-		backgroundPanel.remove(optionPanel);
-		backgroundPanel.add(mainMenuPanel);
-		isDisplayingMainMenu = true;
-		reloadDisplay();
-		//cancels changes if they are not saved
-		setBindings();
-	}
 
 	/** saves options if they are valid */
 	public void saveOptions(Boolean back) {
@@ -530,6 +610,48 @@ public class MainMenu extends JFrame {
 		}
 	}
 
+
+	/** check if every binding is unique */
+	public boolean checkUnicity() {
+		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
+			for (KeySelectingPanel keySelectingPanel2 : allKeySelectingPanels) {
+				if (keySelectingPanel != keySelectingPanel2 && keySelectingPanel.getCurrentKeyBinding().getKeyValue() == keySelectingPanel2.getCurrentKeyBinding().getKeyValue()) {
+					return false;
+				}
+			}
+			//there must be a way to decrease complexity by half and avoid testing twice
+		}
+		return true;
+	}
+
+
+	/** displays main menu and cancel unsaved bindings changes */
+	public void backToMainMenuFromOption() {
+		//all options are saved
+		unsavedChanges = false;
+		//displays the main menu again    
+		backgroundPanel.remove(optionPanel);
+		backgroundPanel.add(mainMenuPanel);
+		isDisplayingMainMenu = true;
+		reloadDisplay();
+		//cancels changes if they are not saved
+		setBindings();
+	}
+
+	/** Find public IP address */
+	public String getPublicIPAddress() {
+		try { 
+			URL url_name = new URL("http://bot.whatismyipaddress.com"); 
+	
+			BufferedReader sc = new BufferedReader(new InputStreamReader(url_name.openStream())); 
+	
+			// reads system IPAddress 
+			return sc.readLine().trim(); 
+		} catch (Exception e) { 
+			return "COULD NOT FIND ADDRESS"; 
+		} 
+	}
+
 	public void setUnsavedChanges(Boolean bool) {
 		unsavedChanges = bool;
 	}
@@ -546,20 +668,24 @@ public class MainMenu extends JFrame {
 		return bluePlayerBindings;
 	}
 
-	/**Le jeu tourne dans un thread a part, il contient les timer (thread) de jeu et d'affichage */
+
+	/**Le jeu tourne dans un thread a part, il contient les timer (thread) de jeu et d'affichage,
+	 * Non : de jeu uniquement, depuis les modifications pour separer Local de Client/Server
+	 */
 	public class StartGame implements Runnable {
 		public void run() {
-			board.togglePause();
+			gameLoop.togglePause();
 		}
 	}
 
+
 	public class ClientRelatedKeyListener implements KeyListener {
 		@Override
-		public void keyPressed(KeyEvent event) {
-		}
+		public void keyPressed(KeyEvent event) {}
+
 		@Override
-		public void keyReleased(KeyEvent event) {
-		}
+		public void keyReleased(KeyEvent event) {}
+
 		@Override
 		public void keyTyped(KeyEvent event) {
 			int code = event.getKeyChar();
@@ -568,10 +694,12 @@ public class MainMenu extends JFrame {
 			if (code == 27) {
 				if (frame.getContentPane() == backgroundPanel && !isDisplayingMainMenu) {
 					backToMainMenuFromOption();
-				} else if (frame.getContentPane() == board) {
+				} else if (frame.getContentPane() == boardGraphism) {
 					handleEscapePanel();
 				}
 			}
 		}
+
 	}
+
 }

@@ -32,7 +32,9 @@ public class KeyBinding implements Serializable {
 		return this.keyActionDescription;
 	}
 
+	@Override
 	public String toString() {
-		return keyActionDescription + keyValue;
+		return "KeyBinding [keyActionDescription=" + keyActionDescription + ", keyValue=" + keyValue + "]";
 	}
+
 }

@@ -6,22 +6,23 @@ import Game.Items.Item.*;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ItemBalls {
+public class ItemBalls implements Serializable {
 
 	/** Tableau contenant les valeurs constantes de chaque Item, ces valeurs sont utiles a la generation des items et a leur initialisation */
-	private ArrayList<ItemBall> allExistingBalls = new ArrayList<ItemBall>();
+	private transient ArrayList<ItemBall> allExistingBalls = new ArrayList<ItemBall>();
 
 
 	/** Tableau contenant les items actuellement sur le plateau */
 	private ArrayList<ItemBall> itemBalls = new ArrayList<ItemBall>();
 
 	/** Somme des probabilites de tous les items */
-	private int sumAllProbas = 0;
+	private transient int sumAllProbas = 0;
 
 	/**Espace entre deux Items */
-	private int interItems = 50; // a mettre dans boardGraphism et a initialiser
+	private transient int interItems = 50; // a mettre dans boardGraphism et a initialiser
 
 
 	public ItemBalls() {
@@ -79,7 +80,6 @@ public class ItemBalls {
 	/** Deplace les items */
 	public void moveItems() {
 		ItemBall ib;
-System.out.println(allExistingBalls.get(0).getNbItem());
 		for (int i=0; i<itemBalls.size(); i++) {
 			ib = itemBalls.get(i);
 			ib.moveY();

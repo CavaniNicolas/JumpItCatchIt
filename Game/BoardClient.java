@@ -1,26 +1,43 @@
-package Network;
+package Game;
 
+import Menu.FileFunctions;
+import Menu.KeyBindings;
 import java.io.*;
 import java.net.*;
 
-import Game.Board;
+/** handles the key listener for online game */
+public class BoardClient extends BoardIO {
+    //board graphism
+    protected BoardGraphism boardGraphism;
 
-public class Client {
-    private Boolean connected;
-    private Boolean inGame;
+    //client input related
+	private PlayerKeyListener playerKeyListener;
+	private InputActions playerInputActions = new InputActions();
+
+	//waiting for everyone or playing
+	private Boolean connected;
+	private Boolean inGame;
+	
+	//object streams
     private ObjectOutputStream objectOutput;
-    private ObjectInputStream objectInput;
+	private ObjectInputStream objectInput;
+	
+	//client socket
     private Socket socket;
 
-	public static void main(String [] args) {
-		new Client();
+	public BoardClient(BoardGraphism boardGraphism, String address) {
+        this.boardGraphism = boardGraphism;
+		KeyBindings playerBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+        playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
+        connect(address);
 	}
-    
-    public Client() {
-        this("2a01:e0a:40c:8ff0:f023:ce59:eb8f:f2c");
-    }
 
-    public Client(String serverHostName) {
+	/** send the input action object to the server */
+	public void handleAction(InputActions inputActions) {
+		outputObject(inputActions);
+	}
+
+    public void connect(String serverHostName) {
         int portNumber = 5000; // Le port du serveur
         
         socket = null; // Un Socket TCP
@@ -60,7 +77,9 @@ public class Client {
                         }
                     }
                 } else {
-
+                    if (obj instanceof Board) {
+						boardGraphism.setBoard((Board)obj);
+					}
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -76,5 +95,9 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public PlayerKeyListener getPlayerKeyListener() {
+        return playerKeyListener;
     }
 }

@@ -6,17 +6,18 @@ import Game.BoardGraphism;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Image;
+import java.io.Serializable;
 
-public class ItemBall extends Entity {
+public class ItemBall extends Entity implements Serializable {
 
 	/** Quantite de cet Item actif en jeu */
-	private int nbItem = 0;
+	private transient int nbItem = 0;
 
 	// Attributs d'initialisation des Items
-	private int nbMaxItem;
-	private int percentItem;
+	private transient int nbMaxItem;
+	private transient int percentItem;
 	protected Color colorItem;
-	private Image imageItem = null;
+	private transient Image imageItem = null;
 
 
 	/** Constructeur pour creer un item lors du jeu */
