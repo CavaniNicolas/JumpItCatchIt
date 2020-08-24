@@ -10,15 +10,8 @@ import java.io.Serializable;
 
 public class ItemBall extends Entity implements Serializable {
 
-	/** Quantite de cet Item actif en jeu */
-	private transient int nbItem = 0;
-
-	// Attributs d'initialisation des Items
-	private transient int nbMaxItem;
-	private transient int percentItem;
 	protected Color colorItem;
 	private transient Image imageItem = null;
-
 
 	/** Constructeur pour creer un item lors du jeu */
 	public ItemBall(int x, int y, int width, int height) {
@@ -27,15 +20,6 @@ public class ItemBall extends Entity implements Serializable {
 		this.minY = - height;
 	}
 
-
-	/** Constructeur pour la liste d'initialisation des items */
-	public ItemBall(int nbMaxItem, int percentItem, Color colorItem, Image imageItem) {
-		super();
-		this.nbMaxItem = nbMaxItem;
-		this.percentItem = percentItem;
-		this.colorItem = colorItem;
-		this.imageItem = imageItem;
-	}
 
 
 	/** Effets qu'applique cet Item, cette methode sera Override pour chaque Item */
@@ -57,12 +41,6 @@ public class ItemBall extends Entity implements Serializable {
 	/* Getters */
 	/* ======= */
 
-	public int getNbMaxItem() {
-		return nbMaxItem;
-	}
-	public int getPercentItem() {
-		return percentItem;
-	}
 	public Color getColorItem() {
 		return colorItem;
 	}
@@ -70,11 +48,4 @@ public class ItemBall extends Entity implements Serializable {
 		return imageItem;
 	}
 
-
-	public int getNbItem() {
-		return nbItem;
-	}
-	public void setNbItem(int newNbItem) {
-		nbItem = newNbItem;
-	}
 }

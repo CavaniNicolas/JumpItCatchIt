@@ -4,12 +4,12 @@ import Game.Items.ItemBall;
 
 import java.awt.Color;
 
-public class PlusOneBall extends ItemBall {
+public class ShieldBreakBall extends ItemBall {
 
 	/** Constructeur pour creer un item lors du jeu */
-	public PlusOneBall(int x, int y, int width, int height) {
+	public ShieldBreakBall(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		this.colorItem = Color.green;
+		this.colorItem = Color.pink;
 	}
 
 
