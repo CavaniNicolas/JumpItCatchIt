@@ -53,6 +53,11 @@ public class BoardGraphism extends JPanel {
 		repaint();
 	}
 
+	/** starts the game display timer */
+	public void startDisplaying() {
+		gameDisplayTimer.start();
+	}
+
 
 	/**
 	 * Fonction d'affichage principale

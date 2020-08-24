@@ -3,6 +3,7 @@ package Menu;
 import Game.Board;
 import Game.BoardClient;
 import Game.BoardGraphism;
+import Game.BoardLocal;
 import Game.BoardServer;
 import Game.GameLoop;
 
@@ -76,8 +77,8 @@ public class MainMenu extends JFrame {
 
 		//create the 5 panels to be displayed (excluding board)
 		backgroundPanel = new BackgroundPanel();
-		createBoard();
-		createBoardGraphism();
+		board = new Board();
+		boardGraphism = new BoardGraphism(board);
 
 		board.setBoardGraphism(boardGraphism);
 
@@ -92,28 +93,31 @@ public class MainMenu extends JFrame {
 		createCreateMultiplayerGamePanel();
 		createJoinMultiplayerGamePanel();
 
-    	/** display main menu first*/
+    	/** display main menu*/
 		backgroundPanel.add(mainMenuPanel);
 		isDisplayingMainMenu = true;
 		this.frame.setContentPane(backgroundPanel);
 		this.frame.setVisible(true);
-
-		//########################
-		//uncomment this line to NOT display a menu
-		//startGame()
-		//########################
 	}
 
 
-	/** starts the board and sets the frame to display it */
-	public void startGame() {
+	/** starts the local board and sets the frame to display it */
+	public void startLocalGame() {
 		isDisplayingEscapePanel = false;
 		isDisplayingMainMenu = false;
 
-		createGameLoop();
+		gameLoop = new GameLoop(board);
+
+		//init game
+		board.initGame();
+		BoardLocal boardLocal = new BoardLocal(board, boardGraphism);
+		boardGraphism.startDisplaying();
+
+		//add the key listeners
+		frame.addKeyListener(boardLocal.getRedPlayerKeyListener());
+		frame.addKeyListener(boardLocal.getBluePlayerKeyListener());
 
 		//start game
-		board.initGame();
 		Thread thread = new Thread(new StartGame());
 		thread.start();
 
@@ -126,22 +130,33 @@ public class MainMenu extends JFrame {
 		frame.setVisible(true);
 	}
 
+	/** starts the online board and sets the frame to display it */
+	public void startOnlineGame() {
+		isDisplayingEscapePanel = false;
+		isDisplayingMainMenu = false;
 
-	/** creates board */
-	public void createBoard() {
-		board = new Board();
-	}
-
-
-	/** creates boardGraphism */
-	public void createBoardGraphism() {
-		boardGraphism = new BoardGraphism(board);
-	}
-
-
-	/** creates gameLoop */
-	public void createGameLoop() {
 		gameLoop = new GameLoop(board);
+
+		//init game
+		board.initGame();
+		BoardLocal boardLocal = new BoardLocal(board, boardGraphism);
+		boardGraphism.startDisplaying();
+
+		//add the key listeners
+		frame.addKeyListener(boardLocal.getRedPlayerKeyListener());
+		frame.addKeyListener(boardLocal.getBluePlayerKeyListener());
+
+		//start game
+		Thread thread = new Thread(new StartGame());
+		thread.start();
+
+		//give the frame the focus
+		frame.setFocusable(true);
+		frame.setFocusTraversalKeysEnabled(false);
+
+		//displays the game panel
+		frame.setContentPane(boardGraphism);
+		frame.setVisible(true);
 	}
 
 
@@ -158,7 +173,7 @@ public class MainMenu extends JFrame {
 		playButton.setPreferredSize(new Dimension(150, 25));
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				startGame();
+				startLocalGame();
 			}
 		});
 

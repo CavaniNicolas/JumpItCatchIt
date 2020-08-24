@@ -19,7 +19,7 @@ public class BoardLocal extends BoardIO {
 	//the board to be modified
 	private Board board;
 
-	public BoardLocal(Board board) {
+	public BoardLocal(Board board, BoardGraphism boardGraphism) {
 		this.board = board;
 		gameLoop = new GameLoop(this.board);
 
@@ -30,9 +30,21 @@ public class BoardLocal extends BoardIO {
 		//on crée les listeners correspondant
 		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, board.getCharacterRed().getInputActions());
 		bluePlayerKeyListener = new PlayerKeyListener(bluePlayerBindings, this, board.getCharacterBlue().getInputActions());
+
+		//add the key listeners to board graphism
+		boardGraphism.addKeyListener(redPlayerKeyListener);
+		boardGraphism.addKeyListener(bluePlayerKeyListener);
 	}
 
 	/** uses directly the input action to change the course of the game */
 	public void handleAction(InputActions inputActions) {
+	}
+
+	public PlayerKeyListener getRedPlayerKeyListener() {
+		return redPlayerKeyListener;
+	}
+
+	public PlayerKeyListener getBluePlayerKeyListener() {
+		return bluePlayerKeyListener;
 	}
 }

@@ -80,7 +80,6 @@ public class ItemBalls implements Serializable {
 	/** Deplace les items */
 	public void moveItems() {
 		ItemBall ib;
-System.out.println(allExistingBalls.get(0).getNbItem());
 		for (int i=0; i<itemBalls.size(); i++) {
 			ib = itemBalls.get(i);
 			ib.moveY();

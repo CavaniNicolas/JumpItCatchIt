@@ -17,18 +17,20 @@ public class InputActions implements Serializable {
 	private transient Character character;
 
 	public void togglePressedKeys(String action, Boolean toggle) {
-		if (action.equals("Left")) {
-			leftPressed = toggle;
-		} else if (action.equals("Right")) {
-			rightPressed = toggle;
-		} else if (action.equals("Jump")) {
-			jumpPressed = toggle;
-		} else if (action.equals("Grab")) {
-			grabPressed = toggle;
-		} else if (action.equals("Shield")) {
-			shieldPressed = toggle;
-		} else if (action.equals("Shoot and push")) {
-			shootPushPressed = toggle;	
+		if (action != null) {
+			if (action.equals("Left")) {
+				leftPressed = toggle;
+			} else if (action.equals("Right")) {
+				rightPressed = toggle;
+			} else if (action.equals("Jump")) {
+				jumpPressed = toggle;
+			} else if (action.equals("Grab")) {
+				grabPressed = toggle;
+			} else if (action.equals("Shield")) {
+				shieldPressed = toggle;
+			} else if (action.equals("Shoot and push")) {
+				shootPushPressed = toggle;	
+			}
 		}
 	}
 
