@@ -24,7 +24,7 @@ public class Character extends Entity {
 	private ActionBooleans actionBooleans = new ActionBooleans();
 
 	/** Booleens d'Input */
-	private InputActions inputActions;
+	private InputActions inputActions; // A INITIALISER DANS LE CONSTRUCTEUR
 
 	/** HUD du personnage */
 	private HUDCharacter hudCharacter;
@@ -104,6 +104,9 @@ public class Character extends Entity {
 	/** Actualise les booleens d'actions */
 	public void updateActionBooleans(Character otherCharacter) {
 		
+		// Verifie le relachement de la touche saut lorsqu'on est en l'air pour autoriser le switch sur un autre appuie de la touche saut
+		checkKeyToUpdateCanSwitch();
+
 		// On verifie les coolDown des sorts
 		checkCoolDowns();
 
@@ -615,6 +618,20 @@ public class Character extends Entity {
 	public void setLives(int lives) {
 		this.lives = lives;
 	}
+
+
+	/** Verifie le relachement de la touche saut lorsqu'on est en l'air pour autoriser le switch sur un autre appuie de la touche saut */
+	public void checkKeyToUpdateCanSwitch() {
+		// Si bouton sauter est relache
+		if (inputActions.getJumpPressed() == false) {
+			// Active le booleens qui permet dactiver le canSwitch si on est dans les airs et qu'on
+			// relache le bouton sauter (pour pouvoir rappuyer dessus dans les airs pour switch)
+			if (actionBooleans.isJumping == true && actionBooleans.isJumpFirstReleaseDone == false) {
+				actionBooleans.isJumpFirstReleaseDone = true;
+			}
+		}
+	}
+
 
 	public class ActionBooleans {
 
