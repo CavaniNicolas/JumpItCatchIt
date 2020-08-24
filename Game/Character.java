@@ -576,8 +576,8 @@ public class Character extends Entity {
 		g.setColor(colorCharacter);
 		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
 		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = (int)((double)(this.width) * boardGraphism.getGraphic().getOneUnityWidth());
-		int height = (int)((double)(this.height) * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = boardGraphism.getGraphic().getCharacterWidth();
+		int height = boardGraphism.getGraphic().getCharacterHeight();
 		g.fillRect(x, y, width, height);
 	}
 
@@ -609,7 +609,7 @@ public class Character extends Entity {
 		} else {
 			firstHeartX = bG.getReal().getHeartsXRight();
 		}
-		hudCharacter.initHUDHearts(firstHeartX, bG.getReal().getHeartsY(), bG.getReal().getHeartWidth(), bG.getReal().getHeartHeight(), bG.getReal().getInterHearts(), this.colorCharacter);
+		hudCharacter.initHUDHearts(firstHeartX, bG.getReal().getHeartsY(), bG.getReal().getInterHearts(), this.colorCharacter);
 	}
 
 

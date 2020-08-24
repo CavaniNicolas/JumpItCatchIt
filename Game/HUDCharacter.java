@@ -9,19 +9,15 @@ public class HUDCharacter {
 	// attributs des coeurs
 	private int firstHeartX;
 	private int heartsY;
-	private int heartWidth;
-	private int heartHeight;
 	private int interHearts;
 	private Color colorHearts = Color.red;
 	// les differentes images
 
 
 	/**Initialise les attributs des coeurs du HUD */
-	public void initHUDHearts(int firstHeartX, int heartsY, int heartWidth, int heartHeight, int interHearts, Color colorHearts) {
+	public void initHUDHearts(int firstHeartX, int heartsY, int interHearts, Color colorHearts) {
 		this.firstHeartX = firstHeartX;
 		this.heartsY = heartsY;
-		this.heartWidth = heartWidth;
-		this.heartHeight = heartHeight;
 		this.interHearts = interHearts;
 		this.colorHearts = colorHearts;
 	}
@@ -40,8 +36,8 @@ public class HUDCharacter {
 
 		int x = (int) ((double) firstHeartX * boardGraphism.getGraphic().getOneUnityWidth());
 		int y = (int) ((double) heartsY * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = (int) ((double) heartWidth * boardGraphism.getGraphic().getOneUnityWidth());
-		int height = (int) ((double) heartHeight * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = boardGraphism.getGraphic().getHeartWidth();
+		int height = boardGraphism.getGraphic().getHeartHeight();
 
 		int i=1;
 		while (i <= livesMax) {

@@ -67,8 +67,8 @@ public class Projectile extends Entity {
 		g.setColor(colorProjectile);
 		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
 		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height / 2)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = (int)((double)(this.width) * boardGraphism.getGraphic().getOneUnityWidth());
-		int height = (int)((double)(this.height) * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = boardGraphism.getGraphic().getProjectileWidth();
+		int height = boardGraphism.getGraphic().getProjectileHeight();
 		g.fillOval(x, y, width, height);
 	}
 

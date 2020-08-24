@@ -36,8 +36,8 @@ public class ItemBall extends Entity {
 		g.setColor(colorItem);
 		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
 		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height / 2)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = (int)((double)(this.width) * boardGraphism.getGraphic().getOneUnityWidth());
-		int height = (int)((double)(this.height) * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = boardGraphism.getGraphic().getItemWidth();
+		int height = boardGraphism.getGraphic().getItemHeight();
 		g.fillOval(x, y, width, height);
 	}
 
