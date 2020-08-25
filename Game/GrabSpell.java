@@ -2,6 +2,7 @@ package Game;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Graphics;
 
 
 /**Class GrabSpell <p>
@@ -32,5 +33,24 @@ public class GrabSpell {
 
 	}
 
+
+	public void initNewGrab() {
+		// x de debut
+		// y de debut
+		// width = initialWidth
+		// range = rangeForThisGrab
+		// speed = SpeedForThisGrab
+	}
+
+
+	/**Dessine le grab */
+	public void drawGrab(Graphics g, BoardGraphism boardGraphism) {
+		g.setColor(colorGrab);
+		int x = (int)((double) (this.x) * boardGraphism.getGraphic().getOneUnityWidth());
+		int y = (int)((double) (boardGraphism.getMaxY() - (this.y + boardGraphism.getReal().getGrabHeight() / 2)) * boardGraphism.getGraphic().getOneUnityHeight());
+		int width = (int)((double) (this.width * boardGraphism.getGraphic().getOneUnityWidth()));
+		int height = boardGraphism.getGraphic().getGrabHeight();
+		g.fillRect(x, y, width, height);
+	}
 
 }
