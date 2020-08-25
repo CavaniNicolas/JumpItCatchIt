@@ -58,10 +58,9 @@ public class MainMenu extends JFrame {
 	/**escape panel*/
 	private JPanel escapePanel;
 
-
 	//boolean handling escape panel
-	private Boolean isDisplayingEscapePanel = false;
 	private Boolean isDisplayingMainMenu;
+	private Boolean isEscapePanelDisplayed = false;
 
 	//boolean to handle unsaved changes in options
 	private Boolean unsavedChanges = false;
@@ -106,67 +105,52 @@ public class MainMenu extends JFrame {
 
 	/** starts the local board and sets the frame to display it */
 	public void startLocalGame() {
-		isDisplayingEscapePanel = false;
 		isDisplayingMainMenu = false;
 
 		gameLoop = new GameLoop(board);
 
 		//init game
 		board.initGame();
-		BoardLocal boardLocal = new BoardLocal(board, boardGraphism);
+		boardIO = new BoardLocal(board, boardGraphism);
 		boardGraphism.startDisplaying();
 
 		//add the key listeners
-		frame.addKeyListener(boardLocal.getRedPlayerKeyListener());
-		frame.addKeyListener(boardLocal.getBluePlayerKeyListener());
+		boardIO.addKeyListeners(frame);
 
 		//start game
 		Thread thread = new Thread(new StartGame());
 		thread.start();
 
-		startDisplayingGame();
+		displayGame();
 	}
 
 	/** starts the online board and sets the frame to display it */
 	public void startOnlineGame() {
-		isDisplayingEscapePanel = false;
-		isDisplayingMainMenu = false;
-
 		gameLoop = new GameLoop(board);
-
-		//init game
-		board.initGame();
 
 		Thread threadServer = new Thread(new BoardServer(board));
 		threadServer.start();
 
-		//start a client on a thread
-		BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1", this);
-		Thread threadClient = new Thread(boardClient);
-		threadClient.start();
-
-		//add the key listeners
-		frame.addKeyListener(boardClient.getPlayerKeyListener());
+		joinOnlineGame("127.0.0.1");
 	}
 
 	/** starts the online board and sets the frame to display it */
 	public void joinOnlineGame(String address) {
-		isDisplayingEscapePanel = false;
 		isDisplayingMainMenu = false;
 
 		//init game
 		board.initGame();
 
 		//start a client on a thread
-		BoardClient boardClient = new BoardClient(boardGraphism, address, this);
-		Thread threadClient = new Thread(boardClient);
+		boardIO = new BoardClient(boardGraphism, address, this);
+		Thread threadClient = new Thread(boardIO);
 		threadClient.start();
 
 		//add the key listeners
-		frame.addKeyListener(boardClient.getPlayerKeyListener());
+		boardIO.addKeyListeners(frame);
 	}
 
-	public void startDisplayingGame() {
+	public void displayGame() {
 		//start gamedisplay timer
 		boardGraphism.startDisplaying();
 
@@ -177,6 +161,14 @@ public class MainMenu extends JFrame {
 		//displays the game panel
 		frame.setContentPane(boardGraphism);
 		frame.setVisible(true);
+	}
+
+	public void displayMainMenu() {
+		//displays the game panel
+		backgroundPanel.removeAll();
+		backgroundPanel.add(mainMenuPanel);
+		isDisplayingMainMenu = true;
+		reloadDisplay();
 	}
 
 	/** creates the mainMenuJPanel with its component */
@@ -345,10 +337,11 @@ public class MainMenu extends JFrame {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//sets the content pane to the main menu and delete board (game has ended)
-				handleEscapePanel();
+				toggleEscapePanel();
+
+				boardIO.exitGame();
 				isDisplayingMainMenu = true;
 				frame.setContentPane(backgroundPanel);
-				gameLoop.togglePause();
 			}
 		});
 
@@ -357,7 +350,7 @@ public class MainMenu extends JFrame {
 		resumeButton.setPreferredSize(new Dimension(180, 25));
 		resumeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				handleEscapePanel();
+				toggleEscapePanel();
 			}
 		});
 		escapePanel.add(backButton);
@@ -365,16 +358,20 @@ public class MainMenu extends JFrame {
 	}
 
 
-	public void handleEscapePanel() {
+	public void toggleEscapePanel() {
+		//pause or not
+		boardIO.setPause();
+
 		//escape button
-		if (isDisplayingEscapePanel) {
-			boardGraphism.remove(escapePanel);
-		} else {
+		if (!isEscapePanelDisplayed) {
 			boardGraphism.add(escapePanel);
+		} else {
+			boardGraphism.remove(escapePanel);
 		}
-		isDisplayingEscapePanel = !isDisplayingEscapePanel;
 		frame.setVisible(true);
 	}
+
+
 
 
 
@@ -614,11 +611,8 @@ public class MainMenu extends JFrame {
 	public void backToMainMenuFromOption() {
 		//all options are saved
 		unsavedChanges = false;
-		//displays the main menu again    
-		backgroundPanel.remove(optionPanel);
-		backgroundPanel.add(mainMenuPanel);
-		isDisplayingMainMenu = true;
-		reloadDisplay();
+		//displays the main menu again 
+		displayMainMenu();
 		//cancels changes if they are not saved
 		setBindings();
 	}
@@ -680,7 +674,7 @@ public class MainMenu extends JFrame {
 				if (frame.getContentPane() == backgroundPanel && !isDisplayingMainMenu) {
 					backToMainMenuFromOption();
 				} else if (frame.getContentPane() == boardGraphism) {
-					handleEscapePanel();
+					toggleEscapePanel();
 				}
 			}
 		}

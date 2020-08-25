@@ -75,7 +75,7 @@ public class BoardServer implements Runnable {
 							e.printStackTrace();
 						}
 
-						outputObject("START GAME");
+						outputObject("GAME STARTED");
 						gameLoopServer.togglePause();
 					}	
 				}
@@ -96,10 +96,8 @@ public class BoardServer implements Runnable {
         ClientProcessor(Socket clientSocket){
 			number = connectionNumber;
 			connectionNumber++;
-			System.out.println("CONNECTION " + connectionNumber + " STARTED");
 			this.clientSocket = clientSocket;
         }
-
 
         @Override
         public void run(){

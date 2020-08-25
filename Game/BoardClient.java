@@ -7,8 +7,10 @@ import Menu.MainMenu;
 import java.io.*;
 import java.net.*;
 
+import javax.swing.JFrame;
+
 /** handles the key listener for online game */
-public class BoardClient extends BoardIO implements Runnable {
+public class BoardClient extends BoardIO {
     //board graphism
     protected BoardGraphism boardGraphism;
 
@@ -74,8 +76,8 @@ public class BoardClient extends BoardIO implements Runnable {
             try {
                 Object obj = objectInput.readObject();
                 if (obj instanceof String) {
-                    if (((String)obj).equals("START GAME")) {
-                        mainMenu.startDisplayingGame();
+                    if (((String)obj).equals("GAME STARTED")) {
+                        mainMenu.displayGame();
                     } else if (((String)obj).equals("GAME ENDED")) {
                         endConnection();
                         connected = false;
@@ -109,9 +111,15 @@ public class BoardClient extends BoardIO implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        mainMenu.displayMainMenu();
     }
 
     public void escapePanelInteraction() {}
+
+    /** adds the keylisteners */
+	public void addKeyListeners(JFrame frame) {
+        frame.addKeyListener(playerKeyListener);
+    }
 
     /** knows what to do when someone returns to the main menu */
 	public void exitGame() {

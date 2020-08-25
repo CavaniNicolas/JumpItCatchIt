@@ -1,5 +1,7 @@
 package Game;
 
+import javax.swing.JFrame;
+
 import Menu.FileFunctions;
 import Menu.KeyBindings;
 
@@ -40,13 +42,20 @@ public class BoardLocal extends BoardIO {
 	public void handleAction(InputActions inputActions) {
 	}
 
-	/** pauses when someone interacts with the escape panel  */
-	public void escapePanelInteraction() {
-		gameLoop.togglePause();
+	/** adds the keylisteners */
+	public void addKeyListeners(JFrame frame) {
+		frame.addKeyListener(redPlayerKeyListener);
+		frame.addKeyListener(bluePlayerKeyListener);
 	}
 
 	/** knows what to do when someone returns to the main menu */
-	public void exitGame() {}
+	public void exitGame() {
+		gameLoop.togglePause();
+	}
+
+	public void setPause() {
+		gameLoop.togglePause();
+	}
 
 	public PlayerKeyListener getRedPlayerKeyListener() {
 		return redPlayerKeyListener;
