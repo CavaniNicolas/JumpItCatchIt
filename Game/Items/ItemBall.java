@@ -6,9 +6,8 @@ import Game.BoardGraphism;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Image;
-import java.io.Serializable;
 
-public class ItemBall extends Entity implements Serializable {
+public class ItemBall extends Entity {
 
 	protected Color colorItem;
 	private transient Image imageItem = null;

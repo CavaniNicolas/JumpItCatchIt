@@ -220,5 +220,10 @@ public class ItemBalls implements Serializable {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "ItemBalls [itemBalls=" + itemBalls + "]";
+	}
+
 
 }

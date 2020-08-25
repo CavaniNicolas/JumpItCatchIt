@@ -157,4 +157,9 @@ public class Entity implements Serializable {
 		this.y = y;
 	}
 
+	@Override
+	public String toString() {
+		return "Entity [x=" + x + ", y=" + y + ", " + "height=" + height + ", width=" + width + "]";
+	}
+
 }

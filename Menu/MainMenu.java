@@ -121,13 +121,7 @@ public class MainMenu extends JFrame {
 		Thread thread = new Thread(new StartGame());
 		thread.start();
 
-		//give the frame the focus
-		frame.setFocusable(true);
-		frame.setFocusTraversalKeysEnabled(false);
-
-		//displays the game panel
-		frame.setContentPane(boardGraphism);
-		frame.setVisible(true);
+		startDisplayingGame();
 	}
 
 	/** starts the online board and sets the frame to display it */
@@ -143,26 +137,10 @@ public class MainMenu extends JFrame {
 		Thread threadServer = new Thread(new BoardServer(board));
 		threadServer.start();
 
-		System.out.println("here");
-		//BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1");
-		System.out.println("there");
-
-		boardGraphism.startDisplaying();
+		//BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1", this);
 
 		//add the key listeners
 		//frame.addKeyListener(boardClient.getPlayerKeyListener());
-
-		//start game
-		Thread thread = new Thread(new StartGame());
-		thread.start();
-/*
-		//give the frame the focus
-		frame.setFocusable(true);
-		frame.setFocusTraversalKeysEnabled(false);
-
-		//displays the game panel
-		frame.setContentPane(boardGraphism);
-		frame.setVisible(true);*/
 	}
 
 	/** starts the online board and sets the frame to display it */
@@ -173,19 +151,18 @@ public class MainMenu extends JFrame {
 		//init game
 		board.initGame();
 
-		BoardClient boardClient = new BoardClient(boardGraphism, address);
+		BoardClient boardClient = new BoardClient(boardGraphism, address, this);
 
-		Thread threadServer = new Thread(boardClient);
-		threadServer.start();
-
-		boardGraphism.startDisplaying();
+		Thread threadClient = new Thread(boardClient);
+		threadClient.start();
 
 		//add the key listeners
 		frame.addKeyListener(boardClient.getPlayerKeyListener());
+	}
 
-		//start game
-		Thread thread = new Thread(new StartGame());
-		thread.start();
+	public void startDisplayingGame() {
+		//start gamedisplay timer
+		boardGraphism.startDisplaying();
 
 		//give the frame the focus
 		frame.setFocusable(true);
@@ -195,8 +172,6 @@ public class MainMenu extends JFrame {
 		frame.setContentPane(boardGraphism);
 		frame.setVisible(true);
 	}
-
-
 
 	/** creates the mainMenuJPanel with its component */
 	public void createMainMenuPanel() {

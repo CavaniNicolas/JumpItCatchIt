@@ -2,6 +2,8 @@ package Game;
 
 import Menu.FileFunctions;
 import Menu.KeyBindings;
+import Menu.MainMenu;
+
 import java.io.*;
 import java.net.*;
 
@@ -25,11 +27,16 @@ public class BoardClient extends BoardIO implements Runnable {
 	//client socket
     private Socket socket;
 
+    //address of the server
     private String address;
 
-	public BoardClient(BoardGraphism boardGraphism, String address) {
+    //mainmenu to start displaying the game when everyone has joined
+    private MainMenu mainMenu;
+
+	public BoardClient(BoardGraphism boardGraphism, String address, MainMenu mainMenu) {
         this.boardGraphism = boardGraphism;
         this.address = address;
+        this.mainMenu = mainMenu;
 		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("red"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
     }
@@ -82,17 +89,20 @@ public class BoardClient extends BoardIO implements Runnable {
                         if (((String)obj).equals("START GAME")) {
                             System.out.println("Starting game on server order");
                             inGame = true;
+                            mainMenu.startDisplayingGame();
                         } else {
                             System.out.println((String)obj);
                         }
                     }
                 } else {
-                    if (((String)obj).equals("GAME ENDED")) {
-                        System.out.println("Closing game on server order");
-                        connected = false;
-                    } else if (obj instanceof Board) {
+                    if (obj instanceof Board) {
 						boardGraphism.setBoard((Board)obj);
-					}
+                    } else if (obj instanceof String) {
+                        if (((String)obj).equals("GAME ENDED")) {
+                            System.out.println("Closing game on server order");
+                            connected = false;
+                        }
+                    }
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -103,12 +113,10 @@ public class BoardClient extends BoardIO implements Runnable {
     }
 
     public void outputObject(Object obj) {
-        //FileFunctions.saveObject(obj, "InputActions.txt");
-        //System.out.println(FileFunctions.getObject("InputActions.txt"));
-
         try {
+            //use writeUnshared instead of writeObject if retransmitting same object with modifications
+            objectOutput.writeUnshared(obj);
             System.out.println("OUTPUTTING :" + obj);
-            objectOutput.writeObject(obj);
         } catch (IOException e) {
             e.printStackTrace();
         }
