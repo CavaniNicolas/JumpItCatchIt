@@ -22,7 +22,7 @@ public class KeyBindingMenu extends JPanel {
 
 	/** creates a new KeySelectingPanel based on a KeyBinding */
 	public void addKeySelectingPanels(String path, String defaultPath) {
-		KeyBindings keyBindings = FileFunctions.getBindings(path);
+		KeyBindings keyBindings = (KeyBindings)FileFunctions.getObject(path);
 		this.setPreferredSize(new Dimension(270, 40*keyBindings.getKeyBindings().size()));
 
 		//a default path is added in the constructor to allow resetting a binding
@@ -39,7 +39,7 @@ public class KeyBindingMenu extends JPanel {
 
 	/** sets the JTextFields so they display the bindings saved in a file designated by a given path string */
 	public void setAllBindings(String path) {
-		KeyBindings keyBindings = FileFunctions.getBindings(path);
+		KeyBindings keyBindings = (KeyBindings)FileFunctions.getObject(path);
 
 		//set the JTextFields to the value of the bindings
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {

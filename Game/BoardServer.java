@@ -165,13 +165,13 @@ public class BoardServer implements Runnable {
 			while (isRunning) {
 				try {
 					obj = objectInputs[number].readObject();
-					System.out.println("PLAYER " + number + " OUTPUTTED " + obj);
 					if (obj instanceof InputActions) {
 						if (number == 0) {
 							board.getCharacterRed().setInputActions((InputActions)obj);;
 						} else {
 							board.getCharacterBlue().setInputActions((InputActions)obj);;
 						}
+						System.out.println("PLAYER " + number + " OUTPUT " + (InputActions)obj);
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();

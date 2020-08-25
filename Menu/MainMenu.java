@@ -603,8 +603,8 @@ public class MainMenu extends JFrame {
 		if (checkUnicity()) {
 			KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
 			KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
-			FileFunctions.saveBindings(redBindings, "KeyBindings/redKeyBindings.txt");
-			FileFunctions.saveBindings(blueBindings, "KeyBindings/blueKeyBindings.txt");
+			FileFunctions.saveObject(redBindings, "KeyBindings/redKeyBindings.txt");
+			FileFunctions.saveObject(blueBindings, "KeyBindings/blueKeyBindings.txt");
 			if (back) {
 				backToMainMenuFromOption();
 			}

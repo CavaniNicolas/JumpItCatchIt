@@ -36,7 +36,7 @@ public class KeySelectingPanel extends JPanel {
 		resetButton.setPreferredSize(new Dimension(70, 25));
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				String defaultKeyValue = intToString(FileFunctions.getBindings(path).getKeyBindings().get(position).getKeyValue());
+				String defaultKeyValue = intToString(((KeyBindings)FileFunctions.getObject(path)).getKeyBindings().get(position).getKeyValue());
 				selectingButton.setText(defaultKeyValue);
 				checkAvailability();
 			}

@@ -30,7 +30,7 @@ public class BoardClient extends BoardIO implements Runnable {
 	public BoardClient(BoardGraphism boardGraphism, String address) {
         this.boardGraphism = boardGraphism;
         this.address = address;
-		KeyBindings playerBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("red"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
     }
     
@@ -103,8 +103,11 @@ public class BoardClient extends BoardIO implements Runnable {
     }
 
     public void outputObject(Object obj) {
+        //FileFunctions.saveObject(obj, "InputActions.txt");
+        //System.out.println(FileFunctions.getObject("InputActions.txt"));
+
         try {
-            //System.out.println("OUTPUTTING :" + obj);
+            System.out.println("OUTPUTTING :" + obj);
             objectOutput.writeObject(obj);
         } catch (IOException e) {
             e.printStackTrace();
