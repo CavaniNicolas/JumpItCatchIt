@@ -3,6 +3,7 @@ package Menu;
 import Game.Board;
 import Game.BoardClient;
 import Game.BoardGraphism;
+import Game.BoardIO;
 import Game.BoardLocal;
 import Game.BoardServer;
 import Game.GameLoop;
@@ -29,6 +30,8 @@ public class MainMenu extends JFrame {
 	
 	/**Contient le jeu */
 	private Board board;
+
+	private BoardIO boardIO;
 
 	/**Contient la boucle principale de calcul du jeu */
 	private GameLoop gameLoop;
@@ -369,7 +372,6 @@ public class MainMenu extends JFrame {
 		} else {
 			boardGraphism.add(escapePanel);
 		}
-		gameLoop.togglePause();
 		isDisplayingEscapePanel = !isDisplayingEscapePanel;
 		frame.setVisible(true);
 	}

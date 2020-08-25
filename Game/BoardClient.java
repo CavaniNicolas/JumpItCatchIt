@@ -16,9 +16,8 @@ public class BoardClient extends BoardIO implements Runnable {
 	private PlayerKeyListener playerKeyListener;
 	private InputActions playerInputActions = new InputActions();
 
-	//waiting for everyone or playing
+	//am i connected or not
 	private Boolean connected;
-	private Boolean inGame;
 	
 	//object streams
     private ObjectOutputStream objectOutput;
@@ -40,10 +39,6 @@ public class BoardClient extends BoardIO implements Runnable {
 		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("red"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
     }
-    
-    public void run() {
-        connect(address);
-    }
 
 	/** send the input action object to the server */
 	public void handleAction(InputActions inputActions) {
@@ -51,28 +46,22 @@ public class BoardClient extends BoardIO implements Runnable {
 		outputObject(inputActions);
 	}
 
-    public void connect(String serverHostName) {
+    public void run() {
         int portNumber = 5000; // Le port du serveur
         
         socket = null; // Un Socket TCP
 
         try {
             // Creation du socket et des flux d'entree/sortie
-            socket = new Socket(serverHostName, portNumber);
+            socket = new Socket(address, portNumber);
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectInput = new ObjectInputStream(socket.getInputStream());
-            System.out.println("CONNECTION STARTED");
             connected = true;
-            inGame = false;
 
             inputObject();
-        
-            // closing flux and socket (output before input)
-            objectOutput.close();
-            objectInput.close();
-            socket.close();
+            endConnection();
         } catch (UnknownHostException e) {
-            System.err.println("Hote inconnu: " + serverHostName);
+            System.err.println("Hote inconnu: " + address);
             System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,26 +73,15 @@ public class BoardClient extends BoardIO implements Runnable {
         while (connected) {
             try {
                 Object obj = objectInput.readObject();
-                //System.out.println(obj);
-                if (!inGame) {
-                    if (obj instanceof String) {
-                        if (((String)obj).equals("START GAME")) {
-                            System.out.println("Starting game on server order");
-                            inGame = true;
-                            mainMenu.startDisplayingGame();
-                        } else {
-                            System.out.println((String)obj);
-                        }
+                if (obj instanceof String) {
+                    if (((String)obj).equals("START GAME")) {
+                        mainMenu.startDisplayingGame();
+                    } else if (((String)obj).equals("GAME ENDED")) {
+                        endConnection();
+                        connected = false;
                     }
-                } else {
-                    if (obj instanceof Board) {
-						boardGraphism.setBoard((Board)obj);
-                    } else if (obj instanceof String) {
-                        if (((String)obj).equals("GAME ENDED")) {
-                            System.out.println("Closing game on server order");
-                            connected = false;
-                        }
-                    }
+                } else if (obj instanceof Board) {
+                    boardGraphism.setBoard((Board)obj);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -117,10 +95,28 @@ public class BoardClient extends BoardIO implements Runnable {
         try {
             //use writeUnshared instead of writeObject if retransmitting same object with modifications
             objectOutput.writeUnshared(obj);
-            //System.out.println("OUTPUTTING :" + obj);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**closing flux and socket (output before input)*/
+    public void endConnection() {
+        try {
+            objectOutput.close();
+            objectInput.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void escapePanelInteraction() {}
+
+    /** knows what to do when someone returns to the main menu */
+	public void exitGame() {
+        outputObject("PLAYER LEFT");
+        endConnection();
     }
 
     public PlayerKeyListener getPlayerKeyListener() {

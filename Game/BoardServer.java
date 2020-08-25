@@ -10,9 +10,8 @@ public class BoardServer implements Runnable {
 	//board
 	private Board board;
 
-	//waiting for everyone or playing
+	//is the server running or not
 	private Boolean isRunning = true;
-	private Boolean inGame = false;
 
 	//player number management
 	private int playerNumber = 2;
@@ -25,6 +24,7 @@ public class BoardServer implements Runnable {
 	//object streams
 	private ObjectOutputStream[] objectOutputs;
 	private ObjectInputStream[] objectInputs;
+	private Socket[] clientSockets;
 
 	public BoardServer(Board board) {
 		this.board = board;
@@ -49,19 +49,18 @@ public class BoardServer implements Runnable {
 		public HandleServer() {
 			objectOutputs = new ObjectOutputStream[playerNumber];
 			objectInputs = new ObjectInputStream[playerNumber];
+			clientSockets = new Socket[playerNumber];
 
 			//loop keeping the server alive
 			while (isRunning == true){
 				//wait for the 2 connections
 				while (currentPlayerNumber < playerNumber) {
-					System.out.println("waiting for "  + (playerNumber - currentPlayerNumber) + " players");
-					System.out.println("Current player number " + currentPlayerNumber);
 					try {
 						//On attend une connexion d'un client
-						Socket client = serverSocket.accept();
+						clientSockets[currentPlayerNumber] = serverSocket.accept();
 
 						//Une fois reçue, on la traite dans un thread séparé
-						Thread thread = new Thread(new ClientProcessor(client));
+						Thread thread = new Thread(new ClientProcessor(clientSockets[currentPlayerNumber]));
 						thread.start();
 						currentPlayerNumber++;
 						
@@ -70,31 +69,15 @@ public class BoardServer implements Runnable {
 					}
 					if (currentPlayerNumber == playerNumber) {
 						try {
-							Thread.sleep(1000);
+							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							Thread.currentThread().interrupt();
 							e.printStackTrace();
 						}
 
-						System.out.println("Starting game");
 						outputObject("START GAME");
-
-						inGame = true;
 						gameLoopServer.togglePause();
-
-						try {
-							Thread.sleep(100000);
-						} catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-							e.printStackTrace();
-						}
-
-						System.out.println("Ending game");
-						outputObject("GAME ENDED");
-
-						isRunning = false;
-					}
-					
+					}	
 				}
 			}
 			try {
@@ -125,51 +108,27 @@ public class BoardServer implements Runnable {
 				objectOutputs[number] = new ObjectOutputStream(clientSocket.getOutputStream());
 				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
 
-				Thread t = new Thread(new InputProcessor(number));
-				t.start();
-
-				while (isRunning) {	
-					if (!inGame) {
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-							e.printStackTrace();
-						}
-						String str = "waiting for " + (playerNumber - currentPlayerNumber) + " players";
-						objectOutputs[number].writeObject(str);
-						objectOutputs[number].flush();
-					}		
-				}
-				objectOutputs[number].writeObject("CONNECTION CLOSED");
-				objectOutputs[number].flush();
-				// closing flux and socket (output before input)
-				objectOutputs[number].close(); 
-				objectInputs[number].close(); 
-				clientSocket.close(); 
-				System.out.println ("Connexion avec "+IP+" fermée");
+				inputProcessor();
 			}  catch (IOException e) { 
 				System.out.println ("Crash de la connexion avec "+IP);
 			} 
 		}
-	}
 
-	public class InputProcessor implements Runnable {
-		private int number;
-		InputProcessor(int number) {
-			this.number = number;
-		}
-		
-		public void run() {
+		public void inputProcessor() {
 			while (isRunning) {
 				try {
 					Object obj = objectInputs[number].readObject();
-					//System.out.println("PLAYER " + number + " OUTPUT " + obj);
 					if (obj instanceof InputActions) {
 						if (number == 0) {
 							board.getCharacterRed().setInputActions((InputActions)obj);;
 						} else {
 							board.getCharacterBlue().setInputActions((InputActions)obj);;
+						}
+					} else if (obj instanceof String) {
+						if (((String)obj).equals("PLAYER LEFT")) {
+							outputObject("GAME ENDED");
+							endAllConnections();
+							isRunning = false;
 						}
 					}
 				} catch (ClassNotFoundException e) {
@@ -179,7 +138,7 @@ public class BoardServer implements Runnable {
 				}
 			}
 		}
-    }
+	}
 
 	public void outputObject(Object obj) {
 		for (ObjectOutputStream objectOutput : objectOutputs) {
@@ -188,6 +147,18 @@ public class BoardServer implements Runnable {
 				objectOutput.reset();
 				//System.out.println("OUTPUTTING : " + obj);
 			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void endAllConnections() {
+		for (int i = 0; i < playerNumber; i++) {
+			try {
+				objectOutputs[i].close(); 
+				objectInputs[i].close(); 
+				clientSockets[i].close(); 
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

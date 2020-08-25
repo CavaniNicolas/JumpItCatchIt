@@ -40,6 +40,14 @@ public class BoardLocal extends BoardIO {
 	public void handleAction(InputActions inputActions) {
 	}
 
+	/** pauses when someone interacts with the escape panel  */
+	public void escapePanelInteraction() {
+		gameLoop.togglePause();
+	}
+
+	/** knows what to do when someone returns to the main menu */
+	public void exitGame() {}
+
 	public PlayerKeyListener getRedPlayerKeyListener() {
 		return redPlayerKeyListener;
 	}
