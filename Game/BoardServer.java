@@ -3,13 +3,9 @@ package Game;
 import java.net.*;
 import java.io.*;
 
-public class BoardServer {
+public class BoardServer implements Runnable {
 	//gameLoop
 	private GameLoopServer gameLoopServer;
-
-	//inputActions
-	private InputActions redPlayerInputActions;
-	private InputActions bluePlayerInputActions;
 
 	//board
 	private Board board;
@@ -19,7 +15,7 @@ public class BoardServer {
 	private Boolean inGame = false;
 
 	//player number management
-	private int playerNumber = 1;
+	private int playerNumber = 2;
 	private int currentPlayerNumber = 0;
 	private int connectionNumber = 0;
 
@@ -32,6 +28,9 @@ public class BoardServer {
 
 	public BoardServer(Board board) {
 		this.board = board;
+	}
+	
+	public void run() {
 		gameLoopServer = new GameLoopServer(this.board, this);
 		
 		//start online server"
@@ -55,7 +54,7 @@ public class BoardServer {
 			while (isRunning == true){
 				//wait for the 2 connections
 				while (currentPlayerNumber < playerNumber) {
-					System.out.println("waiting for " + (playerNumber - currentPlayerNumber) + " players");
+					System.out.println("waiting for "  + (playerNumber - currentPlayerNumber) + " players");
 					System.out.println("Current player number " + currentPlayerNumber);
 					try {
 						//On attend une connexion d'un client
@@ -65,14 +64,38 @@ public class BoardServer {
 						Thread thread = new Thread(new ClientProcessor(client));
 						thread.start();
 						currentPlayerNumber++;
+						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				}
-				System.out.println("Starting game");
-				inGame = true;
-				gameLoopServer.togglePause();
+					if (currentPlayerNumber == playerNumber) {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							Thread.currentThread().interrupt();
+							e.printStackTrace();
+						}
 
+						System.out.println("Starting game");
+						outputObject("START GAME");
+
+						inGame = true;
+						gameLoopServer.togglePause();
+
+						try {
+							Thread.sleep(10000);
+						} catch (InterruptedException e) {
+							Thread.currentThread().interrupt();
+							e.printStackTrace();
+						}
+
+						System.out.println("Ending game");
+						outputObject("GAME ENDED");
+
+						isRunning = false;
+					}
+					
+				}
 			}
 			try {
 				serverSocket.close();
@@ -84,7 +107,7 @@ public class BoardServer {
 	}
  
 
-    public class ClientProcessor extends Thread {
+    public class ClientProcessor implements Runnable {
 		private int number;
         Socket clientSocket = null; 
         ClientProcessor(Socket clientSocket){
@@ -102,7 +125,8 @@ public class BoardServer {
 				objectOutputs[number] = new ObjectOutputStream(clientSocket.getOutputStream());
 				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
 
-				new Thread(new InputProcessor(number));
+				Thread t = new Thread(new InputProcessor(number));
+				t.start();
 
 				while (isRunning) {	
 					if (!inGame) {
@@ -113,12 +137,9 @@ public class BoardServer {
 							e.printStackTrace();
 						}
 						String str = "waiting for " + (playerNumber - currentPlayerNumber) + " players";
-						objectOutputs[connectionNumber].writeObject(str);
-						objectOutputs[connectionNumber].flush();
-					} else {
-						objectOutputs[connectionNumber].writeObject("Starting game");
-						objectOutputs[connectionNumber].flush();
-					}			
+						objectOutputs[number].writeObject(str);
+						objectOutputs[number].flush();
+					}		
 				}
 				objectOutputs[number].writeObject("CONNECTION CLOSED");
 				objectOutputs[number].flush();
@@ -133,11 +154,18 @@ public class BoardServer {
 		}
 	}
 
-	public class InputProcessor extends Thread {
+	public class InputProcessor implements Runnable {
+		private int number;
 		InputProcessor(int number) {
+			this.number = number;
+		}
+		
+		public void run() {
+			Object obj;
 			while (isRunning) {
 				try {
-					Object obj = objectInputs[number].readObject();
+					obj = objectInputs[number].readObject();
+					System.out.println("PLAYER " + number + " OUTPUTTED " + obj);
 					if (obj instanceof InputActions) {
 						if (number == 0) {
 							board.getCharacterRed().setInputActions((InputActions)obj);;
@@ -154,10 +182,11 @@ public class BoardServer {
 		}
     }
 
-	public void outputBoard() {
+	public void outputObject(Object obj) {
 		for (ObjectOutputStream objectOutput : objectOutputs) {
 			try {
-				objectOutput.writeObject(board);
+				objectOutput.writeObject(obj);
+				System.out.println("OUTPUTTING : " + obj);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

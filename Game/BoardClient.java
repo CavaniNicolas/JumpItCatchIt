@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.*;
 
 /** handles the key listener for online game */
-public class BoardClient extends BoardIO {
+public class BoardClient extends BoardIO implements Runnable {
     //board graphism
     protected BoardGraphism boardGraphism;
 
@@ -25,15 +25,22 @@ public class BoardClient extends BoardIO {
 	//client socket
     private Socket socket;
 
+    private String address;
+
 	public BoardClient(BoardGraphism boardGraphism, String address) {
         this.boardGraphism = boardGraphism;
+        this.address = address;
 		KeyBindings playerBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
+    }
+    
+    public void run() {
         connect(address);
-	}
+    }
 
 	/** send the input action object to the server */
 	public void handleAction(InputActions inputActions) {
+        //System.out.println(inputActions);
 		outputObject(inputActions);
 	}
 
@@ -73,11 +80,17 @@ public class BoardClient extends BoardIO {
                 if (!inGame) {
                     if (obj instanceof String) {
                         if (((String)obj).equals("START GAME")) {
+                            System.out.println("Starting game on server order");
                             inGame = true;
+                        } else {
+                            System.out.println((String)obj);
                         }
                     }
                 } else {
-                    if (obj instanceof Board) {
+                    if (((String)obj).equals("GAME ENDED")) {
+                        System.out.println("Closing game on server order");
+                        connected = false;
+                    } else if (obj instanceof Board) {
 						boardGraphism.setBoard((Board)obj);
 					}
                 }
@@ -91,6 +104,7 @@ public class BoardClient extends BoardIO {
 
     public void outputObject(Object obj) {
         try {
+            //System.out.println("OUTPUTTING :" + obj);
             objectOutput.writeObject(obj);
         } catch (IOException e) {
             e.printStackTrace();

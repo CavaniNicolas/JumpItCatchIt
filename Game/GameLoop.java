@@ -7,7 +7,7 @@ import javax.swing.Timer;
 /** the main loop of the game */
 public class GameLoop {
 	private final int updateEveryDt = 12;
-	private Board board;
+	protected Board board;
 	private Timer gamePlayTimer;
 	private Boolean isPlaying = false;
 	private GamePlayTimerListener gamePlayTimerListener = new GamePlayTimerListener();

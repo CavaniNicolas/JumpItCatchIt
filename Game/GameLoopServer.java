@@ -8,7 +8,7 @@ public class GameLoopServer extends GameLoop {
 	}
 
 	public void sendBoardToClients() {
-		boardServer.outputBoard();
+		boardServer.outputObject(board);
 	}
 
 }

@@ -1,15 +1,12 @@
 package Network;
 
-import Game.Board;
-import Game.InputActions;
 import java.net.*;
 import java.io.*;
 
 public class Server {
 	private Boolean inGame = false;
-	private Board board;
 	private int playerNumber = 2;
-	private int currentPlayerNumber;
+	private int currentPlayerNumber = 0;
 	private Boolean isRunning;
 	private ServerSocket serverSocket = null;
 	private int connectionNumber = 0;
@@ -42,8 +39,7 @@ public class Server {
 			objectInputs = new ObjectInputStream[playerNumber];
 
 			while (isRunning == true){
-				//wait for the 2 connections
-				currentPlayerNumber = 0;
+				//wait for the connections
 				while (currentPlayerNumber < playerNumber) {
 					System.out.println("waiting for " + (playerNumber - currentPlayerNumber) + " players");
 					System.out.println("Current player number " + currentPlayerNumber);
@@ -55,12 +51,16 @@ public class Server {
 						Thread thread = new Thread(new ClientProcessor(client));
 						thread.start();
 						currentPlayerNumber++;
+						if (currentPlayerNumber == playerNumber) {
+							System.out.println("Starting game");
+							inGame = true;
+							outputBoard("START GAME");
+						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
-				System.out.println("Starting game");
-				inGame = true;
+
 			}
 			try {
 				serverSocket.close();
@@ -90,7 +90,7 @@ public class Server {
 				objectOutputs[number] = new ObjectOutputStream(clientSocket.getOutputStream());
 				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
 
-				Thread thread = new Thread(new InputProcessor(number));
+				new Thread(new InputProcessor(number));
 
 				while (isRunning) {	
 					if (!inGame) {
@@ -104,8 +104,8 @@ public class Server {
 						objectOutputs[connectionNumber].writeObject(str);
 						objectOutputs[connectionNumber].flush();
 					} else {
-						objectOutputs[connectionNumber].writeObject("Starting game");
-						objectOutputs[connectionNumber].flush();
+						//objectOutputs[connectionNumber].writeObject("START GAME");
+						//objectOutputs[connectionNumber].flush();
 					}			
 				}
 				objectOutputs[number].writeObject("CONNECTION CLOSED");
@@ -126,8 +126,8 @@ public class Server {
 			while (isRunning) {
 				try {
 					Object obj = objectInputs[number].readObject();
-					if (obj instanceof InputActions) {
-						//board.useInputActions(number, obj);
+					if (obj instanceof String) {
+						System.out.println("USER " + number + ": " + (String)obj);
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -137,16 +137,6 @@ public class Server {
 			}
 		}
     }
-
-	public void outputBoard() {
-		for (ObjectOutputStream objectOutput : objectOutputs) {
-			try {
-				objectOutput.writeObject(board);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	/** Find public IP address */
 	public String getPublicIPAddress() {
@@ -161,5 +151,15 @@ public class Server {
 		} catch (Exception e) { 
 			return "COULD NOT FIND ADDRESS"; 
 		} 
+	}
+
+	public void outputBoard(String str) {
+		for (ObjectOutputStream objectOutput : objectOutputs) {
+			try {
+				objectOutput.writeObject(str);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 } 

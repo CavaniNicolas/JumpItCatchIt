@@ -139,28 +139,30 @@ public class MainMenu extends JFrame {
 
 		//init game
 		board.initGame();
-		BoardServer boardServer = new BoardServer(board);
 
+		Thread threadServer = new Thread(new BoardServer(board));
+		threadServer.start();
+
+		System.out.println("here");
 		//BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1");
-		//BoardClient boardClient2 = new BoardClient(boardGraphism, "127.0.0.1");
+		System.out.println("there");
 
 		boardGraphism.startDisplaying();
 
 		//add the key listeners
 		//frame.addKeyListener(boardClient.getPlayerKeyListener());
-		//frame.addKeyListener(boardClient2.getPlayerKeyListener());
 
 		//start game
 		Thread thread = new Thread(new StartGame());
 		thread.start();
-
+/*
 		//give the frame the focus
 		frame.setFocusable(true);
 		frame.setFocusTraversalKeysEnabled(false);
 
 		//displays the game panel
 		frame.setContentPane(boardGraphism);
-		frame.setVisible(true);
+		frame.setVisible(true);*/
 	}
 
 	/** starts the online board and sets the frame to display it */
@@ -172,6 +174,9 @@ public class MainMenu extends JFrame {
 		board.initGame();
 
 		BoardClient boardClient = new BoardClient(boardGraphism, address);
+
+		Thread threadServer = new Thread(boardClient);
+		threadServer.start();
 
 		boardGraphism.startDisplaying();
 

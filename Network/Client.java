@@ -3,8 +3,6 @@ package Network;
 import java.io.*;
 import java.net.*;
 
-import Game.Board;
-
 public class Client {
     private Boolean connected;
     private Boolean inGame;
@@ -13,12 +11,8 @@ public class Client {
     private Socket socket;
 
 	public static void main(String [] args) {
-		new Client();
+		new Client("fe80:0:0:0:1875:b896:fbf9:9fb0");
 	}
-    
-    public Client() {
-        this("2a01:e0a:40c:8ff0:f023:ce59:eb8f:f2c");
-    }
 
     public Client(String serverHostName) {
         int portNumber = 5000; // Le port du serveur
@@ -57,10 +51,11 @@ public class Client {
                     if (obj instanceof String) {
                         if (((String)obj).equals("START GAME")) {
                             inGame = true;
+                            System.out.println("starting game (server order)");
                         }
                     }
                 } else {
-
+                    System.out.println(obj);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
