@@ -83,7 +83,7 @@ public class BoardServer implements Runnable {
 						gameLoopServer.togglePause();
 
 						try {
-							Thread.sleep(10000);
+							Thread.sleep(100000);
 						} catch (InterruptedException e) {
 							Thread.currentThread().interrupt();
 							e.printStackTrace();
@@ -164,7 +164,7 @@ public class BoardServer implements Runnable {
 			while (isRunning) {
 				try {
 					Object obj = objectInputs[number].readObject();
-					System.out.println("PLAYER " + number + " OUTPUT " + obj);
+					//System.out.println("PLAYER " + number + " OUTPUT " + obj);
 					if (obj instanceof InputActions) {
 						if (number == 0) {
 							board.getCharacterRed().setInputActions((InputActions)obj);;
@@ -184,8 +184,9 @@ public class BoardServer implements Runnable {
 	public void outputObject(Object obj) {
 		for (ObjectOutputStream objectOutput : objectOutputs) {
 			try {
-				objectOutput.writeObject(obj);
-				System.out.println("OUTPUTTING : " + obj);
+				objectOutput.writeUnshared(obj);
+				objectOutput.reset();
+				//System.out.println("OUTPUTTING : " + obj);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

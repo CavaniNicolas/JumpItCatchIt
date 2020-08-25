@@ -137,10 +137,13 @@ public class MainMenu extends JFrame {
 		Thread threadServer = new Thread(new BoardServer(board));
 		threadServer.start();
 
-		//BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1", this);
+		//start a client on a thread
+		BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1", this);
+		Thread threadClient = new Thread(boardClient);
+		threadClient.start();
 
 		//add the key listeners
-		//frame.addKeyListener(boardClient.getPlayerKeyListener());
+		frame.addKeyListener(boardClient.getPlayerKeyListener());
 	}
 
 	/** starts the online board and sets the frame to display it */
@@ -151,8 +154,8 @@ public class MainMenu extends JFrame {
 		//init game
 		board.initGame();
 
+		//start a client on a thread
 		BoardClient boardClient = new BoardClient(boardGraphism, address, this);
-
 		Thread threadClient = new Thread(boardClient);
 		threadClient.start();
 

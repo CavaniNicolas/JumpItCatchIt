@@ -84,6 +84,7 @@ public class BoardClient extends BoardIO implements Runnable {
         while (connected) {
             try {
                 Object obj = objectInput.readObject();
+                //System.out.println(obj);
                 if (!inGame) {
                     if (obj instanceof String) {
                         if (((String)obj).equals("START GAME")) {
@@ -116,7 +117,7 @@ public class BoardClient extends BoardIO implements Runnable {
         try {
             //use writeUnshared instead of writeObject if retransmitting same object with modifications
             objectOutput.writeUnshared(obj);
-            System.out.println("OUTPUTTING :" + obj);
+            //System.out.println("OUTPUTTING :" + obj);
         } catch (IOException e) {
             e.printStackTrace();
         }
