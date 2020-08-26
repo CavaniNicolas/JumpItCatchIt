@@ -14,10 +14,6 @@ public class BoardLocal extends BoardIO {
 	private PlayerKeyListener redPlayerKeyListener;
 	private PlayerKeyListener bluePlayerKeyListener;
 
-	//input actions for both players
-	private InputActions redPlayerInputActions;
-	private InputActions bluePlayerInputActions;
-
 	//the board to be modified
 	private Board board;
 
@@ -51,6 +47,11 @@ public class BoardLocal extends BoardIO {
 	/** knows what to do when someone returns to the main menu */
 	public void togglePause(Boolean bool) {
 		gameLoop.togglePause(bool);
+	}
+
+	/**exit game */
+	public void exitGame() {
+		gameLoop.togglePause(true);
 	}
 
 	public PlayerKeyListener getRedPlayerKeyListener() {
