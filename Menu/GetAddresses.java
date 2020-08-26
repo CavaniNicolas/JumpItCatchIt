@@ -1,4 +1,4 @@
-package Network;
+package Menu;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
