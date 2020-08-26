@@ -20,22 +20,22 @@ public class BoardGraphism extends JPanel {
 	/**true une fois que les valeurs graphiques fixes ont ete initialisees */
 	private boolean isGraphicUpdateDone = false;
 
-	/**Coordonnees reelles */
-	private GraphicalAttributes real = new GraphicalAttributes();
-	/**Coordonnees graphiques */
-	private GraphicalAttributes graphic = new GraphicalAttributes();
+	// /**Coordonnees reelles */
+	// private GraphicalAttributes real = new GraphicalAttributes();
+	// /**Coordonnees graphiques */
+	// private GraphicalAttributes graphic = new GraphicalAttributes();
 
 
-	/**Largeur reelle max du board */
-	private int maxX = 16_000;
-	/**Hauteur reelle max du board */
-	private int maxY = 10_000;
+	// /**Largeur reelle max du board */
+	// private int maxX = 16_000;
+	// /**Hauteur reelle max du board */
+	// private int maxY = 10_000;
 
 
-	/**Largeur du JPanel (Board) */
-	private int boardWidth;
-	/**Hauteur du JPanel (Board) */
-	private int boardHeight;
+	// /**Largeur du JPanel (Board) */
+	// private int boardWidth;
+	// /**Hauteur du JPanel (Board) */
+	// private int boardHeight;
 
 
 	/**Timer d'affichage du jeu */
@@ -96,9 +96,9 @@ public class BoardGraphism extends JPanel {
 	 * Cette methode n'est appelee qu'une seule fois
 	 */
 	public void initRealCoordsAttributes() {
-		// dimensions d'une unite
-		real.oneUnityWidth = 1.0;
-		real.oneUnityHeight = 1.0;
+		// // dimensions d'une unite
+		// real.oneUnityWidth = 1.0;
+		// real.oneUnityHeight = 1.0;
 
 		// dimensions des plateformes
 		real.platformWidth = 5_000;
@@ -118,8 +118,8 @@ public class BoardGraphism extends JPanel {
 		real.secondaryXcoordLeft = 1_800;
 		real.secondaryXcoordRight = 14_200;
 
-		// position au sol en Y
-		real.groundLevelYCoord = 1_500;
+		// // position au sol en Y
+		// real.groundLevelYCoord = 1_500;
 
 
 		// Items
@@ -145,13 +145,13 @@ public class BoardGraphism extends JPanel {
 	public void updateGraphicCoordsAttributes(int maxX, int maxY, int boardWidth, int boardHeight) {
 		if (!isGraphicUpdateDone) {
 
-			// dimensions du JPanel
-			this.boardWidth = boardWidth;
-			this.boardHeight = boardHeight;
+			// // dimensions du JPanel
+			// this.boardWidth = boardWidth;
+			// this.boardHeight = boardHeight;
 
-			// dimensions d'une unite
-			graphic.oneUnityWidth = (double)boardWidth / (double)maxX;
-			graphic.oneUnityHeight = (double)boardHeight / (double)maxY;
+			// // dimensions d'une unite
+			// graphic.oneUnityWidth = (double)boardWidth / (double)maxX;
+			// graphic.oneUnityHeight = (double)boardHeight / (double)maxY;
 
 
 			// dimensions des plateformes
