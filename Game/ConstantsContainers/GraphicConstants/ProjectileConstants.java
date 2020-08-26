@@ -1,6 +1,4 @@
-package Game.ConstantsContainers.GraphicConstants.EntityConstants;
-
-import Game.ConstantsContainers.GraphicConstants.ConstantGraphicAttributes;
+package Game.ConstantsContainers.GraphicConstants;
 
 
 /** Class ProjectileConstants <p>
@@ -27,6 +25,7 @@ public class ProjectileConstants extends ConstantGraphicAttributes {
 	}
 
 
+	@Override
 	public void updateConstantGraphicAttributes(int boardJPanelNewWidth, int boardJPanelNewHeight) {
 		super.updateConstantGraphicAttributes(boardJPanelNewWidth, boardJPanelNewHeight);
 

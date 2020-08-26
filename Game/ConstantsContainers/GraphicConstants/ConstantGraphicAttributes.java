@@ -36,6 +36,7 @@ public class ConstantGraphicAttributes {
 	}
 
 
+	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */
 	public void updateConstantGraphicAttributes(int boardJPanelWidth, int boardJPanelHeight) {
 		// dimensions d'une unite
 		this.oneUnityWidth = (double)boardJPanelWidth / (double)realAttributes.maxX;

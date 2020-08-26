@@ -25,6 +25,7 @@ public class VariousConstants extends ConstantGraphicAttributes {
 	}
 
 
+	@Override
 	public void updateConstantGraphicAttributes(int boardJPanelNewWidth, int boardJPanelNewHeight) {
 		super.updateConstantGraphicAttributes(boardJPanelNewWidth, boardJPanelNewHeight);
 
