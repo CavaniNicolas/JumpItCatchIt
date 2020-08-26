@@ -15,19 +15,19 @@ public class ConstantGraphicAttributes {
 	protected double oneUnityHeight = 1.0;
 
 	/**Coordonnees reelles */
-	protected ConstantGraphicAttributes real;
+	protected ConstantGraphicAttributes realAttributes;
 
 
-	public ConstantGraphicAttributes(ConstantGraphicAttributes real, int boardJPanelWidth, int boardJPanelHeight) {
-		this.real = real;
+	public ConstantGraphicAttributes(ConstantGraphicAttributes realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
+		this.realAttributes = realAttributes;
 		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
 	}
 
 
 	public void updateConstantGraphicAttributes(int boardJPanelWidth, int boardJPanelHeight) {
 		// dimensions d'une unite
-		this.oneUnityWidth = (double)boardJPanelWidth / (double)real.maxX;
-		this.oneUnityHeight = (double)boardJPanelHeight / (double)real.maxY;
+		this.oneUnityWidth = (double)boardJPanelWidth / (double)realAttributes.maxX;
+		this.oneUnityHeight = (double)boardJPanelHeight / (double)realAttributes.maxY;
 
 		// dimensions du JPanel
 		this.maxX = boardJPanelWidth;
