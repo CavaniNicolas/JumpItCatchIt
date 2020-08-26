@@ -383,12 +383,9 @@ public class MainMenu extends JFrame {
 		} else {
 			boardGraphism.remove(escapePanel);
 		}
+		isEscapePanelDisplayed = !isEscapePanelDisplayed;
 		frame.setVisible(true);
 	}
-
-
-
-
 
 	public void createSaveQuitOptionsPanel() {
 		saveQuitOptionsPanel = new JPanel();
