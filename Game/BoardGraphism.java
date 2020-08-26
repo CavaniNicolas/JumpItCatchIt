@@ -122,11 +122,11 @@ public class BoardGraphism extends JPanel {
 		// real.groundLevelYCoord = 1_500;
 
 
-		// Items
-		real.itemWidth = 1_200;
-		real.itemHeight = 1_200;
-		real.itemFirstX = maxX / 2;
-		real.itemFirstY = maxY + real.itemHeight / 2;
+		// // Items
+		// real.itemWidth = 1_200;
+		// real.itemHeight = 1_200;
+		// real.itemFirstX = maxX / 2;
+		// real.itemFirstY = maxY + real.itemHeight / 2;
 
 
 		// HUD Character
@@ -176,11 +176,11 @@ public class BoardGraphism extends JPanel {
 			// graphic.groundLevelYCoord = (int)((maxY - real.groundLevelYCoord) * graphic.oneUnityHeight);
 
 
-			// Items
-			graphic.itemWidth = (int)(real.itemWidth * graphic.oneUnityWidth);
-			graphic.itemHeight = (int)(real.itemHeight * graphic.oneUnityHeight);
-			graphic.itemFirstX = (int)(real.itemFirstX * graphic.oneUnityWidth);
-			graphic.itemFirstY = (int)(real.itemFirstY * graphic.oneUnityHeight);
+			// // Items
+			// graphic.itemWidth = (int)(real.itemWidth * graphic.oneUnityWidth);
+			// graphic.itemHeight = (int)(real.itemHeight * graphic.oneUnityHeight);
+			// graphic.itemFirstX = (int)(real.itemFirstX * graphic.oneUnityWidth);
+			// graphic.itemFirstY = (int)(real.itemFirstY * graphic.oneUnityHeight);
 
 
 			// HUD Character
@@ -287,11 +287,11 @@ public class BoardGraphism extends JPanel {
 		// private int groundLevelYCoord;
 
 
-		// Items
-		private int itemWidth;
-		private int itemHeight;
-		private int itemFirstX;
-		private int itemFirstY;
+		// // Items
+		// private int itemWidth;
+		// private int itemHeight;
+		// private int itemFirstX;
+		// private int itemFirstY;
 
 
 		// HUD Character
