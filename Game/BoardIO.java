@@ -18,7 +18,7 @@ public class BoardIO implements Runnable {
 	public void exitGame() {}
 
 	/** pause */
-	public void setPause() {}
+	public void togglePause(Boolean bool) {}
 
 	/** restart game */
 	public void restartGame() {}

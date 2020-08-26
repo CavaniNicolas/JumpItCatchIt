@@ -76,7 +76,7 @@ public class BoardServer implements Runnable {
 						}
 
 						outputObjectToAll("GAME STARTED");
-						gameLoopServer.togglePause();
+						gameLoopServer.togglePause(true);
 					}	
 				}
 			}

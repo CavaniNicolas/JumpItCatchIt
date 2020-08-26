@@ -125,8 +125,7 @@ public class MainMenu extends JFrame {
 		boardIO.addKeyListeners(frame);
 
 		//start game
-		Thread thread = new Thread(new StartGame());
-		thread.start();
+		boardIO.togglePause(false);
 
 		displayGame();
 	}
@@ -374,14 +373,13 @@ public class MainMenu extends JFrame {
 
 
 	public void toggleEscapePanel() {
-		//pause or not
-		boardIO.setPause();
-
 		//escape button
 		if (!isEscapePanelDisplayed) {
 			boardGraphism.add(escapePanel);
+			boardIO.togglePause(true);
 		} else {
 			boardGraphism.remove(escapePanel);
+			boardIO.togglePause(false);
 		}
 		isEscapePanelDisplayed = !isEscapePanelDisplayed;
 		frame.setVisible(true);
@@ -774,17 +772,6 @@ public class MainMenu extends JFrame {
 	public KeyBindingMenu getBluePlayerBindingMenu() {
 		return bluePlayerBindings;
 	}
-
-
-	/**Le jeu tourne dans un thread a part, il contient les timer (thread) de jeu et d'affichage,
-	 * Non : de jeu uniquement, depuis les modifications pour separer Local de Client/Server
-	 */
-	public class StartGame implements Runnable {
-		public void run() {
-			gameLoop.togglePause();
-		}
-	}
-
 
 	public class ClientRelatedKeyListener implements KeyListener {
 		@Override

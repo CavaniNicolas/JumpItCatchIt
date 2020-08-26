@@ -49,12 +49,8 @@ public class BoardLocal extends BoardIO {
 	}
 
 	/** knows what to do when someone returns to the main menu */
-	public void exitGame() {
-		gameLoop.togglePause();
-	}
-
-	public void setPause() {
-		gameLoop.togglePause();
+	public void togglePause(Boolean bool) {
+		gameLoop.togglePause(bool);
 	}
 
 	public PlayerKeyListener getRedPlayerKeyListener() {
