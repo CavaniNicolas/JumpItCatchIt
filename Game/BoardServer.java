@@ -38,7 +38,7 @@ public class BoardServer implements Runnable {
             int portNumber = 5000;
 			serverSocket = new ServerSocket(portNumber);
 			new Thread(new HandleServer());
-        }  catch (IOException e) { 
+        }  catch (Exception e) { 
 			e.printStackTrace();
 			isRunning = false;
         } 
@@ -64,25 +64,25 @@ public class BoardServer implements Runnable {
 						thread.start();
 						currentPlayerNumber++;
 						
-					} catch (IOException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					if (currentPlayerNumber == playerNumber) {
 						try {
 							Thread.sleep(500);
-						} catch (InterruptedException e) {
+						} catch (Exception e) {
 							Thread.currentThread().interrupt();
 							e.printStackTrace();
 						}
 
 						outputObjectToAll("GAME STARTED");
-						gameLoopServer.togglePause(true);
+						gameLoopServer.togglePause(false);
 					}	
 				}
 			}
 			try {
 				serverSocket.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				serverSocket = null;
 			}
@@ -107,8 +107,9 @@ public class BoardServer implements Runnable {
 				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
 
 				inputProcessor();
-			}  catch (IOException e) { 
+			} catch (Exception e) { 
 				System.out.println ("Crash de la connexion avec "+IP);
+				e.printStackTrace();
 			} 
 		}
 
@@ -133,9 +134,7 @@ public class BoardServer implements Runnable {
 							outputObject("PING", objectOutputs[number]);
 						}
 					}
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -145,9 +144,9 @@ public class BoardServer implements Runnable {
 	public void outputObject(Object obj, ObjectOutputStream objectOutput) {
 		try {
 			objectOutput.writeUnshared(obj);
-			objectOutput.reset();
-			//System.out.println("OUTPUTTING : " + obj);
-		} catch (IOException e) {
+			objectOutput.flush();
+            objectOutput.reset();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

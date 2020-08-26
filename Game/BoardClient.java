@@ -99,9 +99,7 @@ public class BoardClient extends BoardIO {
                 } else if (obj instanceof Board) {
                     boardGraphism.setBoard((Board)obj);
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -111,7 +109,8 @@ public class BoardClient extends BoardIO {
         try {
             //use writeUnshared instead of writeObject if retransmitting same object with modifications
             objectOutput.writeUnshared(obj);
-        } catch (IOException e) {
+            objectOutput.flush();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -122,7 +121,7 @@ public class BoardClient extends BoardIO {
             objectOutput.close();
             objectInput.close();
             socket.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
