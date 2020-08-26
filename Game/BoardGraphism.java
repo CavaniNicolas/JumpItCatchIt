@@ -100,9 +100,9 @@ public class BoardGraphism extends JPanel {
 		// real.oneUnityWidth = 1.0;
 		// real.oneUnityHeight = 1.0;
 
-		// dimensions des plateformes
-		real.platformWidth = 5_000;
-		real.platformHeight = 1_500;
+		// // dimensions des plateformes
+		// real.platformWidth = 5_000;
+		// real.platformHeight = 1_500;
 
 		// dimensions des personnages
 		real.characterWidth = 1_600;
@@ -154,23 +154,23 @@ public class BoardGraphism extends JPanel {
 			// graphic.oneUnityHeight = (double)boardHeight / (double)maxY;
 
 
-			// dimensions des plateformes
-			graphic.platformWidth = (int)(real.platformWidth * graphic.oneUnityWidth);
-			graphic.platformHeight = (int)(real.platformHeight * graphic.oneUnityHeight);
+			// // dimensions des plateformes
+			// graphic.platformWidth = (int)(real.platformWidth * graphic.oneUnityWidth);
+			// graphic.platformHeight = (int)(real.platformHeight * graphic.oneUnityHeight);
 
-			// dimensions des personnages
-			graphic.characterWidth = (int)(real.characterWidth * graphic.oneUnityWidth);
-			graphic.characterHeight = (int)(real.characterHeight * graphic.oneUnityHeight);
+			// // dimensions des personnages
+			// graphic.characterWidth = (int)(real.characterWidth * graphic.oneUnityWidth);
+			// graphic.characterHeight = (int)(real.characterHeight * graphic.oneUnityHeight);
 
 			// dimensions des projectiles
 			graphic.projectileWidth = (int)(real.getProjectileWidth() * graphic.oneUnityWidth);
 			graphic.projectileHeight = (int)(real.getProjectileHeight() * graphic.oneUnityHeight);
 
-			// positions des personnages en X sur les plateforme
-			graphic.primaryXcoordLeft = (int)(real.primaryXcoordLeft * graphic.oneUnityWidth);
-			graphic.primaryXcoordRight = (int)(real.primaryXcoordRight * graphic.oneUnityWidth);
-			graphic.secondaryXcoordLeft = (int)(real.secondaryXcoordLeft * graphic.oneUnityWidth);
-			graphic.secondaryXcoordRight = (int)(real.secondaryXcoordRight * graphic.oneUnityWidth);
+			// // positions des personnages en X sur les plateforme
+			// graphic.primaryXcoordLeft = (int)(real.primaryXcoordLeft * graphic.oneUnityWidth);
+			// graphic.primaryXcoordRight = (int)(real.primaryXcoordRight * graphic.oneUnityWidth);
+			// graphic.secondaryXcoordLeft = (int)(real.secondaryXcoordLeft * graphic.oneUnityWidth);
+			// graphic.secondaryXcoordRight = (int)(real.secondaryXcoordRight * graphic.oneUnityWidth);
 
 			// position au sol en Y
 			graphic.groundLevelYCoord = (int)((maxY - real.groundLevelYCoord) * graphic.oneUnityHeight);
@@ -230,21 +230,21 @@ public class BoardGraphism extends JPanel {
 	/* Getters */
 	/* ======= */
 
-	public GraphicalAttributes getReal() {
-		return real;
-	}
+	// public GraphicalAttributes getReal() {
+	// 	return real;
+	// }
 
-	public GraphicalAttributes getGraphic() {
-		return graphic;
-	}
+	// public GraphicalAttributes getGraphic() {
+	// 	return graphic;
+	// }
 
-	public int getMaxX() {
-		return maxX;
-	}
+	// public int getMaxX() {
+	// 	return maxX;
+	// }
 
-	public int getMaxY() {
-		return maxY;
-	}
+	// public int getMaxY() {
+	// 	return maxY;
+	// }
 
 
 
@@ -253,38 +253,38 @@ public class BoardGraphism extends JPanel {
 	 */
 	public class GraphicalAttributes {
 
-		/**Largeur d'une unite graphique */
-		private double oneUnityWidth;
-		/**Hauteur d'une unite graphique */
-		private double oneUnityHeight;
+		// /**Largeur d'une unite graphique */
+		// private double oneUnityWidth;
+		// /**Hauteur d'une unite graphique */
+		// private double oneUnityHeight;
 
-		/**Largeur des plateformes */
-		private int platformWidth;
-		/**Hauteur des plateformes*/
-		private int platformHeight;
+		// /**Largeur des plateformes */
+		// private int platformWidth;
+		// /**Hauteur des plateformes*/
+		// private int platformHeight;
 
-		/**Largeur des personnages */
-		private int characterWidth;
-		/**Hauteur des personnages*/
-		private int characterHeight;
+		// /**Largeur des personnages */
+		// private int characterWidth;
+		// /**Hauteur des personnages*/
+		// private int characterHeight;
 
 		/**Largeur des projectiles */
 		private int projectileWidth;
 		/**Hauteur des projectiles */
 		private int projectileHeight;
 
-		/**Coordonnee principale en X du personnage a gauche (position sur la plateforme) */
-		private int primaryXcoordLeft;
-		/**Coordonnee secondaire en X du personnage a gauche (position a l'atterrissage d'un changement de plateforme) */
-		private int secondaryXcoordLeft;
+		// /**Coordonnee principale en X du personnage a gauche (position sur la plateforme) */
+		// private int primaryXcoordLeft;
+		// /**Coordonnee secondaire en X du personnage a gauche (position a l'atterrissage d'un changement de plateforme) */
+		// private int secondaryXcoordLeft;
 
-		/**Coordonnee principale en X du personnage a droite (position sur la plateforme) */
-		private int primaryXcoordRight;
-		/**Coordonnee secondaire en X du personnage a droite (position a l'atterrissage d'un changement de plateforme) */
-		private int secondaryXcoordRight;
+		// /**Coordonnee principale en X du personnage a droite (position sur la plateforme) */
+		// private int primaryXcoordRight;
+		// /**Coordonnee secondaire en X du personnage a droite (position a l'atterrissage d'un changement de plateforme) */
+		// private int secondaryXcoordRight;
 
-		/**Coordonnee en Y du niveau du sol reelle */
-		private int groundLevelYCoord;
+		// /**Coordonnee en Y du niveau du sol reelle */
+		// private int groundLevelYCoord;
 
 
 		// Items

@@ -1,5 +1,6 @@
 package Game.ConstantsContainers.GraphicConstants;
 
+
 /** Class ConstantGraphicAttriubutes
  */
 public class ConstantGraphicAttributes {

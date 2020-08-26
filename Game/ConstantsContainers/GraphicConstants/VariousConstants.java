@@ -1,12 +1,13 @@
 package Game.ConstantsContainers.GraphicConstants;
 
+
 public class VariousConstants extends ConstantGraphicAttributes {
 
 	/**Largeur des plateformes */
 	private int platformWidth = 5_000;
 	/**Hauteur des plateformes (et en consequent hauteur du sol) */
 	private int platformHeight = 1_500;
-	
+
 
 	public VariousConstants(VariousConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
 		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
@@ -20,8 +21,8 @@ public class VariousConstants extends ConstantGraphicAttributes {
 		VariousConstants real = (VariousConstants)realAttributes;
 
 		// dimensions des plateformes
-		this.platformWidth = (int)(real.platformWidth * oneUnityWidth);
-		this.platformHeight = (int)(real.platformHeight * oneUnityHeight);
+		platformWidth = (int)(real.platformWidth * oneUnityWidth);
+		platformHeight = (int)(real.platformHeight * oneUnityHeight);
 	}
 
 
