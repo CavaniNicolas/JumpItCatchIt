@@ -104,19 +104,19 @@ public class BoardGraphism extends JPanel {
 		// real.platformWidth = 5_000;
 		// real.platformHeight = 1_500;
 
-		// dimensions des personnages
-		real.characterWidth = 1_600;
-		real.characterHeight = 2_000;
+		// // dimensions des personnages
+		// real.characterWidth = 1_600;
+		// real.characterHeight = 2_000;
 
-		// dimensions des projectiles
-		real.projectileWidth = 1_000;
-		real.projectileHeight = 1_000;
+		// // dimensions des projectiles
+		// real.projectileWidth = 1_000;
+		// real.projectileHeight = 1_000;
 
-		// positions des personnages en X sur les plateforme
-		real.primaryXcoordLeft = 3_800;
-		real.primaryXcoordRight = 12_200;
-		real.secondaryXcoordLeft = 1_800;
-		real.secondaryXcoordRight = 14_200;
+		// // positions des personnages en X sur les plateforme
+		// real.primaryXcoordLeft = 3_800;
+		// real.primaryXcoordRight = 12_200;
+		// real.secondaryXcoordLeft = 1_800;
+		// real.secondaryXcoordRight = 14_200;
 
 		// // position au sol en Y
 		// real.groundLevelYCoord = 1_500;
@@ -162,9 +162,9 @@ public class BoardGraphism extends JPanel {
 			// graphic.characterWidth = (int)(real.characterWidth * graphic.oneUnityWidth);
 			// graphic.characterHeight = (int)(real.characterHeight * graphic.oneUnityHeight);
 
-			// dimensions des projectiles
-			graphic.projectileWidth = (int)(real.getProjectileWidth() * graphic.oneUnityWidth);
-			graphic.projectileHeight = (int)(real.getProjectileHeight() * graphic.oneUnityHeight);
+			// // dimensions des projectiles
+			// graphic.projectileWidth = (int)(real.getProjectileWidth() * graphic.oneUnityWidth);
+			// graphic.projectileHeight = (int)(real.getProjectileHeight() * graphic.oneUnityHeight);
 
 			// // positions des personnages en X sur les plateforme
 			// graphic.primaryXcoordLeft = (int)(real.primaryXcoordLeft * graphic.oneUnityWidth);
@@ -172,8 +172,8 @@ public class BoardGraphism extends JPanel {
 			// graphic.secondaryXcoordLeft = (int)(real.secondaryXcoordLeft * graphic.oneUnityWidth);
 			// graphic.secondaryXcoordRight = (int)(real.secondaryXcoordRight * graphic.oneUnityWidth);
 
-			// position au sol en Y
-			graphic.groundLevelYCoord = (int)((maxY - real.groundLevelYCoord) * graphic.oneUnityHeight);
+			// // position au sol en Y
+			// graphic.groundLevelYCoord = (int)((maxY - real.groundLevelYCoord) * graphic.oneUnityHeight);
 
 
 			// Items
@@ -268,10 +268,10 @@ public class BoardGraphism extends JPanel {
 		// /**Hauteur des personnages*/
 		// private int characterHeight;
 
-		/**Largeur des projectiles */
-		private int projectileWidth;
-		/**Hauteur des projectiles */
-		private int projectileHeight;
+		// /**Largeur des projectiles */
+		// private int projectileWidth;
+		// /**Hauteur des projectiles */
+		// private int projectileHeight;
 
 		// /**Coordonnee principale en X du personnage a gauche (position sur la plateforme) */
 		// private int primaryXcoordLeft;
