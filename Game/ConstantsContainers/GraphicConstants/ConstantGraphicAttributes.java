@@ -35,4 +35,25 @@ public class ConstantGraphicAttributes {
 
 	}
 
+
+	/* ======= */
+	/* Getters */
+	/* ======= */
+
+	public int getMaxX() {
+		return maxX;
+	}
+	public int getMaxY() {
+		return maxY;
+	}
+	public double getOneUnityWidth() {
+		return oneUnityWidth;
+	}
+	public double getOneUnityHeight() {
+		return oneUnityHeight;
+	}
+	public ConstantGraphicAttributes getRealAttributes() {
+		return realAttributes;
+	}
+
 }
