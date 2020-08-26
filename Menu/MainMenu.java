@@ -54,9 +54,12 @@ public class MainMenu extends JFrame {
 	private JPanel createMultiplayerGamePanel;
 	private JPanel joinMultiplayerGamePanel;
 	private JPanel multiplayerPanel;
+	private JPanel playerLeftPanel;
+	private JPanel connectionErrorPanel;
 
 	/**escape panel*/
 	private JPanel escapePanel;
+	private JPanel endGamePanel;
 
 	//boolean handling escape panel
 	private Boolean isDisplayingMainMenu;
@@ -87,13 +90,17 @@ public class MainMenu extends JFrame {
 		createMainMenuPanel();
 
 		createKeyBindingMenu();
-		createEscapePanel();
 		createSaveQuitOptionsPanel();
 		createSaveFailedPanel();
 
 		createMultiplayerPanel();
 		createCreateMultiplayerGamePanel();
 		createJoinMultiplayerGamePanel();
+
+		createEscapePanel();
+		createPlayerLeftPanel();
+		createEndGamePanel();
+		createConnectionErrorPanel();
 
     	/** display main menu*/
 		backgroundPanel.add(mainMenuPanel);
@@ -130,6 +137,14 @@ public class MainMenu extends JFrame {
 
 		Thread threadServer = new Thread(new BoardServer(board));
 		threadServer.start();
+
+		//sleep to avoid joining a game before the server was started
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			e.printStackTrace();
+		}
 
 		joinOnlineGame("127.0.0.1");
 	}
@@ -168,7 +183,7 @@ public class MainMenu extends JFrame {
 		backgroundPanel.removeAll();
 		backgroundPanel.add(mainMenuPanel);
 		isDisplayingMainMenu = true;
-		reloadDisplay();
+		reloadMenuDisplay();
 	}
 
 	/** creates the mainMenuJPanel with its component */
@@ -195,7 +210,7 @@ public class MainMenu extends JFrame {
 			public void actionPerformed(ActionEvent arg0) { 
 				backgroundPanel.remove(mainMenuPanel);
 				backgroundPanel.add(multiplayerPanel);
-				reloadDisplay();
+				reloadMenuDisplay();
 			}
 		});
 
@@ -208,7 +223,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.remove(mainMenuPanel);
 				backgroundPanel.add(optionPanel);
 				isDisplayingMainMenu = false;
-				reloadDisplay();
+				reloadMenuDisplay();
 			}
 		});
 
@@ -282,7 +297,7 @@ public class MainMenu extends JFrame {
 				} else {
 					backgroundPanel.remove(optionPanel);
 					backgroundPanel.add(saveQuitOptionsPanel);
-					reloadDisplay();
+					reloadMenuDisplay();
 				}
 			}
 		});
@@ -391,7 +406,7 @@ public class MainMenu extends JFrame {
 			public void actionPerformed(ActionEvent arg0) { 
 				backgroundPanel.remove(saveQuitOptionsPanel);
 				backgroundPanel.add(optionPanel);
-				reloadDisplay();
+				reloadMenuDisplay();
 				saveOptions(true);
 			}
 		});
@@ -430,7 +445,7 @@ public class MainMenu extends JFrame {
 				//displays the option panel
 				backgroundPanel.remove(saveFailedPanel);
 				backgroundPanel.add(optionPanel);
-				reloadDisplay();				
+				reloadMenuDisplay();				
 			}
 		});
 
@@ -455,7 +470,7 @@ public class MainMenu extends JFrame {
 				//displays the creatingGame panel 
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(createMultiplayerGamePanel);
-				reloadDisplay();
+				reloadMenuDisplay();
 				startOnlineGame();
 			}
 		});
@@ -468,7 +483,7 @@ public class MainMenu extends JFrame {
 				//displays the joiningGame panel 
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(joinMultiplayerGamePanel);
-				reloadDisplay();			
+				reloadMenuDisplay();			
 			}
 		});
 
@@ -480,7 +495,7 @@ public class MainMenu extends JFrame {
 				//displays the mainMenu panel 
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(mainMenuPanel);
-				reloadDisplay();
+				reloadMenuDisplay();
 			}
 		});
 
@@ -513,7 +528,7 @@ public class MainMenu extends JFrame {
 				//displays the mainMenu panel 
 				backgroundPanel.remove(createMultiplayerGamePanel);
 				backgroundPanel.add(multiplayerPanel);
-				reloadDisplay();
+				reloadMenuDisplay();
 			}
 		});
 
@@ -555,7 +570,7 @@ public class MainMenu extends JFrame {
 				//displays the multiplayer panel 
 				backgroundPanel.remove(joinMultiplayerGamePanel);
 				backgroundPanel.add(multiplayerPanel);
-				reloadDisplay();
+				reloadMenuDisplay();
 			}
 		});
 
@@ -565,10 +580,115 @@ public class MainMenu extends JFrame {
 		joinMultiplayerGamePanel.add(backButton);
 	}
 
+	/** creates the playerLeftPanel with its component*/
+	public void createPlayerLeftPanel() {
+		playerLeftPanel = new JPanel();
+		playerLeftPanel.setBorder(BorderFactory.createTitledBorder("GAME ENDED"));
+		playerLeftPanel.setBackground(Color.white);
+		playerLeftPanel.setPreferredSize(new Dimension(320, 75));
 
+		//create a joinable game
+		JLabel message = new JLabel("The other player has cowardly left ");
+		message.setPreferredSize(new Dimension(300, 25));
+
+		//back to main menu
+		JButton backButton = new JButton("BACK TO MAIN MENU");
+		backButton.setPreferredSize(new Dimension(200, 25));
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the multiplayer panel 
+				backgroundPanel.removeAll();
+				backgroundPanel.add(mainMenuPanel);
+				boardGraphism.remove(playerLeftPanel);
+				reloadMenuDisplay();
+			}
+		});
+
+		playerLeftPanel.add(message);
+		playerLeftPanel.add(backButton);
+	}
+
+	/** creates the playerLeftPanel with its component*/
+	public void createEndGamePanel() {
+		endGamePanel = new JPanel();
+		endGamePanel.setBorder(BorderFactory.createTitledBorder("GAME ENDED"));
+		endGamePanel.setBackground(Color.white);
+		endGamePanel.setPreferredSize(new Dimension(320, 75));
+
+		//create a joinable game
+		JLabel message = new JLabel("Well that was fun");
+		message.setPreferredSize(new Dimension(300, 25));
+
+		//restart
+		JButton restartButton = new JButton("RESTART");
+		restartButton.setPreferredSize(new Dimension(200, 25));
+		restartButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				boardGraphism.remove(endGamePanel);
+				boardIO.restartGame();
+			}
+		});
+
+		//back to main menu
+		JButton backButton = new JButton("BACK TO MAIN MENU");
+		backButton.setPreferredSize(new Dimension(200, 25));
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the main menu panel 
+				backgroundPanel.removeAll();
+				backgroundPanel.add(mainMenuPanel);
+				boardGraphism.remove(endGamePanel);
+				boardIO.exitGame();
+				reloadMenuDisplay();
+			}
+		});
+
+		endGamePanel.add(message);
+		endGamePanel.add(restartButton);
+		endGamePanel.add(backButton);
+	}
+
+	/** creates the playerLeftPanel with its component*/
+	public void createConnectionErrorPanel() {
+		connectionErrorPanel = new JPanel();
+		connectionErrorPanel.setBorder(BorderFactory.createTitledBorder("ERROR"));
+		connectionErrorPanel.setBackground(Color.white);
+		connectionErrorPanel.setPreferredSize(new Dimension(240, 85));
+
+		//couldn't connect
+		JLabel message = new JLabel("Couldn't connect to the server");
+		message.setPreferredSize(new Dimension(220, 25));
+
+		//back
+		JButton backButton = new JButton("BACK");
+		backButton.setPreferredSize(new Dimension(200, 25));
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the main menu panel 
+				backgroundPanel.removeAll();
+				backgroundPanel.add(joinMultiplayerGamePanel);
+				reloadMenuDisplay();
+			}
+		});
+
+		connectionErrorPanel.add(message);
+		connectionErrorPanel.add(backButton);
+	}
+
+	/** display connection error panel */
+	public void displayConnectionErrorPanel() {
+		backgroundPanel.removeAll();
+		backgroundPanel.add(connectionErrorPanel);
+		reloadMenuDisplay();
+	}
+
+	/** display player left panel */
+	public void displayPlayerLeftPanel() {
+		boardGraphism.add(playerLeftPanel);
+	}
 
 	/** reloads the displays (avoid former panels to be displayed) */
-	public void reloadDisplay() {
+	public void reloadMenuDisplay() {
 		frame.setContentPane(backgroundPanel);
 		frame.setVisible(true);
 	}
@@ -588,7 +708,7 @@ public class MainMenu extends JFrame {
 		} else {
 			backgroundPanel.remove(optionPanel);
 			backgroundPanel.add(saveFailedPanel);
-			reloadDisplay();
+			reloadMenuDisplay();
 		}
 	}
 

@@ -64,4 +64,8 @@ public class BoardLocal extends BoardIO {
 	public PlayerKeyListener getBluePlayerKeyListener() {
 		return bluePlayerKeyListener;
 	}
+
+	public void restartGame() {
+		board.initGame();
+	}
 }

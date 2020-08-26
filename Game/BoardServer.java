@@ -75,7 +75,7 @@ public class BoardServer implements Runnable {
 							e.printStackTrace();
 						}
 
-						outputObject("GAME STARTED");
+						outputObjectToAll("GAME STARTED");
 						gameLoopServer.togglePause();
 					}	
 				}
@@ -124,9 +124,13 @@ public class BoardServer implements Runnable {
 						}
 					} else if (obj instanceof String) {
 						if (((String)obj).equals("PLAYER LEFT")) {
-							outputObject("GAME ENDED");
+							outputObjectToAll("GAME ENDED");
 							endAllConnections();
 							isRunning = false;
+						} else if (((String)obj).equals("RESTART GAME")) {
+							
+						} else if (((String)obj).equals("PING")) {
+							outputObject("PING", objectOutputs[number]);
 						}
 					}
 				} catch (ClassNotFoundException e) {
@@ -138,15 +142,19 @@ public class BoardServer implements Runnable {
 		}
 	}
 
-	public void outputObject(Object obj) {
+	public void outputObject(Object obj, ObjectOutputStream objectOutput) {
+		try {
+			objectOutput.writeUnshared(obj);
+			objectOutput.reset();
+			//System.out.println("OUTPUTTING : " + obj);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void outputObjectToAll(Object obj) {
 		for (ObjectOutputStream objectOutput : objectOutputs) {
-			try {
-				objectOutput.writeUnshared(obj);
-				objectOutput.reset();
-				//System.out.println("OUTPUTTING : " + obj);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			outputObject(obj, objectOutput);
 		}
 	}
 

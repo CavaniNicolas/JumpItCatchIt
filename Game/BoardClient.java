@@ -8,6 +8,9 @@ import java.io.*;
 import java.net.*;
 
 import javax.swing.JFrame;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.Timer;
 
 /** handles the key listener for online game */
 public class BoardClient extends BoardIO {
@@ -34,12 +37,22 @@ public class BoardClient extends BoardIO {
     //mainmenu to start displaying the game when everyone has joined
     private MainMenu mainMenu;
 
+    //timer for ping tests
+    private Timer ping;
+    private long startTime;
+
 	public BoardClient(BoardGraphism boardGraphism, String address, MainMenu mainMenu) {
         this.boardGraphism = boardGraphism;
         this.address = address;
         this.mainMenu = mainMenu;
 		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("red"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
+        ping = new Timer(1000, new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                outputObject("PING");
+                startTime = System.currentTimeMillis();
+			}
+        });
     }
 
 	/** send the input action object to the server */
@@ -60,14 +73,12 @@ public class BoardClient extends BoardIO {
             objectInput = new ObjectInputStream(socket.getInputStream());
             connected = true;
 
+            ping.start();
+
             inputObject();
             endConnection();
-        } catch (UnknownHostException e) {
-            System.err.println("Hote inconnu: " + address);
-            System.exit(1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+        } catch (Exception e) {
+            mainMenu.displayConnectionErrorPanel();
         }
     }
     
@@ -81,6 +92,9 @@ public class BoardClient extends BoardIO {
                     } else if (((String)obj).equals("GAME ENDED")) {
                         endConnection();
                         connected = false;
+                        mainMenu.displayPlayerLeftPanel();
+                    } else if (((String)obj).equals("PING")) {
+                        System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
                     }
                 } else if (obj instanceof Board) {
                     boardGraphism.setBoard((Board)obj);
@@ -111,7 +125,6 @@ public class BoardClient extends BoardIO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mainMenu.displayMainMenu();
     }
 
     public void escapePanelInteraction() {}
@@ -125,6 +138,10 @@ public class BoardClient extends BoardIO {
 	public void exitGame() {
         outputObject("PLAYER LEFT");
         endConnection();
+    }
+
+    public void restartGame() {
+        outputObject("RESTART GAME");
     }
 
     public PlayerKeyListener getPlayerKeyListener() {
