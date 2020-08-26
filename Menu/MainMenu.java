@@ -22,7 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
@@ -517,8 +517,18 @@ public class MainMenu extends JFrame {
 		gameAvailable.setPreferredSize(new Dimension(300, 25));
 
 		//join an existing game
-		JLabel waiting = new JLabel("Waiting for your great enemy");
+		JLabel waiting = new JLabel();
 		waiting.setPreferredSize(new Dimension(300, 25));
+	
+		Timer timer = new Timer(500, new ActionListener() {
+			String baseString = "...   ";
+			int beginning = 0;
+			public void actionPerformed(ActionEvent arg0) {
+				waiting.setText("Waiting for your great enemy " + (baseString + baseString).substring(beginning, beginning + 3));
+				beginning = (baseString.length() + beginning - 1)% baseString.length();
+			}
+		});
+		timer.start();
 
 		//back to main menu
 		JButton backButton = new JButton("BACK");
@@ -529,6 +539,7 @@ public class MainMenu extends JFrame {
 				backgroundPanel.remove(createMultiplayerGamePanel);
 				backgroundPanel.add(multiplayerPanel);
 				reloadMenuDisplay();
+				timer.stop();
 			}
 		});
 
