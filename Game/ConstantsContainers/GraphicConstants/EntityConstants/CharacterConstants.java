@@ -3,6 +3,9 @@ package Game.ConstantsContainers.GraphicConstants.EntityConstants;
 import Game.ConstantsContainers.GraphicConstants.ConstantGraphicAttributes;
 
 
+/** Class CharacterConstants <p>
+ * Contient les attributs graphiques constants des personnages
+ */
 public class CharacterConstants extends ConstantGraphicAttributes {
 
 	/**Largeur des personnages */
@@ -21,6 +24,13 @@ public class CharacterConstants extends ConstantGraphicAttributes {
 	private int secondaryXcoordRight = 14_200;
 
 
+	/** Constructeur pour le stockage des constantes coordonnees Reelles */
+	public CharacterConstants() {
+		super();
+	}
+
+
+	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
 	public CharacterConstants(CharacterConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
 		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
 		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);

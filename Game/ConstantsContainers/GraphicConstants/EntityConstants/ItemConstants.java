@@ -3,6 +3,9 @@ package Game.ConstantsContainers.GraphicConstants.EntityConstants;
 import Game.ConstantsContainers.GraphicConstants.ConstantGraphicAttributes;
 
 
+/** Class ItemConstants <p>
+ * Contient les attributs graphiques constants des items
+ */
 public class ItemConstants extends ConstantGraphicAttributes {
 
 	/**Largeur des Items */
@@ -16,6 +19,13 @@ public class ItemConstants extends ConstantGraphicAttributes {
 	private int itemFirstY;
 
 
+	/** Constructeur pour le stockage des constantes coordonnees Reelles */
+	public ItemConstants() {
+		super();
+	}
+
+
+	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
 	public ItemConstants(ItemConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
 		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
 		itemFirstX = realAttributes.maxX / 2;

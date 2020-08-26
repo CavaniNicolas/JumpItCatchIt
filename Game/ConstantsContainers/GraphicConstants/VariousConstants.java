@@ -1,6 +1,9 @@
 package Game.ConstantsContainers.GraphicConstants;
 
 
+/** Class VariousConstants <p>
+ * Contient les attributs graphiques constants divers
+ */
 public class VariousConstants extends ConstantGraphicAttributes {
 
 	/**Largeur des plateformes */
@@ -9,6 +12,13 @@ public class VariousConstants extends ConstantGraphicAttributes {
 	private int platformHeight = 1_500;
 
 
+	/** Constructeur pour le stockage des constantes coordonnees Reelles */
+	public VariousConstants() {
+		super();
+	}
+
+
+	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
 	public VariousConstants(VariousConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
 		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
 		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);

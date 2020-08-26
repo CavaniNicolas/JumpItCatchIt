@@ -1,7 +1,11 @@
 package Game.ConstantsContainers.GraphicConstants;
 
 
-/** Class ConstantGraphicAttriubutes
+/** Class ConstantGraphicAttriubutes <p>
+ * Contient les attributs graphiques constants <p>
+ * Les attributs de ConstantGraphicAttributes sont initialises en coordonnees reels.
+ * Il est necessaire de creer un objet ConstantGraphicAttributes pour stocker les attributs coordonnees reels,
+ * cet objet sera un attribut d'un deuxieme objet ConstantGraphicAttributes dont les attributs seront des coordonnees graphiques.
  */
 public class ConstantGraphicAttributes {
 
@@ -19,6 +23,13 @@ public class ConstantGraphicAttributes {
 	protected ConstantGraphicAttributes realAttributes;
 
 
+	/** Constructeur pour le stockage des constantes coordonnees Reelles */
+	public ConstantGraphicAttributes() {
+		realAttributes = null;
+	}
+
+
+	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
 	public ConstantGraphicAttributes(ConstantGraphicAttributes realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
 		this.realAttributes = realAttributes;
 		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
