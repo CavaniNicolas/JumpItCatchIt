@@ -90,7 +90,6 @@ public class BoardClient extends BoardIO {
                     if (((String)obj).equals("GAME STARTED")) {
                         mainMenu.displayGame();
                     } else if (((String)obj).equals("GAME ENDED")) {
-                        endConnection();
                         connected = false;
                         mainMenu.displayPlayerLeftPanel();
                     } else if (((String)obj).equals("PING")) {

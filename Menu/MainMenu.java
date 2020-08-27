@@ -134,7 +134,7 @@ public class MainMenu extends JFrame {
 	public void startOnlineGame() {
 		gameLoop = new GameLoop(board);
 
-		Thread threadServer = new Thread(new BoardServer(board));
+		Thread threadServer = new Thread(new BoardServer());
 		threadServer.start();
 
 		//sleep to avoid joining a game before the server was started

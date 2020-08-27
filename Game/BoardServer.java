@@ -12,11 +12,13 @@ public class BoardServer implements Runnable {
 
 	//is the server running or not
 	private Boolean isRunning = true;
+	private Boolean isStarting = true;
 
 	//player number management
 	private int playerNumber = 2;
 	private int currentPlayerNumber = 0;
 	private int connectionNumber = 0;
+	private int initializedStreams = 0;
 
 	//server socket and address
 	private ServerSocket serverSocket = null;
@@ -25,10 +27,6 @@ public class BoardServer implements Runnable {
 	private ObjectOutputStream[] objectOutputs;
 	private ObjectInputStream[] objectInputs;
 	private Socket[] clientSockets;
-
-	public BoardServer(Board board) {
-		this.board = board;
-	}
 	
 	public void run() {
 		gameLoopServer = new GameLoopServer(this.board, this);
@@ -47,39 +45,30 @@ public class BoardServer implements Runnable {
  	/**Le server tourne dans un thread a part*/
 	 public class HandleServer extends Thread {
 		public HandleServer() {
+			clientSockets = new Socket[playerNumber];
 			objectOutputs = new ObjectOutputStream[playerNumber];
 			objectInputs = new ObjectInputStream[playerNumber];
-			clientSockets = new Socket[playerNumber];
 
 			//loop keeping the server alive
 			while (isRunning == true){
-				//wait for the 2 connections
-				while (currentPlayerNumber < playerNumber) {
-					try {
-						//On attend une connexion d'un client
-						clientSockets[currentPlayerNumber] = serverSocket.accept();
-
-						//Une fois reçue, on la traite dans un thread séparé
-						Thread thread = new Thread(new ClientProcessor(clientSockets[currentPlayerNumber]));
-						thread.start();
-						currentPlayerNumber++;
-						
-					} catch (Exception e) {
-						e.printStackTrace();
+				//this loop happens only when server starts and waits for connections
+				if (isStarting) {
+					while (currentPlayerNumber < playerNumber) {
+						createConnections();
 					}
-					if (currentPlayerNumber == playerNumber) {
-						try {
-							Thread.sleep(500);
-						} catch (Exception e) {
-							Thread.currentThread().interrupt();
-							e.printStackTrace();
-						}
-
-						outputObjectToAll("GAME STARTED");
-						gameLoopServer.togglePause(false);
-					}	
+					isStarting = false;
+					//just to make sure all communications are ready before starting game
+					while (initializedStreams < playerNumber) {}
+				}
+				//when all players have connected
+				if (currentPlayerNumber == playerNumber) {
+					startGame();
+					//to avoid starting games again and prepare for restarting when over
+					currentPlayerNumber = 0;
 				}
 			}
+
+			//close the server
 			try {
 				serverSocket.close();
 			} catch (Exception e) {
@@ -87,6 +76,29 @@ public class BoardServer implements Runnable {
 				serverSocket = null;
 			}
 		}
+	}
+
+	public void createConnections() {
+		try {
+			//On attend une connexion d'un client
+			clientSockets[currentPlayerNumber] = serverSocket.accept();
+
+			//Une fois reçue, on la traite dans un thread séparé
+			Thread thread = new Thread(new ClientProcessor(clientSockets[currentPlayerNumber]));
+			thread.start();
+			currentPlayerNumber++;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void startGame() {
+		board = new Board();
+		board.setBoardGraphism(new BoardGraphism(board));
+		board.initGame();
+
+		outputObjectToAll("GAME STARTED");
+		gameLoopServer.togglePause(false);	
 	}
  
 
@@ -105,7 +117,7 @@ public class BoardServer implements Runnable {
 			try { 
 				objectOutputs[number] = new ObjectOutputStream(clientSocket.getOutputStream());
 				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
-
+				initializedStreams++;
 				inputProcessor();
 			} catch (Exception e) { 
 				System.out.println ("Crash de la connexion avec "+IP);
@@ -129,7 +141,7 @@ public class BoardServer implements Runnable {
 							endAllConnections();
 							isRunning = false;
 						} else if (((String)obj).equals("RESTART GAME")) {
-							
+							currentPlayerNumber++;
 						} else if (((String)obj).equals("PING")) {
 							outputObject("PING", objectOutputs[number]);
 						}
@@ -143,7 +155,7 @@ public class BoardServer implements Runnable {
 
 	public void outputObject(Object obj, ObjectOutputStream objectOutput) {
 		try {
-			objectOutput.writeUnshared(obj);
+			objectOutput.writeObject(obj);
 			objectOutput.flush();
             objectOutput.reset();
 		} catch (Exception e) {

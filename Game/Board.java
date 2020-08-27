@@ -1,8 +1,6 @@
 package Game;
 
 import Game.Items.ItemBalls;
-import Menu.FileFunctions;
-
 import java.awt.Color;
 import java.io.Serializable;
 
@@ -205,18 +203,5 @@ public class Board implements Serializable {
 	public String toString() {
 		return "Board [characterBlue=" + characterBlue + ", characterRed=" + characterRed + ", itemBalls=" + itemBalls
 				+ "]";
-	}
-
-	public static void main(String[] args) {
-		Board board = new Board();
-		BoardGraphism boardGraphism = new BoardGraphism(board);
-		ItemBalls itemBalls = new ItemBalls();
-		Character chara = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
-			boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, new InputActions(), boardGraphism);
-		Entity ent = new Entity();
-		Projectile proj = new Projectile(0, 0, 10, boardGraphism, 100, 10, chara, Color.white);
-		String path = "OBJECTS.txt";
-		FileFunctions.saveObject(board, path);
-		System.out.println(FileFunctions.getObject(path));
 	}
 }
