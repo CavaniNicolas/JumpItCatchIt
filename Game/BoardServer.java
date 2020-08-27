@@ -120,8 +120,8 @@ public class BoardServer implements Runnable {
 				initializedStreams++;
 				inputProcessor();
 			} catch (Exception e) { 
-				System.out.println ("Crash de la connexion avec "+IP);
 				e.printStackTrace();
+				stopServer();
 			} 
 		}
 
@@ -136,49 +136,59 @@ public class BoardServer implements Runnable {
 							board.getCharacterBlue().setInputActions((InputActions)obj);;
 						}
 					} else if (obj instanceof String) {
-						if (((String)obj).equals("PLAYER LEFT")) {
-							gameLoopServer.togglePause(true);
-							outputObjectToAll("GAME ENDED");
-							endAllConnections();
-							isRunning = false;
-						} else if (((String)obj).equals("RESTART GAME")) {
+						if (((String)obj).equals("RESTART GAME")) {
 							currentPlayerNumber++;
 						} else if (((String)obj).equals("PING")) {
-							outputObject("PING", objectOutputs[number]);
+							outputObject("PING", number);
 						}
 					}
+				//happens when remote client shutdown connection					
 				} catch (Exception e) {
 					e.printStackTrace();
+					stopServer();
 				}
 			}
 		}
 	}
 
-	public void outputObject(Object obj, ObjectOutputStream objectOutput) {
+	public void stopServer() {
+		isRunning = false;
+		gameLoopServer.togglePause(true);
+		outputObjectToAll("PLAYER LEFT");
+		endAllConnections();
+	}
+
+	public void outputObject(Object obj, int i) {
 		try {
-			objectOutput.writeObject(obj);
-			objectOutput.flush();
-            objectOutput.reset();
+			objectOutputs[i].writeObject(obj);
+			objectOutputs[i].flush();
+			objectOutputs[i].reset();
+		//happens when remote client shutdowns connection					
+		} catch (Exception e) {
+			e.printStackTrace();
+			endConnection(i);
+		}
+	}
+
+	public void outputObjectToAll(Object obj) {
+		for (int i = 0; i < objectOutputs.length; i++) {
+			outputObject(obj, i);
+		}
+	}
+
+	public void endConnection(int i) {
+		try {
+			objectOutputs[i].close(); 
+			objectInputs[i].close(); 
+			clientSockets[i].close(); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void outputObjectToAll(Object obj) {
-		for (ObjectOutputStream objectOutput : objectOutputs) {
-			outputObject(obj, objectOutput);
-		}
-	}
-
 	public void endAllConnections() {
 		for (int i = 0; i < playerNumber; i++) {
-			try {
-				objectOutputs[i].close(); 
-				objectInputs[i].close(); 
-				clientSockets[i].close(); 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			endConnection(i);
 		}
 	}
 }

@@ -89,7 +89,7 @@ public class BoardClient extends BoardIO {
                 if (obj instanceof String) {
                     if (((String)obj).equals("GAME STARTED")) {
                         mainMenu.displayGame();
-                    } else if (((String)obj).equals("GAME ENDED")) {
+                    } else if (((String)obj).equals("PLAYER LEFT")) {
                         connected = false;
                         mainMenu.displayPlayerLeftPanel();
                     } else if (((String)obj).equals("PING")) {
@@ -98,8 +98,10 @@ public class BoardClient extends BoardIO {
                 } else if (obj instanceof Board) {
                     boardGraphism.setBoard((Board)obj);
                 }
+            //happens if connection remotely stopped
             } catch (Exception e) {
                 e.printStackTrace();
+                endConnection();
             }
         }
     }
@@ -109,13 +111,16 @@ public class BoardClient extends BoardIO {
             //use writeUnshared instead of writeObject if retransmitting same object with modifications
             objectOutput.writeUnshared(obj);
             objectOutput.flush();
+        //happens if connection remotely stopped
         } catch (Exception e) {
             e.printStackTrace();
+            endConnection();
         }
     }
     
     /**closing flux and socket (output before input)*/
     public void endConnection() {
+        connected = false;
         try {
             objectOutput.close();
             objectInput.close();
@@ -138,7 +143,6 @@ public class BoardClient extends BoardIO {
 
     /** knows what to do when someone returns to the main menu */
 	public void exitGame() {
-        outputObject("PLAYER LEFT");
         endConnection();
     }
 

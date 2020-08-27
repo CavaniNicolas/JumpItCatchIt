@@ -595,7 +595,7 @@ public class MainMenu extends JFrame {
 		playerLeftPanel = new JPanel();
 		playerLeftPanel.setBorder(BorderFactory.createTitledBorder("GAME ENDED"));
 		playerLeftPanel.setBackground(Color.white);
-		playerLeftPanel.setPreferredSize(new Dimension(320, 75));
+		playerLeftPanel.setPreferredSize(new Dimension(320, 85));
 
 		//create a joinable game
 		JLabel message = new JLabel("The other player has cowardly left ");
@@ -695,6 +695,8 @@ public class MainMenu extends JFrame {
 	/** display player left panel */
 	public void displayPlayerLeftPanel() {
 		boardGraphism.add(playerLeftPanel);
+		boardIO.handleKeyListeners(frame, false);
+		frame.setVisible(true);
 	}
 
 	/** reloads the displays (avoid former panels to be displayed) */
