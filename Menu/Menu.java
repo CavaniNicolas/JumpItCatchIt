@@ -32,17 +32,22 @@ public class Menu extends JPanel {
 
 	/** sets all component size to the size of the biggest component*/
 	public void setDimensions() {
-		for (Component component : this.getComponents()) {
-			width = Math.max(width, component.getPreferredSize().getWidth());
-			height = Math.max(height, component.getPreferredSize().getHeight());
-		}
+		getMaxDimensions();
 		for (Component component : this.getComponents()) {
 			component.setPreferredSize(new Dimension((int)width, (int)height));
 		}
 	}
 
+	public void getMaxDimensions() {
+		for (Component component : this.getComponents()) {
+			width = Math.max(width, component.getPreferredSize().getWidth());
+			height = Math.max(height, component.getPreferredSize().getHeight());
+		}
+	}
+
 	/** orders the JPanel vertically (true) or horizontally */
 	public void setOrder(Boolean vertical) {
+		getMaxDimensions();
 		if (vertical) {
 			int totalHeight = 0;
 			for (Component component : this.getComponents()) {

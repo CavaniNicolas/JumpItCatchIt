@@ -1,10 +1,8 @@
 package Menu;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -19,14 +17,12 @@ public class KeySelectingPanel extends Menu {
 	private MainMenu mainMenu;
 
 	public KeySelectingPanel(KeyBinding keyBinding, int position, String path, MainMenu mainMenu) {
+		super();
 		similarKeySelectingPanels = new ArrayList<KeySelectingPanel>();
 		this.mainMenu = mainMenu;
 
-		this.setBackground(Color.white);
-
 		label = new JLabel();
 		selectingButton = new JButton();
-		//selectingButton.setBorderPainted(false);
 		selectingButton.setOpaque(true);
 		selectingButton.addKeyListener(new keyButtonListener());
 		resetButton = new JButton("Reset");

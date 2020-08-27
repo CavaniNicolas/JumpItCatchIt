@@ -301,7 +301,6 @@ public class MainMenu extends JFrame {
 		//and the buttons at the bottm
 		optionPanel.add(buttonPanel);
 
-		optionPanel.setDimensions();
 		optionPanel.setOrder(true);
 	}
 
@@ -502,7 +501,6 @@ public class MainMenu extends JFrame {
 		});
 
 		createMultiplayerGamePanel.add(buttonPanel);
-		createMultiplayerGamePanel.setDimensions();
 		createMultiplayerGamePanel.setOrder(true);
 	}
 
@@ -537,7 +535,6 @@ public class MainMenu extends JFrame {
 			}
 		});
 
-		buttonPanel.setDimensions();
 		buttonPanel.setOrder(false);
 
 		joinMultiplayerGamePanel.add(buttonPanel);
