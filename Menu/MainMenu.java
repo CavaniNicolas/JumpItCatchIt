@@ -8,6 +8,8 @@ import Game.BoardLocal;
 import Game.BoardServer;
 import Game.GameLoop;
 
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
 import java.io.*;
 import java.net.*;
 import java.awt.event.KeyListener;
@@ -509,15 +511,28 @@ public class MainMenu extends JFrame {
 		createMultiplayerGamePanel = new JPanel();
 		createMultiplayerGamePanel.setBorder(BorderFactory.createTitledBorder("CREATING A GAME"));
 		createMultiplayerGamePanel.setBackground(Color.white);
-		createMultiplayerGamePanel.setPreferredSize(new Dimension(320, 120));
+		createMultiplayerGamePanel.setPreferredSize(new Dimension(360, 145));
 
 		//create a joinable game
-		JLabel gameAvailable = new JLabel("Your game is available on : " + getPublicIPAddress());
-		gameAvailable.setPreferredSize(new Dimension(300, 25));
+		JLabel gameAvailable = new JLabel("Your game is available on : ");
+		gameAvailable.setPreferredSize(new Dimension(330, 25));
+
+		//create a joinable game
+		JLabel address = new JLabel(getPublicIPAddress());
+		address.setPreferredSize(new Dimension(260, 25));
+
+		/** copy ip to paste somewhere else */
+		JButton copyButton = new JButton("COPY");
+		copyButton.setPreferredSize(new Dimension(70, 25));
+		copyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(getPublicIPAddress()), null);
+			}
+		});
 
 		//join an existing game
 		JLabel waiting = new JLabel();
-		waiting.setPreferredSize(new Dimension(300, 25));
+		waiting.setPreferredSize(new Dimension(330, 25));
 	
 		Timer timer = new Timer(500, new ActionListener() {
 			String baseString = "...   ";
@@ -543,6 +558,8 @@ public class MainMenu extends JFrame {
 		});
 
 		createMultiplayerGamePanel.add(gameAvailable);
+		createMultiplayerGamePanel.add(address);
+		createMultiplayerGamePanel.add(copyButton);
 		createMultiplayerGamePanel.add(waiting);
 		createMultiplayerGamePanel.add(backButton);
 	}
