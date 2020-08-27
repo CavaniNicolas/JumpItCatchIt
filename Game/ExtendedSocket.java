@@ -13,6 +13,7 @@ public class ExtendedSocket {
 	public ExtendedSocket(int ID, Socket socket) {
 		this.ID = ID;
 		this.clientSocket = socket;
+		System.out.println(this.clientSocket.getInetAddress().getHostAddress());
 		initializeStreams();
 	}
 
