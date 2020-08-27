@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.util.ArrayList;
 
+import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
+
 import java.awt.Graphics;
 
 /** Class Character <p>
@@ -100,20 +103,20 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, BoardGraphism boardGraphism) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, CharacterConstants CCReal, BoardGraphism boardGraphism) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
 		this.imageCharacter = imageCharacter;
 		this.inputActions = inputActions;
-		initGraphicAttributes(boardGraphism);
+		initGraphicAttributes(CCReal);
 		initHUDCharacter(boardGraphism);
 	}
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, BoardGraphism boardGraphism) {
-		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, boardGraphism);
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, CharacterConstants CCReal, BoardGraphism boardGraphism) {
+		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, CCReal, boardGraphism);
 	}
 
 
@@ -224,7 +227,7 @@ public class Character extends Entity {
 
 
 	/** Actualise les booleens de position */
-	public void updatePositionBooleans(BoardGraphism boardGraphism, Character otherCharacter) {
+	public void updatePositionBooleans(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
 
 		// Si on est a gauche ou a droite de son adversaire
 		if (x == otherCharacter.x) {
@@ -240,12 +243,12 @@ public class Character extends Entity {
 		}
 
 		// Si on est sur la plateforme de gauche
-		if (x < boardGraphism.getReal().getPlatformWidth() + (boardGraphism.getReal().getCharacterWidth() / 2) ) {
+		if (x < MCReal.getPlatformWidth() + (CCReal.getCharacterWidth() / 2) ) {
 			isOnLeftPlatform = true;
 			isOnRightPlatform = false;
 			isFalling = false;
 		// Si on est sur la plateforme de droite
-		} else if (x > boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - boardGraphism.getReal().getCharacterWidth() / 2) {
+		} else if (x > MCReal.getMaxX() - MCReal.getPlatformWidth() - CCReal.getCharacterWidth() / 2) {
 			isOnLeftPlatform = false;
 			isOnRightPlatform = true;
 			isFalling = false;
@@ -255,7 +258,7 @@ public class Character extends Entity {
 			isOnLeftPlatform = false;
 			isOnRightPlatform = false;
 			// Si on tombe
-			if (y <= boardGraphism.getReal().getPlatformHeight()) {
+			if (y <= MCReal.getPlatformHeight()) {
 				isFalling = true;
 			} else {
 				isFalling = false;
@@ -304,15 +307,16 @@ public class Character extends Entity {
 
 
 	/** Actualise les coordonnees de collisions maximales et minimales */
-	public void updateCollisionBorders(BoardGraphism boardGraphism, Character otherCharacter) {
+	public void updateCollisionBorders(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
 
-		updatePositionBooleans(boardGraphism, otherCharacter);
+		updatePositionBooleans(MCReal, CCReal, otherCharacter);
 
-		int halfCharacterWidth = boardGraphism.getReal().getCharacterWidth() / 2;
+		int halfCharacterWidth = CCReal.getCharacterWidth() / 2;
+		int maxXBoard = MCReal.getMaxX();
 
 		// Si on est sur une plateforme, on determine le sol
 		if (isOnLeftPlatform || isOnRightPlatform) {
-			minY = boardGraphism.getReal().getGroundLevelYCoord();
+			minY = MCReal.getPlatformHeight();
 		} else {
 			// Si on est pas sur une plateforme il faut tomber
 			minY = -10_000;
@@ -339,27 +343,27 @@ public class Character extends Entity {
 				} else {
 					// Les limites sont le bord droit du board et l'autre perso
 					minX = otherCharacter.x + halfCharacterWidth;
-					maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+					maxX = maxXBoard - halfCharacterWidth;
 				}
 
 			// Sinon ils ne sont pas a la meme hauteur, ils peuvent se traverser
 			} else {
 				// Les limites sont les bords gauche et droit du board
 				minX = halfCharacterWidth;
-				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+				maxX = maxXBoard - halfCharacterWidth;
 			}
 
 
 			// Supprime la collisions entre les joueurs lors d'un switch d'un des joueurs
 			if (actionBooleans.isSwitching || otherCharacter.getActionBooleans().isSwitching) {
 				minX = halfCharacterWidth;
-				maxX = boardGraphism.getMaxX() - halfCharacterWidth;
+				maxX = maxXBoard - halfCharacterWidth;
 			}
 
 		// Si on tombe au milieu, les bords sont les plateformes
 		} else {
-			minX = boardGraphism.getReal().getPlatformWidth() + halfCharacterWidth;
-			maxX = boardGraphism.getMaxX() - boardGraphism.getReal().getPlatformWidth() - halfCharacterWidth;
+			minX = MCReal.getPlatformWidth() + halfCharacterWidth;
+			maxX = maxXBoard - MCReal.getPlatformWidth() - halfCharacterWidth;
 		}
 
 	}
@@ -367,12 +371,12 @@ public class Character extends Entity {
 
 
 	/**Actualise la position du personnage (selon X et Y) puis le deplace (le deplacement gere les collisions grace aux collision borders */
-	public void updatePosition(BoardGraphism boardGraphism, Character otherCharacter) {
+	public void updatePosition(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
 		
 		// Si on tombe et qu'on a touché le fond, on replace le personnage sur la plateforme disponible
 		if (isFalling && y == minY) {
-			replacePlayer(boardGraphism, otherCharacter);
-			updateCollisionBorders(boardGraphism, otherCharacter);
+			replacePlayer(MCReal, CCReal, otherCharacter);
+			updateCollisionBorders(MCReal, CCReal, otherCharacter);
 		}
 
 		checkMovement(otherCharacter);
@@ -384,7 +388,7 @@ public class Character extends Entity {
 
 
 	/**Repositionne le joueur sur la plateforme disponible si il est tombe dans le vide */
-	public void replacePlayer(BoardGraphism boardGraphism, Character otherCharacter) {
+	public void replacePlayer(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
 
 		// On respawn
 		isSpawning = true;
@@ -403,17 +407,17 @@ public class Character extends Entity {
 
 		// Si la plateforme de gauche est libre
 		if (otherCharacter.isOnLeftPlatform == false) {
-			x = boardGraphism.getReal().getSecondaryXcoordLeft();
+			x = CCReal.getSecondaryXcoordLeft();
 
 			isOnLeftPlatform = true;
 		// Si la plateforme de droite est libre
 		} else {
-			x = boardGraphism.getReal().getSecondaryXcoordRight();
+			x = CCReal.getSecondaryXcoordRight();
 			isOnRightPlatform = true;
 		}
 
 		//  hauteur du spawn
-		y = boardGraphism.getReal().getGroundLevelYCoord() * 3;
+		y = MCReal.getPlatformHeight() * 3;
 
 		// Reset des vitesses accelerations
 		speedX = 0;
@@ -572,12 +576,12 @@ public class Character extends Entity {
 
 
 	/**Dessine le personnage */
-	public void drawCharacter(Graphics g, BoardGraphism boardGraphism) {
+	public void drawCharacter(Graphics g, MainConstants MC, CharacterConstants CC) {
 		g.setColor(colorCharacter);
-		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = boardGraphism.getGraphic().getCharacterWidth();
-		int height = boardGraphism.getGraphic().getCharacterHeight();
+		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
+		int y = (int)((double)(MC.getMaxY() - (this.y + this.height)) * MC.getOneUnityHeight());
+		int width = CC.getCharacterWidth();
+		int height = CC.getCharacterHeight();
 		g.fillRect(x, y, width, height);
 	}
 
@@ -591,9 +595,9 @@ public class Character extends Entity {
 
 
 	/**Initialise les champs graphiques */
-	public void initGraphicAttributes(BoardGraphism boardGraphism) {
-		this.width = boardGraphism.getReal().getCharacterWidth();
-		this.height = boardGraphism.getReal().getCharacterHeight();
+	public void initGraphicAttributes(CharacterConstants CCReal) {
+		this.width = CCReal.getCharacterWidth();
+		this.height = CCReal.getCharacterHeight();
 	}
 
 
