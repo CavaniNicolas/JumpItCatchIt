@@ -10,17 +10,17 @@ public class HUDConstants extends ConstantGraphicAttributes {
 	/* Coeurs */
 	/* ====== */
 	/**Position en X du coeur de gauche HUD de gauche */
-	private int heartsXLeft;
+	private int heartsXLeft = 500;
 	/**Position en X du coeur de droite du HUD de droite */
-	private int heartsXRight;
+	private int heartsXRight = 15_100; //16_000 - 500 - 400 : maxX - memeDistanceDuBord - largeur (temporaire cf issue #29)
 	/**Position en Y des coeurs des HUD */
-	private int heartsY;
+	private int heartsY = 400; // ERREUR ICI, devrait etre 10_000 - 400 = 9_600 adapter la fonction displayHUDHearts()
 	/**Largeur des coeurs du HUD */
-	private int heartWidth;
+	private int heartWidth = 400;
 	/**Hauteur des coeurs du HUD */
-	private int heartHeight;
+	private int heartHeight = 800;
 	/**Distance entre les coeurs d'un meme personnage */
-	private int interHearts;
+	private int interHearts = 200;
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
