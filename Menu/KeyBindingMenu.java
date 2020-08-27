@@ -26,8 +26,6 @@ public class KeyBindingMenu extends Menu {
 			keySelectingPanels.add(keySelectingPanel);
 			this.add(keySelectingPanel);
 		}
-
-		setOrder(true);
 	}
 
 	public ArrayList<KeySelectingPanel> getKeySelectingPanels() {
