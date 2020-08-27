@@ -606,7 +606,8 @@ public class MainMenu extends JFrame {
 		backButton.setPreferredSize(new Dimension(200, 25));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//displays the multiplayer panel 
+				//displays the multiplayer panel
+				boardIO.handleKeyListeners(frame, false);
 				backgroundPanel.removeAll();
 				backgroundPanel.add(mainMenuPanel);
 				boardGraphism.remove(playerLeftPanel);
@@ -675,6 +676,7 @@ public class MainMenu extends JFrame {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//displays the main menu panel 
+				boardIO.handleKeyListeners(frame, false);
 				backgroundPanel.removeAll();
 				backgroundPanel.add(joinMultiplayerGamePanel);
 				reloadMenuDisplay();
