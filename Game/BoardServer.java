@@ -28,7 +28,9 @@ public class BoardServer implements Runnable {
 	private ObjectInputStream[] objectInputs;
 	private Socket[] clientSockets;
 	
-	public void run() {
+	public void run() {		
+		board = new Board();
+		board.setBoardGraphism(new BoardGraphism(board));
 		gameLoopServer = new GameLoopServer(this.board, this);
 		
 		//start online server"
@@ -93,8 +95,7 @@ public class BoardServer implements Runnable {
 	}
 
 	public void startGame() {
-		board = new Board();
-		board.setBoardGraphism(new BoardGraphism(board));
+
 		board.initGame();
 
 		outputObjectToAll("GAME STARTED");
