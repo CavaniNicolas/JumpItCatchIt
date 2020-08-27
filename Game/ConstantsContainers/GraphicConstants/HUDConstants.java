@@ -4,7 +4,11 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class HUDConstants <p>
  * Contient les attributs graphiques constants du HUD
  */
-public class HUDConstants extends ConstantGraphicAttributes {
+public class HUDConstants {
+
+	/**Coordonnees reelles */
+	private HUDConstants real;
+
 
 	/* ====== */
 	/* Coeurs */
@@ -25,22 +29,19 @@ public class HUDConstants extends ConstantGraphicAttributes {
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
 	public HUDConstants() {
-		super();
+		this.real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public HUDConstants(HUDConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
-		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
-		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
+	public HUDConstants(HUDConstants real, double oneUnityWidth, double oneUnityHeight) {
+		this.real = real;
+		updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 	}
 
 
-	@Override
-	public void updateConstantGraphicAttributes(int boardJPanelNewWidth, int boardJPanelNewHeight) {
-		super.updateConstantGraphicAttributes(boardJPanelNewWidth, boardJPanelNewHeight);
-
-		HUDConstants real = (HUDConstants)realAttributes;
+	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */
+	public void updateConstantGraphicAttributes(double oneUnityWidth, double oneUnityHeight) {
 
 		// positions des coeurs
 		heartsXLeft = (int)(real.heartsXLeft * oneUnityWidth);

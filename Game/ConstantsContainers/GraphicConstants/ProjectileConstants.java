@@ -4,7 +4,11 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class ProjectileConstants <p>
  * Contient les attributs graphiques constants des projectiles
  */
-public class ProjectileConstants extends ConstantGraphicAttributes {
+public class ProjectileConstants {
+
+	/**Coordonnees reelles */
+	private ProjectileConstants real;
+
 
 	/**Largeur des projectiles */
 	private int projectileWidth = 1_000;
@@ -14,22 +18,19 @@ public class ProjectileConstants extends ConstantGraphicAttributes {
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
 	public ProjectileConstants() {
-		super();
+		this. real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public ProjectileConstants(ProjectileConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
-		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
-		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
+	public ProjectileConstants(ProjectileConstants real, double oneUnityWidth, double oneUnityHeight) {
+		this.real = real;
+		updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 	}
 
 
-	@Override
-	public void updateConstantGraphicAttributes(int boardJPanelNewWidth, int boardJPanelNewHeight) {
-		super.updateConstantGraphicAttributes(boardJPanelNewWidth, boardJPanelNewHeight);
-
-		ProjectileConstants real = (ProjectileConstants)realAttributes;
+	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */
+	public void updateConstantGraphicAttributes(double oneUnityWidth, double oneUnityHeight) {
 
 		// dimensions des projectiles
 		projectileWidth = (int)(real.projectileWidth * oneUnityWidth);
@@ -41,6 +42,10 @@ public class ProjectileConstants extends ConstantGraphicAttributes {
 	/* ======= */
 	/* Getters */
 	/* ======= */
+
+	public ProjectileConstants getReal() {
+		return real;
+	}
 
 	public int getProjectileWidth() {
 		return projectileWidth;

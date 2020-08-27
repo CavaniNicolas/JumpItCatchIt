@@ -4,7 +4,11 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class CharacterConstants <p>
  * Contient les attributs graphiques constants des personnages
  */
-public class CharacterConstants extends ConstantGraphicAttributes {
+public class CharacterConstants {
+
+	/**Coordonnees reelles */
+	private CharacterConstants real;
+
 
 	/**Largeur des personnages */
 	private int characterWidth = 1_600;
@@ -24,22 +28,19 @@ public class CharacterConstants extends ConstantGraphicAttributes {
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
 	public CharacterConstants() {
-		super();
+		this.real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public CharacterConstants(CharacterConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
-		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
-		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
+	public CharacterConstants(CharacterConstants real, double oneUnityWidth, double oneUnityHeight) {
+		this.real = real;
+		updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 	}
 
 
-	@Override
-	public void updateConstantGraphicAttributes(int boardJPanelNewWidth, int boardJPanelNewHeight) {
-		super.updateConstantGraphicAttributes(boardJPanelNewWidth, boardJPanelNewHeight);
-
-		CharacterConstants real = (CharacterConstants)realAttributes;
+	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */
+	public void updateConstantGraphicAttributes(double oneUnityWidth, double oneUnityHeight) {
 
 		// dimensions des personnages
 		characterWidth = (int)(real.characterWidth * oneUnityWidth);

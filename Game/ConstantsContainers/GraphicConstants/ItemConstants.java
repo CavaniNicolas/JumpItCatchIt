@@ -4,7 +4,11 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class ItemConstants <p>
  * Contient les attributs graphiques constants des items
  */
-public class ItemConstants extends ConstantGraphicAttributes {
+public class ItemConstants {
+
+	/**Coordonnees reelles */
+	private ItemConstants real;
+
 
 	/**Largeur des Items */
 	private int itemWidth = 1_200;
@@ -19,25 +23,22 @@ public class ItemConstants extends ConstantGraphicAttributes {
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
 	public ItemConstants() {
-		super();
+		this.real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public ItemConstants(ItemConstants realAttributes, int boardJPanelWidth, int boardJPanelHeight) {
-		super(realAttributes, boardJPanelWidth, boardJPanelHeight);
-		itemFirstX = realAttributes.maxX / 2;
-		itemFirstY = realAttributes.maxY + itemHeight / 2;
+	public ItemConstants(ItemConstants real, int maxXReal, int maxYReal, double oneUnityWidth, double oneUnityHeight) {
+		this.real = real;
+		itemFirstX = maxXReal / 2;
+		itemFirstY = maxYReal + itemHeight / 2;
 
-		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
+		updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 	}
 
 
-	@Override
-	public void updateConstantGraphicAttributes(int boardJPanelNewWidth, int boardJPanelNewHeight) {
-		super.updateConstantGraphicAttributes(boardJPanelNewWidth, boardJPanelNewHeight);
-
-		ItemConstants real = (ItemConstants)realAttributes;
+	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */
+	public void updateConstantGraphicAttributes(double oneUnityWidth, double oneUnityHeight) {
 
 		// dimensions des Items
 		itemWidth = (int)(real.itemWidth * oneUnityWidth);

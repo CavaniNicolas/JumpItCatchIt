@@ -125,10 +125,6 @@ public class Board implements Serializable {
 	public void initGame() {
 		isPlaying = false;
 
-
-		// Initialise les coordonnees reelles des objets
-		boardGraphism.initRealCoordsAttributes();
-
 		// On charge les objets (sans image) tout doit etre fonctionnel
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles
 		// existent, des carres sinon
