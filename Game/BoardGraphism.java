@@ -164,8 +164,27 @@ public class BoardGraphism extends JPanel {
 		this.board = board;
 	}
 
+
 	/* ======= */
 	/* Getters */
 	/* ======= */
-	
+
+	// Constant Containers
+	public MainConstants getMainConstants() {
+		return mainConstants;
+	}
+	public CharacterConstants getCharacterConstants() {
+		return characterConstants;
+	}
+	public ProjectileConstants getProjectileConstants() {
+		return projectileConstants;
+	}
+	public ItemConstants getItemConstants() {
+		return itemConstants;
+	}
+	public HUDConstants getHUDConstants() {
+		return HUDConstants;
+	}
+
+
 }
