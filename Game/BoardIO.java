@@ -11,8 +11,8 @@ public class BoardIO implements Runnable {
 	/** knows what to do with an input action (send it to server or use it directly for local game) */
 	public void handleAction(InputActions inputActions) {}
 
-	/** adds the keylisteners */
-	public void addKeyListeners(JFrame frame) {}
+	/** adds (true ) or remove (false) the keylisteners */
+	public void handleKeyListeners(JFrame frame, Boolean bool) {}
 
 	/** knows what to do when someone returns to the main menu */
 	public void exitGame() {}

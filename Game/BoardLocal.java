@@ -38,10 +38,15 @@ public class BoardLocal extends BoardIO {
 	public void handleAction(InputActions inputActions) {
 	}
 
-	/** adds the keylisteners */
-	public void addKeyListeners(JFrame frame) {
-		frame.addKeyListener(redPlayerKeyListener);
-		frame.addKeyListener(bluePlayerKeyListener);
+	/** adds (true) or remove (false) the keylisteners */
+	public void handleKeyListeners(JFrame frame, Boolean bool) {
+		if (bool) {
+			frame.addKeyListener(redPlayerKeyListener);
+			frame.addKeyListener(bluePlayerKeyListener);
+		} else {
+			frame.removeKeyListener(redPlayerKeyListener);
+			frame.removeKeyListener(bluePlayerKeyListener);
+		}
 	}
 
 	/** knows what to do when someone returns to the main menu */

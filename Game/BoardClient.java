@@ -73,7 +73,7 @@ public class BoardClient extends BoardIO {
             objectInput = new ObjectInputStream(socket.getInputStream());
             connected = true;
 
-            ping.start();
+            //ping.start();
 
             inputObject();
             endConnection();
@@ -127,9 +127,13 @@ public class BoardClient extends BoardIO {
 
     public void escapePanelInteraction() {}
 
-    /** adds the keylisteners */
-	public void addKeyListeners(JFrame frame) {
-        frame.addKeyListener(playerKeyListener);
+    /** adds (true) or remove (false) the keylisteners */
+	public void handleKeyListeners(JFrame frame, Boolean bool) {
+        if (bool) {
+            frame.addKeyListener(playerKeyListener);
+        } else {
+            frame.removeKeyListener(playerKeyListener);
+        }
     }
 
     /** knows what to do when someone returns to the main menu */

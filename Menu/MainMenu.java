@@ -122,7 +122,7 @@ public class MainMenu extends JFrame {
 		boardGraphism.startDisplaying();
 
 		//add the key listeners
-		boardIO.addKeyListeners(frame);
+		boardIO.handleKeyListeners(frame, true);
 
 		//start game
 		boardIO.togglePause(false);
@@ -161,7 +161,7 @@ public class MainMenu extends JFrame {
 		threadClient.start();
 
 		//add the key listeners
-		boardIO.addKeyListeners(frame);
+		boardIO.handleKeyListeners(frame, true);
 	}
 
 	public void displayGame() {
@@ -354,7 +354,11 @@ public class MainMenu extends JFrame {
 				toggleEscapePanel();
 
 				boardIO.exitGame();
+				boardIO.handleKeyListeners(frame, false);
+
 				isDisplayingMainMenu = true;
+				backgroundPanel.removeAll();
+				backgroundPanel.add(mainMenuPanel);
 				frame.setContentPane(backgroundPanel);
 			}
 		});

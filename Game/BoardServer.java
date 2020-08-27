@@ -32,7 +32,7 @@ public class BoardServer implements Runnable {
 		board = new Board();
 		board.setBoardGraphism(new BoardGraphism(board));
 		gameLoopServer = new GameLoopServer(this.board, this);
-		
+
 		//start online server"
         try { 
             int portNumber = 5000;
@@ -95,7 +95,6 @@ public class BoardServer implements Runnable {
 	}
 
 	public void startGame() {
-
 		board.initGame();
 
 		outputObjectToAll("GAME STARTED");
@@ -138,6 +137,7 @@ public class BoardServer implements Runnable {
 						}
 					} else if (obj instanceof String) {
 						if (((String)obj).equals("PLAYER LEFT")) {
+							gameLoopServer.togglePause(true);
 							outputObjectToAll("GAME ENDED");
 							endAllConnections();
 							isRunning = false;
