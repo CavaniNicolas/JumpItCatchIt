@@ -72,6 +72,7 @@ public class BoardServer implements Runnable {
 		}
 	}
 
+	/** checks if all streams are alive */
 	public Boolean testAllStreams() {
 		for (ExtendedSocket extendedSocket : extendedSockets) {
 			if (!extendedSocket.getReady()) {
@@ -81,6 +82,7 @@ public class BoardServer implements Runnable {
 		return true;
 	}
 
+	/** waits for a new connection and creates its socket */
 	public void createConnections() {
 		try {
 			//On attend une connexion d'un client
@@ -96,6 +98,7 @@ public class BoardServer implements Runnable {
 		}
 	}
 
+	/** start game */
 	public void startGame() {
 		board.initGame();
 
@@ -103,13 +106,14 @@ public class BoardServer implements Runnable {
 		gameLoopServer.togglePause(false);	
 	}
  
-
+	/** handles client connections */
     public class ClientProcessor implements Runnable {
         ExtendedSocket clientSocket; 
         ClientProcessor(ExtendedSocket clientSocket){
 			this.clientSocket = clientSocket;
         }
 
+		/** handles every object received */
 		public void run() {
 			while (isRunning) {
 				Object obj = clientSocket.readObject();
@@ -133,6 +137,7 @@ public class BoardServer implements Runnable {
 		}
 	}
 
+	/** stops server */
 	public void stopServer() {
 		isRunning = false;
 		gameLoopServer.togglePause(true);
@@ -145,12 +150,14 @@ public class BoardServer implements Runnable {
 		}
 	}
 
+	/** output an object to every connected client */
 	public void outputObjectToAll(Object obj) {
 		for (ExtendedSocket extendedSocket : extendedSockets) {
 			extendedSocket.outputObject(obj);
 		}
 	}
 
+	/** disconnects all connected clients */
 	public void endAllConnections() {
 		for (ExtendedSocket extendedSocket : extendedSockets) {
 			extendedSocket.endConnection();

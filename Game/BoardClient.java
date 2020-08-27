@@ -67,6 +67,7 @@ public class BoardClient extends BoardIO {
         }
     }
     
+    /** handles every object received */
     public void inputObject() {
         while (connected) {
             Object obj = socket.readObject();
@@ -105,6 +106,7 @@ public class BoardClient extends BoardIO {
         }
     }
 
+    /** tries outputting an object to the server, if it fails it displays a connection error */
     public void outputObject(Object obj) {
         if (!socket.outputObject(obj)) {
             closeClient();
@@ -125,6 +127,7 @@ public class BoardClient extends BoardIO {
         mainMenu.displayMainMenu();
     }
 
+    /** ask the server to restart the game */
     public void restartGame() {
         outputObject("RESTART GAME");
     }

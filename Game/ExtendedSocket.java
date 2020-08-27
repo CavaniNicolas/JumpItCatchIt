@@ -23,7 +23,7 @@ public class ExtendedSocket {
 			objectInput = new ObjectInputStream(clientSocket.getInputStream());
 			ready = true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -32,7 +32,7 @@ public class ExtendedSocket {
 		try {
 			return objectInput.readObject();
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}
@@ -45,7 +45,7 @@ public class ExtendedSocket {
 			objectOutput.reset();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			endConnection();
 			return false;
 		}
@@ -58,7 +58,7 @@ public class ExtendedSocket {
 			objectInput.close(); 
 			clientSocket.close(); 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
