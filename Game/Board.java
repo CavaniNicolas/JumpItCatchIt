@@ -1,8 +1,6 @@
 package Game;
 
 import Game.Items.ItemBalls;
-import Menu.KeyBindings;
-import Menu.FileFunctions;
 
 import java.awt.Color;
 import java.io.Serializable;
@@ -134,10 +132,10 @@ public class Board implements Serializable {
 		InputActions blueCharacterInputActions = new InputActions();
 
 		// Creation des deux persos
-		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
-				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redCharacterInputActions, boardGraphism);
-		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
-				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueCharacterInputActions, boardGraphism);
+		characterRed = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordLeft(),
+				boardGraphism.getMainConstants().getPlatformHeight(), true, Color.red, redCharacterInputActions, boardGraphism);
+		characterBlue = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordRight(),
+				boardGraphism.getMainConstants().getPlatformHeight(), false, Color.blue, blueCharacterInputActions, boardGraphism);
 
 		// met les characters dans les objets inputActions correspondants
 		redCharacterInputActions.setCharacter(characterRed);
@@ -173,7 +171,6 @@ public class Board implements Serializable {
 	/* Getters */
 	/* ======= */
 
-
 	public void setIsPlaying(Boolean bool) {
 		isPlaying = bool;
 	}
@@ -198,4 +195,6 @@ public class Board implements Serializable {
 	public void setBoardGraphism(BoardGraphism boardGraphism) {
 		this.boardGraphism = boardGraphism;
 	}
+
+
 }
