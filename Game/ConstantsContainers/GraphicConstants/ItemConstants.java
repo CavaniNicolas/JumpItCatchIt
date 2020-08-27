@@ -55,6 +55,10 @@ public class ItemConstants {
 	/* Getters */
 	/* ======= */
 
+	public ItemConstants getReal() {
+		return real;
+	}
+
 	public int getItemWidth() {
 		return itemWidth;
 	}

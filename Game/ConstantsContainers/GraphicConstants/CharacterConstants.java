@@ -58,6 +58,10 @@ public class CharacterConstants {
 	/* Getters */
 	/* ======= */
 
+	public CharacterConstants getReal() {
+		return real;
+	}
+
 	public int getCharacterWidth() {
 		return characterWidth;
 	}

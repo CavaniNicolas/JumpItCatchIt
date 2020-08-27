@@ -60,6 +60,10 @@ public class HUDConstants {
 	/* Getters */
 	/* ======= */
 
+	public HUDConstants getReal() {
+		return real;
+	}
+
 	public int getHeartsXLeft() {
 		return heartsXLeft;
 	}
