@@ -138,6 +138,11 @@ public class BoardServer implements Runnable {
 		gameLoopServer.togglePause(true);
 		outputObjectToAll("PLAYER LEFT");
 		endAllConnections();
+		try {
+			serverSocket.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void outputObjectToAll(Object obj) {
