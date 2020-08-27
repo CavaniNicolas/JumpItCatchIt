@@ -63,6 +63,7 @@ public class BoardClient extends BoardIO {
             //ping.start();
             inputObject();
         } catch (Exception e) {
+            e.printStackTrace();
             mainMenu.displayConnectionErrorPanel();
         }
     }

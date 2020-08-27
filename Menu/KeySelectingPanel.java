@@ -80,7 +80,7 @@ public class KeySelectingPanel extends Menu {
 		return similarKeySelectingPanels;
 	}
 
-	/** return selectingButton's text */
+	/** return selectingButton */
 	public JButton getButton() {
 		return selectingButton;
 	}

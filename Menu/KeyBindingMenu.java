@@ -55,7 +55,7 @@ public class KeyBindingMenu extends Menu {
 
 	/** sets all component size to the size of the biggest component*/
 	public void setDimensions() {
-		height = Math.max(width, keySelectingPanels.get(0).getLabel().getPreferredSize().getHeight());
+		height = keySelectingPanels.get(0).getLabel().getPreferredSize().getHeight();
 		for (KeySelectingPanel panel : keySelectingPanels) {
 			width = Math.max(width, panel.getLabel().getPreferredSize().getWidth());
 		}
