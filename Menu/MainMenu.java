@@ -118,7 +118,7 @@ public class MainMenu extends JFrame {
 
 		//init game
 		board.initGame();
-		boardIO = new BoardLocal(board, boardGraphism);
+		boardIO = new BoardLocal(board);
 		boardGraphism.startDisplaying();
 
 		//add the key listeners
