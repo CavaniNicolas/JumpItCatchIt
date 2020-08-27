@@ -75,37 +75,9 @@ public class BoardGraphism extends JPanel {
 	}
 
 
-	/**Initialise les attributs graphiques fixes. <p>
-	 * Cette methode n'est appelee qu'une seule fois
-	 */
-	public void initRealCoordsAttributes() {
-
-
-		// HUD Character
-		// Coeurs
-		real.heartsXLeft = 500;
-		real.heartsXRight = 15_100; //16_000 - 500 - 400 : maxX - memeDistanceDuBord - largeur
-		real.heartsY = 400;
-		real.heartWidth = 400;
-		real.heartHeight = 800;
-		real.interHearts = 200;
-
-	}
-
-
 	/**Actualise les coordonnees et les dimensions graphiques si la fenetre est redimensionnee */
 	public void updateGraphicCoordsAttributes(int maxX, int maxY, int boardWidth, int boardHeight) {
 		if (!isGraphicUpdateDone) {
-
-			// HUD Character
-			// Coeurs
-			graphic.heartsXLeft = (int)(real.heartsXLeft * graphic.oneUnityWidth);
-			graphic.heartsXRight = (int)(real.heartsXRight * graphic.oneUnityWidth);
-			graphic.heartsY = (int)(real.heartsY * graphic.oneUnityHeight);
-			graphic.heartWidth = (int)(real.heartWidth * graphic.oneUnityWidth);
-			graphic.heartHeight = (int)(real.heartHeight * graphic.oneUnityHeight);
-			graphic.interHearts = (int)(real.interHearts * graphic.oneUnityWidth);
-
 
 			// Initialisation terminee
 			this.isGraphicUpdateDone = true;
@@ -126,6 +98,18 @@ public class BoardGraphism extends JPanel {
 		g.setColor(darkBlue);
 		g.fillRect(boardWidth - graphic.platformWidth, graphic.groundLevelYCoord, graphic.platformWidth, graphic.platformHeight);
 	}
+	
+	
+	public class GameDisplayTimerListener implements ActionListener {
+		
+		/**Action a effectuer lorsque le timer renvoie un event */
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			
+			updateWindow();
+			
+		}
+	}
 
 
 	/* ======= */
@@ -143,64 +127,5 @@ public class BoardGraphism extends JPanel {
 	/* ======= */
 	/* Getters */
 	/* ======= */
-
-
-
-	/**Class GraphicalAttributes<p>
-	 * Contient les coordonnees et les dimensions qui n'ont pas forcement a etre modifiees des objets
-	 */
-	public class GraphicalAttributes {
-
-
-		// HUD Character
-		// Coeurs
-		private int heartsXLeft;
-		private int heartsXRight;
-		private int heartsY;
-		private int heartWidth;
-		private int heartHeight;
-		private int interHearts;
-
-
-		/* ======= */
-		/* Getters */
-		/* ======= */
-
-
-		// HUD Character
-		// Coeurs
-		public int getHeartsXLeft() {
-			return heartsXLeft;
-		}
-		public int getHeartsXRight() {
-			return heartsXRight;
-		}
-		public int getHeartsY() {
-			return heartsY;
-		}
-		public int getHeartWidth() {
-			return heartWidth;
-		}
-		public int getHeartHeight() {
-			return heartHeight;
-		}
-		public int getInterHearts() {
-			return interHearts;
-		}
-
-
-	}
-
-
-	public class GameDisplayTimerListener implements ActionListener {
-
-		/**Action a effectuer lorsque le timer renvoie un event */
-		@Override
-		public void actionPerformed(ActionEvent event) {
-
-			updateWindow();
-
-		}
-	}
-
+	
 }
