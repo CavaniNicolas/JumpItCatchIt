@@ -9,19 +9,19 @@ import java.awt.Color;
 import java.awt.Component;
 
 public class Menu extends JPanel {
-	private double width = 0;
-	private double height = 0;
-	private final int widthMargin = 15;
-	private final int heightMargin = 15;
-	private int borderMargin = 0;
+	protected double width = 0;
+	protected double height = 0;
+	protected final int widthMargin = 15;
+	protected final int heightMargin = 15;
+	protected int borderMargin = 0;
+
+	public Menu(){
+		this.setBackground(Color.white);
+	}
 
 	public void displayBorder(String name) {
 		this.setBorder(BorderFactory.createTitledBorder(name));
 		borderMargin = 15;
-	}
-
-	public void createPanel() {
-		this.setBackground(Color.white);
 	}
 
 	public void addNewButton(String name, ActionListener actionListener) {

@@ -2,20 +2,16 @@ package Menu;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import java.awt.Color;
 
-
-public class KeyBindingMenu extends JPanel {
+public class KeyBindingMenu extends Menu {
 	private ArrayList<KeySelectingPanel> keySelectingPanels;
 	private MainMenu mainMenu;
 
 	public KeyBindingMenu(String name, MainMenu mainMenu) {
+		super();
 		this.mainMenu = mainMenu;
 		//JPanel binding player
-		this.setBorder(BorderFactory.createTitledBorder(name));
-		this.setBackground(Color.white);
+		displayBorder(name);
 
 		keySelectingPanels = new ArrayList<KeySelectingPanel>();
 	}
@@ -23,7 +19,6 @@ public class KeyBindingMenu extends JPanel {
 	/** creates a new KeySelectingPanel based on a KeyBinding */
 	public void addKeySelectingPanels(String path, String defaultPath) {
 		KeyBindings keyBindings = (KeyBindings)FileFunctions.getObject(path);
-		this.setPreferredSize(new Dimension(270, 40*keyBindings.getKeyBindings().size()));
 
 		//a default path is added in the constructor to allow resetting a binding
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
@@ -31,6 +26,8 @@ public class KeyBindingMenu extends JPanel {
 			keySelectingPanels.add(keySelectingPanel);
 			this.add(keySelectingPanel);
 		}
+
+		setOrder(true);
 	}
 
 	public ArrayList<KeySelectingPanel> getKeySelectingPanels() {
@@ -54,5 +51,17 @@ public class KeyBindingMenu extends JPanel {
 			currentKeyBindings.addBinding(keySelectingPanel.getCurrentKeyBinding());
 		}
 		return currentKeyBindings;
+	}
+
+	/** sets all component size to the size of the biggest component*/
+	public void setDimensions() {
+		height = Math.max(width, keySelectingPanels.get(0).getLabel().getPreferredSize().getHeight());
+		for (KeySelectingPanel panel : keySelectingPanels) {
+			width = Math.max(width, panel.getLabel().getPreferredSize().getWidth());
+		}
+		for (KeySelectingPanel panel : keySelectingPanels) {
+			panel.getLabel().setPreferredSize(new Dimension((int)width, (int)height));
+			panel.setOrder(false);
+		}
 	}
 }

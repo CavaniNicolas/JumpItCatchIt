@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class KeySelectingPanel extends JPanel {
+public class KeySelectingPanel extends Menu {
 	private JButton selectingButton;
 	private JLabel label;
 	private JButton resetButton;
@@ -23,17 +23,13 @@ public class KeySelectingPanel extends JPanel {
 		this.mainMenu = mainMenu;
 
 		this.setBackground(Color.white);
-		this.setPreferredSize(new Dimension(250, 30));
 
 		label = new JLabel();
-		label.setPreferredSize(new Dimension(100,25));
 		selectingButton = new JButton();
 		//selectingButton.setBorderPainted(false);
 		selectingButton.setOpaque(true);
-		selectingButton.setPreferredSize(new Dimension(50, 25));
 		selectingButton.addKeyListener(new keyButtonListener());
 		resetButton = new JButton("Reset");
-		resetButton.setPreferredSize(new Dimension(70, 25));
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				String defaultKeyValue = intToString(((KeyBindings)FileFunctions.getObject(path)).getKeyBindings().get(position).getKeyValue());
@@ -91,6 +87,10 @@ public class KeySelectingPanel extends JPanel {
 	/** return selectingButton's text */
 	public JButton getButton() {
 		return selectingButton;
+	}
+
+	public JLabel getLabel() {
+		return label;
 	}
 
 	/** returns the key binding described currently by the button and key description */

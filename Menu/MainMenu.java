@@ -246,6 +246,11 @@ public class MainMenu extends JFrame {
 		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "KeyBindings/blueKeyBindingsDefault.txt");
 
 		addAllKeySelectingPanels();
+
+		redPlayerBindings.setDimensions();
+		redPlayerBindings.setOrder(true);
+		bluePlayerBindings.setDimensions();
+		bluePlayerBindings.setOrder(true);
 		
 		keyBindingPanel.add(redPlayerBindings);
 		keyBindingPanel.add(bluePlayerBindings);
@@ -296,6 +301,7 @@ public class MainMenu extends JFrame {
 		//and the buttons at the bottm
 		optionPanel.add(buttonPanel);
 
+		optionPanel.setDimensions();
 		optionPanel.setOrder(true);
 	}
 
@@ -496,6 +502,7 @@ public class MainMenu extends JFrame {
 		});
 
 		createMultiplayerGamePanel.add(buttonPanel);
+		createMultiplayerGamePanel.setDimensions();
 		createMultiplayerGamePanel.setOrder(true);
 	}
 
@@ -534,6 +541,7 @@ public class MainMenu extends JFrame {
 		buttonPanel.setOrder(false);
 
 		joinMultiplayerGamePanel.add(buttonPanel);
+		joinMultiplayerGamePanel.setDimensions();
 		joinMultiplayerGamePanel.setOrder(true);
 	}
 
