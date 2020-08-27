@@ -4,7 +4,6 @@ import Menu.FileFunctions;
 import Menu.KeyBindings;
 import Menu.MainMenu;
 
-import java.io.*;
 import java.net.*;
 
 import javax.swing.JFrame;
@@ -24,12 +23,8 @@ public class BoardClient extends BoardIO {
 	//am i connected or not
 	private Boolean connected;
 	
-	//object streams
-    private ObjectOutputStream objectOutput;
-	private ObjectInputStream objectInput;
-	
 	//client socket
-    private Socket socket;
+    private ExtendedSocket socket;
 
     //address of the server
     private String address;
@@ -40,6 +35,10 @@ public class BoardClient extends BoardIO {
     //timer for ping tests
     private Timer ping;
     private long startTime;
+
+    //port number
+    private final int portNumber = 5000; 
+
 
 	public BoardClient(BoardGraphism boardGraphism, String address, MainMenu mainMenu) {
         this.boardGraphism = boardGraphism;
@@ -55,28 +54,14 @@ public class BoardClient extends BoardIO {
         });
     }
 
-	/** send the input action object to the server */
-	public void handleAction(InputActions inputActions) {
-        //System.out.println(inputActions);
-		outputObject(inputActions);
-	}
-
     public void run() {
-        int portNumber = 5000; // Le port du serveur
-        
-        socket = null; // Un Socket TCP
-
         try {
             // Creation du socket et des flux d'entree/sortie
-            socket = new Socket(address, portNumber);
-            objectOutput = new ObjectOutputStream(socket.getOutputStream());
-            objectInput = new ObjectInputStream(socket.getInputStream());
+            socket = new ExtendedSocket(0, new Socket(address, portNumber));
             connected = true;
 
             //ping.start();
-
             inputObject();
-            endConnection();
         } catch (Exception e) {
             mainMenu.displayConnectionErrorPanel();
         }
@@ -84,51 +69,30 @@ public class BoardClient extends BoardIO {
     
     public void inputObject() {
         while (connected) {
-            try {
-                Object obj = objectInput.readObject();
-                if (obj instanceof String) {
-                    if (((String)obj).equals("GAME STARTED")) {
-                        mainMenu.displayGame();
-                    } else if (((String)obj).equals("PLAYER LEFT")) {
-                        connected = false;
-                        mainMenu.displayPlayerLeftPanel();
-                    } else if (((String)obj).equals("PING")) {
-                        System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
-                    }
-                } else if (obj instanceof Board) {
-                    boardGraphism.setBoard((Board)obj);
+            Object obj = socket.readObject();
+            if (obj == null) {
+                //server closed unexpectedly
+                closeClient();
+                mainMenu.displayConnectionErrorPanel();
+            } else if (obj instanceof String) {
+                if (((String)obj).equals("GAME STARTED")) {
+                    mainMenu.displayGame();
+                } else if (((String)obj).equals("PLAYER LEFT")) {
+                    connected = false;
+                    mainMenu.displayPlayerLeftPanel();
+                } else if (((String)obj).equals("PING")) {
+                    System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
                 }
-            //happens if connection remotely stopped
-            } catch (Exception e) {
-                e.printStackTrace();
-                endConnection();
+            } else if (obj instanceof Board) {
+                boardGraphism.setBoard((Board)obj);
             }
         }
     }
 
-    public void outputObject(Object obj) {
-        try {
-            //use writeUnshared instead of writeObject if retransmitting same object with modifications
-            objectOutput.writeUnshared(obj);
-            objectOutput.flush();
-        //happens if connection remotely stopped
-        } catch (Exception e) {
-            e.printStackTrace();
-            endConnection();
-        }
-    }
-    
-    /**closing flux and socket (output before input)*/
-    public void endConnection() {
-        connected = false;
-        try {
-            objectOutput.close();
-            objectInput.close();
-            socket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    /** send the input action object to the server */
+	public void handleAction(InputActions inputActions) {
+		outputObject(inputActions);
+	}
 
     public void escapePanelInteraction() {}
 
@@ -141,9 +105,24 @@ public class BoardClient extends BoardIO {
         }
     }
 
+    public void outputObject(Object obj) {
+        if (!socket.outputObject(obj)) {
+            closeClient();
+            mainMenu.displayConnectionErrorPanel();
+        }
+    }
+
+    /** closes the client and displays connection error */
+    public void closeClient() {
+        connected = false;
+        ping.stop();
+    }
+
     /** knows what to do when someone returns to the main menu */
 	public void exitGame() {
-        endConnection();
+        socket.endConnection();
+        closeClient();
+        mainMenu.displayMainMenu();
     }
 
     public void restartGame() {
