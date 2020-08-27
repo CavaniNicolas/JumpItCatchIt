@@ -16,6 +16,7 @@ public class ExtendedSocket {
 		initializeStreams();
 	}
 
+	/** creates the output and input streams */
 	public void initializeStreams() {
 		try {
 			objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());

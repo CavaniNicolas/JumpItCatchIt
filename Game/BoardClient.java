@@ -128,8 +128,4 @@ public class BoardClient extends BoardIO {
     public void restartGame() {
         outputObject("RESTART GAME");
     }
-
-    public PlayerKeyListener getPlayerKeyListener() {
-        return playerKeyListener;
-    }
 }
