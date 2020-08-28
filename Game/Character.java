@@ -10,6 +10,7 @@ import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
 
 import java.awt.Graphics;
 
+
 /** Class Character <p>
  * contient le personnage, toutes ses actions, positions, etats... <p>
  * La position (x,y) du Character est en bas au milieu du rectangle */
@@ -25,7 +26,7 @@ public class Character extends Entity {
 	private int lives = livesMax;
 
 	/** Booleens d'actions */
-	private ActionBooleans actionBooleans = new ActionBooleans();
+	private transient ActionBooleans actionBooleans = new ActionBooleans();
 
 	/** Booleens d'Input */
 	private transient InputActions inputActions;
@@ -718,4 +719,11 @@ public class Character extends Entity {
 		}
 
 	}
+
+	@Override
+	public String toString() {
+		return "Character [isSpawning=" + isSpawning + ", lives=" + lives
+				+ ", livesMax=" + livesMax + ", projectiles=" + projectiles + " " + super.toString() + "]";
+	}
+
 }

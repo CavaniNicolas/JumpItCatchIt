@@ -14,6 +14,7 @@ import java.awt.Image;
 public class ItemBall extends Entity {
 	private static final long serialVersionUID = 1L;
 
+
 	/** Couleur de l'Item, chaque item a une couleur par defaut */
 	protected transient Color colorItem;
 	/** Image de l'Item */

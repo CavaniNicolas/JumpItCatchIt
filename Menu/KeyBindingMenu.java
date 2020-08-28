@@ -2,32 +2,18 @@ package Menu;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import java.awt.Color;
 
-
-public class KeyBindingMenu extends JPanel {
-	private ArrayList<KeySelectingPanel> keySelectingPanels;
-	private MainMenu mainMenu;
-
-	public KeyBindingMenu(String name, MainMenu mainMenu) {
-		this.mainMenu = mainMenu;
-		//JPanel binding player
-		this.setBorder(BorderFactory.createTitledBorder(name));
-		this.setBackground(Color.white);
-
-		keySelectingPanels = new ArrayList<KeySelectingPanel>();
-	}
+public class KeyBindingMenu extends Menu {
+	private ArrayList<KeySelectingPanel> keySelectingPanels = new ArrayList<KeySelectingPanel>();
+	private KeyBindings keyBindings;
 
 	/** creates a new KeySelectingPanel based on a KeyBinding */
-	public void addKeySelectingPanels(String path, String defaultPath) {
-		KeyBindings keyBindings = FileFunctions.getBindings(path);
-		this.setPreferredSize(new Dimension(270, 40*keyBindings.getKeyBindings().size()));
+	public KeyBindingMenu(String path, String defaultPath, KeyOptionMenu keyOptionMenu) {
+		keyBindings = (KeyBindings)FileFunctions.getObject(path);
 
 		//a default path is added in the constructor to allow resetting a binding
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
-			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath, mainMenu);
+			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath, keyOptionMenu);
 			keySelectingPanels.add(keySelectingPanel);
 			this.add(keySelectingPanel);
 		}
@@ -39,7 +25,7 @@ public class KeyBindingMenu extends JPanel {
 
 	/** sets the JTextFields so they display the bindings saved in a file designated by a given path string */
 	public void setAllBindings(String path) {
-		KeyBindings keyBindings = FileFunctions.getBindings(path);
+		KeyBindings keyBindings = (KeyBindings)FileFunctions.getObject(path);
 
 		//set the JTextFields to the value of the bindings
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
@@ -54,5 +40,21 @@ public class KeyBindingMenu extends JPanel {
 			currentKeyBindings.addBinding(keySelectingPanel.getCurrentKeyBinding());
 		}
 		return currentKeyBindings;
+	}
+
+	/** sets all component size to the size of the biggest component*/
+	public void setDimensions() {
+		height = keySelectingPanels.get(0).getLabel().getPreferredSize().getHeight();
+		for (KeySelectingPanel panel : keySelectingPanels) {
+			width = Math.max(width, panel.getLabel().getPreferredSize().getWidth());
+		}
+		for (KeySelectingPanel panel : keySelectingPanels) {
+			panel.getLabel().setPreferredSize(new Dimension((int)width, (int)height));
+			panel.setOrder(false);
+		}
+	}
+
+	public Boolean checkChanges() {
+		return keyBindings.equals(getCurrentKeyBindings());
 	}
 }

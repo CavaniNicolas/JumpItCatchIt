@@ -1,45 +1,40 @@
 package Game;
 
 import java.net.*;
-import java.io.*;
+import java.util.ArrayList;
 
-public class BoardServer {
+public class BoardServer implements Runnable {
 	//gameLoop
 	private GameLoopServer gameLoopServer;
-
-	//inputActions
-	private InputActions redPlayerInputActions;
-	private InputActions bluePlayerInputActions;
 
 	//board
 	private Board board;
 
-	//waiting for everyone or playing
+	//is the server running or not
 	private Boolean isRunning = true;
-	private Boolean inGame = false;
+	private Boolean isStarting = true;
 
 	//player number management
-	private int playerNumber = 1;
+	private int playerNumber = 2;
 	private int currentPlayerNumber = 0;
-	private int connectionNumber = 0;
 
 	//server socket and address
 	private ServerSocket serverSocket = null;
 
 	//object streams
-	private ObjectOutputStream[] objectOutputs;
-	private ObjectInputStream[] objectInputs;
-
-	public BoardServer(Board board) {
-		this.board = board;
+	private ArrayList<ExtendedSocket> extendedSockets;
+	
+	public void run() {		
+		board = new Board();
+		board.setBoardGraphism(new BoardGraphism(board));
 		gameLoopServer = new GameLoopServer(this.board, this);
-		
+
 		//start online server"
         try { 
             int portNumber = 5000;
 			serverSocket = new ServerSocket(portNumber);
 			new Thread(new HandleServer());
-        }  catch (IOException e) { 
+        }  catch (Exception e) { 
 			e.printStackTrace();
 			isRunning = false;
         } 
@@ -48,119 +43,124 @@ public class BoardServer {
  	/**Le server tourne dans un thread a part*/
 	 public class HandleServer extends Thread {
 		public HandleServer() {
-			objectOutputs = new ObjectOutputStream[playerNumber];
-			objectInputs = new ObjectInputStream[playerNumber];
+			extendedSockets = new ArrayList<ExtendedSocket>();
 
 			//loop keeping the server alive
 			while (isRunning == true){
-				//wait for the 2 connections
-				while (currentPlayerNumber < playerNumber) {
-					System.out.println("waiting for " + (playerNumber - currentPlayerNumber) + " players");
-					System.out.println("Current player number " + currentPlayerNumber);
-					try {
-						//On attend une connexion d'un client
-						Socket client = serverSocket.accept();
-
-						//Une fois reçue, on la traite dans un thread séparé
-						Thread thread = new Thread(new ClientProcessor(client));
-						thread.start();
-						currentPlayerNumber++;
-					} catch (IOException e) {
-						e.printStackTrace();
+				//this loop happens only when server starts and waits for connections
+				if (isStarting) {
+					while (currentPlayerNumber < playerNumber) {
+						createConnections();
 					}
+					isStarting = false;
 				}
-				System.out.println("Starting game");
-				inGame = true;
-				gameLoopServer.togglePause();
-
+				//when all players have connected
+				if (currentPlayerNumber == playerNumber && testAllStreams()) {
+					startGame();
+					//to avoid starting games again and prepare for restarting when over
+					currentPlayerNumber = 0;
+				}
 			}
+
+			//close the server
 			try {
 				serverSocket.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				serverSocket = null;
 			}
 		}
 	}
- 
 
-    public class ClientProcessor extends Thread {
-		private int number;
-        Socket clientSocket = null; 
-        ClientProcessor(Socket clientSocket){
-			number = connectionNumber;
-			connectionNumber++;
-			System.out.println("CONNECTION " + connectionNumber + " STARTED");
-			this.clientSocket = clientSocket;
-        }
+	/** checks if all streams are alive */
+	public Boolean testAllStreams() {
+		for (ExtendedSocket extendedSocket : extendedSockets) {
+			if (!extendedSocket.getReady()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
+	/** waits for a new connection and creates its socket */
+	public void createConnections() {
+		try {
+			//On attend une connexion d'un client
+			ExtendedSocket extendedSocket = new ExtendedSocket(currentPlayerNumber, serverSocket.accept());
+			extendedSockets.add(extendedSocket);
 
-        @Override
-        public void run(){
-			String IP = clientSocket.getInetAddress().getHostAddress().toString();
-			try { 
-				objectOutputs[number] = new ObjectOutputStream(clientSocket.getOutputStream());
-				objectInputs[number] = new ObjectInputStream(clientSocket.getInputStream());
-
-				new Thread(new InputProcessor(number));
-
-				while (isRunning) {	
-					if (!inGame) {
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-							e.printStackTrace();
-						}
-						String str = "waiting for " + (playerNumber - currentPlayerNumber) + " players";
-						objectOutputs[connectionNumber].writeObject(str);
-						objectOutputs[connectionNumber].flush();
-					} else {
-						objectOutputs[connectionNumber].writeObject("Starting game");
-						objectOutputs[connectionNumber].flush();
-					}			
-				}
-				objectOutputs[number].writeObject("CONNECTION CLOSED");
-				objectOutputs[number].flush();
-				// closing flux and socket (output before input)
-				objectOutputs[number].close(); 
-				objectInputs[number].close(); 
-				clientSocket.close(); 
-				System.out.println ("Connexion avec "+IP+" fermée");
-			}  catch (IOException e) { 
-				System.out.println ("Crash de la connexion avec "+IP);
-			} 
+			//Une fois reçue, on la traite dans un thread séparé
+			Thread thread = new Thread(new ClientProcessor(extendedSocket));
+			thread.start();
+			currentPlayerNumber++;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public class InputProcessor extends Thread {
-		InputProcessor(int number) {
+	/** start game */
+	public void startGame() {
+		board.initGame();
+
+		outputObjectToAll("GAME STARTED");
+		gameLoopServer.togglePause(false);	
+	}
+ 
+	/** handles client connections */
+    public class ClientProcessor implements Runnable {
+        ExtendedSocket clientSocket; 
+        ClientProcessor(ExtendedSocket clientSocket){
+			this.clientSocket = clientSocket;
+        }
+
+		/** handles every object received */
+		public void run() {
 			while (isRunning) {
-				try {
-					Object obj = objectInputs[number].readObject();
-					if (obj instanceof InputActions) {
-						if (number == 0) {
-							board.getCharacterRed().setInputActions((InputActions)obj);;
-						} else {
-							board.getCharacterBlue().setInputActions((InputActions)obj);;
-						}
+				Object obj = clientSocket.readObject();
+				if (obj == null) {
+					extendedSockets.remove(clientSocket);
+					stopServer();
+				} else if (obj instanceof InputActions) {
+					if (clientSocket.getID() == 0) {
+						board.getCharacterRed().setInputActions((InputActions)obj);;
+					} else {
+						board.getCharacterBlue().setInputActions((InputActions)obj);;
 					}
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+				} else if (obj instanceof String) {
+					if (((String)obj).equals("RESTART GAME")) {
+						currentPlayerNumber++;
+					} else if (((String)obj).equals("PING")) {
+						clientSocket.outputObject("PING");
+					}
 				}
 			}
 		}
-    }
+	}
 
-	public void outputBoard() {
-		for (ObjectOutputStream objectOutput : objectOutputs) {
-			try {
-				objectOutput.writeObject(board);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	/** stops server */
+	public void stopServer() {
+		isRunning = false;
+		gameLoopServer.togglePause(true);
+		outputObjectToAll("PLAYER LEFT");
+		endAllConnections();
+		try {
+			serverSocket.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** output an object to every connected client */
+	public void outputObjectToAll(Object obj) {
+		for (ExtendedSocket extendedSocket : extendedSockets) {
+			extendedSocket.outputObject(obj);
+		}
+	}
+
+	/** disconnects all connected clients */
+	public void endAllConnections() {
+		for (ExtendedSocket extendedSocket : extendedSockets) {
+			extendedSocket.endConnection();
 		}
 	}
 }

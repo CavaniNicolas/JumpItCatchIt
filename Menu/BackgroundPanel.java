@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Image;
 import java.awt.Dimension;
-import javax.swing.BorderFactory;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
@@ -17,10 +16,11 @@ public class BackgroundPanel extends JPanel {
 	//background color/image
 	private String pathToBackground = "assets/background.JPG";
 	private Image background;
+	private JLabel title;
 	private Color backgroundColor = Color.black;
 
 	public BackgroundPanel() {
-		JLabel title = new JLabel("JUMP IT CATCH IT");
+		title = new JLabel("JUMP IT CATCH IT");
 		title.setPreferredSize(new Dimension(1000, 100));
 
 		//create a font from a file
@@ -58,5 +58,9 @@ public class BackgroundPanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		g.drawImage(background, 0, 0, null);
+	}
+
+	public JLabel getLabel() {
+		return title;
 	}
 }

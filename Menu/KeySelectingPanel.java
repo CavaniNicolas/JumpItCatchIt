@@ -1,42 +1,34 @@
 package Menu;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class KeySelectingPanel extends JPanel {
+public class KeySelectingPanel extends Menu {
 	private JButton selectingButton;
 	private JLabel label;
 	private JButton resetButton;
 	private ArrayList<KeySelectingPanel> similarKeySelectingPanels;
-	private MainMenu mainMenu;
+	private KeyOptionMenu keyOptionMenu;
 
-	public KeySelectingPanel(KeyBinding keyBinding, int position, String path, MainMenu mainMenu) {
+	public KeySelectingPanel(KeyBinding keyBinding, int position, String path, KeyOptionMenu keyOptionMenu) {
+		super();
 		similarKeySelectingPanels = new ArrayList<KeySelectingPanel>();
-		this.mainMenu = mainMenu;
-
-		this.setBackground(Color.white);
-		this.setPreferredSize(new Dimension(250, 30));
+		this.keyOptionMenu = keyOptionMenu;
 
 		label = new JLabel();
-		label.setPreferredSize(new Dimension(100,25));
 		selectingButton = new JButton();
-		//selectingButton.setBorderPainted(false);
 		selectingButton.setOpaque(true);
-		selectingButton.setPreferredSize(new Dimension(50, 25));
 		selectingButton.addKeyListener(new keyButtonListener());
 		resetButton = new JButton("Reset");
-		resetButton.setPreferredSize(new Dimension(70, 25));
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				String defaultKeyValue = intToString(FileFunctions.getBindings(path).getKeyBindings().get(position).getKeyValue());
+				String defaultKeyValue = intToString(((KeyBindings)FileFunctions.getObject(path)).getKeyBindings().get(position).getKeyValue());
 				selectingButton.setText(defaultKeyValue);
 				checkAvailability();
 			}
@@ -60,19 +52,14 @@ public class KeySelectingPanel extends JPanel {
 		//if changing to an available state, check the former similar panel to change it as well
 		for (KeySelectingPanel similarKeySelectingPanel : similarKeySelectingPanels) {
 			similarKeySelectingPanel.getSimilarKeySelectingPanels().clear();
-			similarKeySelectingPanel.getButton().setBackground(Color.white);
+			similarKeySelectingPanel.checkAvailability();
 		}
 		//resets to available before testing again
 		similarKeySelectingPanels.clear();
 		selectingButton.setBackground(Color.white);
-
-		//create an array list of all KeySelectingPanels
-		ArrayList<KeySelectingPanel> allKeySelectingPanels = new ArrayList<KeySelectingPanel>();
-		allKeySelectingPanels.addAll(mainMenu.getRedPlayerBindingMenu().getKeySelectingPanels());
-		allKeySelectingPanels.addAll(mainMenu.getBluePlayerBindingMenu().getKeySelectingPanels());
 		
 		//check all the other panels for similar panels
-		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
+		for (KeySelectingPanel keySelectingPanel : keyOptionMenu.getAllKeySelectingPanels()) {
 			if (keySelectingPanel != this && keySelectingPanel.getButton().getText().equals(this.selectingButton.getText())) {
 				//add the similar panel to the list of similar panels
 				similarKeySelectingPanels.add(keySelectingPanel);
@@ -88,9 +75,13 @@ public class KeySelectingPanel extends JPanel {
 		return similarKeySelectingPanels;
 	}
 
-	/** return selectingButton's text */
+	/** return selectingButton */
 	public JButton getButton() {
 		return selectingButton;
+	}
+
+	public JLabel getLabel() {
+		return label;
 	}
 
 	/** returns the key binding described currently by the button and key description */
@@ -119,9 +110,6 @@ public class KeySelectingPanel extends JPanel {
 	
 		public void keyTyped(KeyEvent event) {	
 			String cara = String.valueOf((char)event.getKeyChar());
-			if (!cara.equals(selectingButton.getText())) {
-				mainMenu.setUnsavedChanges(true);
-			}
 			//if (cara in validCaracters) {
 				selectingButton.setText(cara);
 			//}

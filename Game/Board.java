@@ -197,4 +197,10 @@ public class Board implements Serializable {
 	}
 
 
+	@Override
+	public String toString() {
+		return "Board [characterBlue=" + characterBlue + ", characterRed=" + characterRed + ", itemBalls=" + itemBalls
+				+ "]";
+	}
+
 }

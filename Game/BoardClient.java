@@ -2,8 +2,14 @@ package Game;
 
 import Menu.FileFunctions;
 import Menu.KeyBindings;
-import java.io.*;
+import Menu.MainMenu;
+
 import java.net.*;
+
+import javax.swing.JFrame;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.Timer;
 
 /** handles the key listener for online game */
 public class BoardClient extends BoardIO {
@@ -14,90 +20,116 @@ public class BoardClient extends BoardIO {
 	private PlayerKeyListener playerKeyListener;
 	private InputActions playerInputActions = new InputActions();
 
-	//waiting for everyone or playing
+	//am i connected or not
 	private Boolean connected;
-	private Boolean inGame;
-	
-	//object streams
-    private ObjectOutputStream objectOutput;
-	private ObjectInputStream objectInput;
 	
 	//client socket
-    private Socket socket;
+    private ExtendedSocket socket;
 
-	public BoardClient(BoardGraphism boardGraphism, String address) {
+    //address of the server
+    private String address;
+
+    //mainmenu to start displaying the game when everyone has joined
+    private MainMenu mainMenu;
+
+    //timer for ping tests
+    private Timer ping;
+    private long startTime;
+
+    //port number
+    private final int portNumber = 5000; 
+
+
+	public BoardClient(BoardGraphism boardGraphism, String address, MainMenu mainMenu) {
         this.boardGraphism = boardGraphism;
-		KeyBindings playerBindings = FileFunctions.getBindings(FileFunctions.getPathFileToUse("red"));
+        this.address = address;
+        this.mainMenu = mainMenu;
+		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("red"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
-        connect(address);
-	}
+        ping = new Timer(1000, new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                outputObject("PING");
+                startTime = System.currentTimeMillis();
+			}
+        });
+    }
 
-	/** send the input action object to the server */
-	public void handleAction(InputActions inputActions) {
-		outputObject(inputActions);
-	}
-
-    public void connect(String serverHostName) {
-        int portNumber = 5000; // Le port du serveur
-        
-        socket = null; // Un Socket TCP
-
+    public void run() {
         try {
             // Creation du socket et des flux d'entree/sortie
-            socket = new Socket(serverHostName, portNumber);
-            objectOutput = new ObjectOutputStream(socket.getOutputStream());
-            objectInput = new ObjectInputStream(socket.getInputStream());
-            System.out.println("CONNECTION STARTED");
+            socket = new ExtendedSocket(0, new Socket(address, portNumber));
             connected = true;
-            inGame = false;
 
+            //ping.start();
             inputObject();
-        
-            // closing flux and socket (output before input)
-            objectOutput.close();
-            objectInput.close();
-            socket.close();
-        } catch (UnknownHostException e) {
-            System.err.println("Hote inconnu: " + serverHostName);
-            System.exit(1);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            mainMenu.displayConnectionErrorPanel();
         }
     }
     
+    /** handles every object received */
     public void inputObject() {
         while (connected) {
-            try {
-                Object obj = objectInput.readObject();
-                if (!inGame) {
-                    if (obj instanceof String) {
-                        if (((String)obj).equals("START GAME")) {
-                            inGame = true;
-                        }
-                    }
-                } else {
-                    if (obj instanceof Board) {
-						boardGraphism.setBoard((Board)obj);
-					}
+            Object obj = socket.readObject();
+            if (obj == null) {
+                //server closed unexpectedly
+                closeClient();
+                mainMenu.displayConnectionErrorPanel();
+            } else if (obj instanceof String) {
+                if (((String)obj).equals("GAME STARTED")) {
+                    mainMenu.displayGame();
+                } else if (((String)obj).equals("PLAYER LEFT")) {
+                    connected = false;
+                    mainMenu.displayPlayerLeftPanel();
+                } else if (((String)obj).equals("PING")) {
+                    System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else if (obj instanceof Board) {
+                boardGraphism.setBoard((Board)obj);
             }
         }
     }
 
-    public void outputObject(Object obj) {
-        try {
-            objectOutput.writeObject(obj);
-        } catch (IOException e) {
-            e.printStackTrace();
+    /** send the input action object to the server */
+	public void handleAction(InputActions inputActions) {
+		outputObject(inputActions);
+	}
+
+    public void escapePanelInteraction() {}
+
+    /** adds (true) or remove (false) the keylisteners */
+	public void handleKeyListeners(JFrame frame, Boolean bool) {
+        if (bool) {
+            frame.addKeyListener(playerKeyListener);
+        } else {
+            frame.removeKeyListener(playerKeyListener);
         }
     }
 
-    public PlayerKeyListener getPlayerKeyListener() {
-        return playerKeyListener;
+    /** tries outputting an object to the server, if it fails it displays a connection error */
+    public void outputObject(Object obj) {
+        if (!socket.outputObject(obj)) {
+            closeClient();
+            mainMenu.displayConnectionErrorPanel();
+        }
+    }
+
+    /** closes the client and displays connection error */
+    public void closeClient() {
+        connected = false;
+        ping.stop();
+    }
+
+    /** knows what to do when someone returns to the main menu */
+	public void exitGame() {
+        socket.endConnection();
+        closeClient();
+        mainMenu.displayMainMenu();
+    }
+
+    /** ask the server to restart the game */
+    public void restartGame() {
+        outputObject("RESTART GAME");
     }
 }

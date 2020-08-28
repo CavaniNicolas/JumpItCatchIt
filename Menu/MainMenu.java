@@ -3,71 +3,57 @@ package Menu;
 import Game.Board;
 import Game.BoardClient;
 import Game.BoardGraphism;
+import Game.BoardIO;
 import Game.BoardLocal;
 import Game.BoardServer;
-import Game.GameLoop;
 
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
 import java.io.*;
 import java.net.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import java.awt.event.ActionEvent;
+import javax.swing.Timer;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 4L;
 	
 	/**Contient le jeu */
 	private Board board;
-
-	/**Contient la boucle principale de calcul du jeu */
-	private GameLoop gameLoop;
+	private BoardIO boardIO;
 	
 	//main menu panels
-	private JPanel mainMenuPanel;
-	private JPanel optionPanel;
+	private Menu mainMenuPanel;
+	private Menu optionPanel;
 	private BackgroundPanel backgroundPanel;
-
-	//attributes relative to the option menu
-	private KeyBindingMenu redPlayerBindings;
-	private KeyBindingMenu bluePlayerBindings;
-	private JPanel saveQuitOptionsPanel;
-	private JPanel saveFailedPanel;
 	
 	/**Contient l'affichage du jeu */
 	private BoardGraphism boardGraphism;
 
 	// Multiplayer panels
-	private JPanel createMultiplayerGamePanel;
-	private JPanel joinMultiplayerGamePanel;
-	private JPanel multiplayerPanel;
+	private Menu createMultiplayerGamePanel;
+	private Menu joinMultiplayerGamePanel;
+	private Menu multiplayerPanel;
+	private Menu playerLeftPanel;
+	private Menu connectionErrorPanel;
 
 	/**escape panel*/
-	private JPanel escapePanel;
-
+	private Menu escapePanel;
+	private Menu endGamePanel;
 
 	//boolean handling escape panel
-	private Boolean isDisplayingEscapePanel = false;
-	private Boolean isDisplayingMainMenu;
-
-	//boolean to handle unsaved changes in options
-	private Boolean unsavedChanges = false;
+	private Boolean isEscapePanelDisplayed = false;
 
 	//the frame displaying all the stuff
 	private JFrame frame;
 
-	//all the KeySelectingPanels
-	private ArrayList<KeySelectingPanel> allKeySelectingPanels = new ArrayList<KeySelectingPanel>();
+	//permet la navigation
+	private Menu selectedMenu;
 
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
@@ -82,105 +68,60 @@ public class MainMenu extends JFrame {
 
 		board.setBoardGraphism(boardGraphism);
 
-		createMainMenuPanel();
+		createMenus();
 
-		createKeyBindingMenu();
-		createEscapePanel();
-		createSaveQuitOptionsPanel();
-		createSaveFailedPanel();
-
-		createMultiplayerPanel();
-		createCreateMultiplayerGamePanel();
-		createJoinMultiplayerGamePanel();
-
-    	/** display main menu*/
-		backgroundPanel.add(mainMenuPanel);
-		isDisplayingMainMenu = true;
-		this.frame.setContentPane(backgroundPanel);
-		this.frame.setVisible(true);
+		displayMainMenu();
 	}
 
 
 	/** starts the local board and sets the frame to display it */
 	public void startLocalGame() {
-		isDisplayingEscapePanel = false;
-		isDisplayingMainMenu = false;
-
-		gameLoop = new GameLoop(board);
-
 		//init game
 		board.initGame();
-		BoardLocal boardLocal = new BoardLocal(board, boardGraphism);
-		boardGraphism.startDisplaying();
+		boardIO = new BoardLocal(board);
 
 		//add the key listeners
-		frame.addKeyListener(boardLocal.getRedPlayerKeyListener());
-		frame.addKeyListener(boardLocal.getBluePlayerKeyListener());
+		boardIO.handleKeyListeners(frame, true);
 
 		//start game
-		Thread thread = new Thread(new StartGame());
-		thread.start();
+		boardIO.togglePause(false);
 
-		//give the frame the focus
-		frame.setFocusable(true);
-		frame.setFocusTraversalKeysEnabled(false);
-
-		//displays the game panel
-		frame.setContentPane(boardGraphism);
-		frame.setVisible(true);
+		displayGame();
 	}
 
 	/** starts the online board and sets the frame to display it */
 	public void startOnlineGame() {
-		isDisplayingEscapePanel = false;
-		isDisplayingMainMenu = false;
+		Thread threadServer = new Thread(new BoardServer());
+		threadServer.start();
 
-		gameLoop = new GameLoop(board);
+		//sleep to avoid joining a game before the server was started
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			e.printStackTrace();
+		}
 
-		//init game
-		board.initGame();
-		BoardServer boardServer = new BoardServer(board);
-
-		//BoardClient boardClient = new BoardClient(boardGraphism, "127.0.0.1");
-		//BoardClient boardClient2 = new BoardClient(boardGraphism, "127.0.0.1");
-
-		boardGraphism.startDisplaying();
-
-		//add the key listeners
-		//frame.addKeyListener(boardClient.getPlayerKeyListener());
-		//frame.addKeyListener(boardClient2.getPlayerKeyListener());
-
-		//start game
-		Thread thread = new Thread(new StartGame());
-		thread.start();
-
-		//give the frame the focus
-		frame.setFocusable(true);
-		frame.setFocusTraversalKeysEnabled(false);
-
-		//displays the game panel
-		frame.setContentPane(boardGraphism);
-		frame.setVisible(true);
+		joinOnlineGame("127.0.0.1");
 	}
 
 	/** starts the online board and sets the frame to display it */
 	public void joinOnlineGame(String address) {
-		isDisplayingEscapePanel = false;
-		isDisplayingMainMenu = false;
-
-		//init game
+		//init game, shouldn't be necessary (if not included the platforms are not displayed)
 		board.initGame();
 
-		BoardClient boardClient = new BoardClient(boardGraphism, address);
-
-		boardGraphism.startDisplaying();
+		//start a client on a thread
+		boardIO = new BoardClient(boardGraphism, address, this);
+		Thread threadClient = new Thread(boardIO);
+		threadClient.start();
 
 		//add the key listeners
-		frame.addKeyListener(boardClient.getPlayerKeyListener());
+		boardIO.handleKeyListeners(frame, true);
+	}
 
-		//start game
-		Thread thread = new Thread(new StartGame());
-		thread.start();
+	public void displayGame() {
+		//start gamedisplay timer
+		boardGraphism.startDisplaying();
 
 		//give the frame the focus
 		frame.setFocusable(true);
@@ -191,451 +132,293 @@ public class MainMenu extends JFrame {
 		frame.setVisible(true);
 	}
 
+	public void displayMainMenu() {
+		//displays the game panel
+		backgroundPanel.removeAll();
+		backgroundPanel.add(backgroundPanel.getLabel());
+		backgroundPanel.add(mainMenuPanel);
+		selectedMenu = mainMenuPanel;
+		reloadMenuDisplay();
+	}
 
+	public void createMenus() {
+		mainMenuPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+
+		optionPanel = new KeyOptionMenu(backgroundPanel, mainMenuPanel, frame);
+		multiplayerPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+
+		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel, frame);
+		connectionErrorPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel, frame);
+		playerLeftPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+
+		escapePanel = new Menu();
+		createMultiplayerGamePanel = new Menu();
+		endGamePanel = new Menu();
+
+		createMainMenuPanel();
+
+		createKeyBindingMenu();
+
+		createMultiplayerPanel();
+		createCreateMultiplayerGamePanel();
+		createJoinMultiplayerGamePanel();
+
+		createEscapePanel();
+		createPlayerLeftPanel();
+		createEndGamePanel();
+		createConnectionErrorPanel();
+	}
 
 	/** creates the mainMenuJPanel with its component */
 	public void createMainMenuPanel() {
-		mainMenuPanel = new JPanel();
-
-		//create a panel to contain the buttons
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setPreferredSize(new Dimension(160, 130));
-
 		//start a game
-		JButton playButton = new JButton("PLAY");
-		playButton.setPreferredSize(new Dimension(150, 25));
-		playButton.addActionListener(new ActionListener() {
+		mainMenuPanel.addNewButton("PLAY", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				startLocalGame();
 			}
 		});
 
 		//multiplayer menu
-		JButton multiplayerButton = new JButton("MULTIPLAYER");
-		multiplayerButton.setPreferredSize(new Dimension(150, 25));
-		multiplayerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				backgroundPanel.remove(mainMenuPanel);
-				backgroundPanel.add(multiplayerPanel);
-				reloadDisplay();
-			}
-		});
-
-		//open option menu
-		JButton optionButton = new JButton("OPTIONS");
-		optionButton.setPreferredSize(new Dimension(150, 25));
-    	optionButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//displays the option panel 
-				backgroundPanel.remove(mainMenuPanel);
-				backgroundPanel.add(optionPanel);
-				isDisplayingMainMenu = false;
-				reloadDisplay();
-			}
-		});
+		mainMenuPanel.addNewButton("MULTIPLAYER", multiplayerPanel);
+		mainMenuPanel.addNewButton("OPTIONS", optionPanel);
 
 		/**closes the app */
-		JButton quitButton = new JButton("QUIT");
-		quitButton.setPreferredSize(new Dimension(150, 25));
-    	quitButton.addActionListener(new ActionListener() {
+		mainMenuPanel.addNewButton("QUIT", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				System.exit(0);       
 			}
 		});
 
-		buttonPanel.add(playButton);
-		buttonPanel.add(multiplayerButton);
-		buttonPanel.add(optionButton);
-		buttonPanel.add(quitButton);
-
-		mainMenuPanel.add(buttonPanel);
-	}
-
-
-
-	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
-	public void setBindings() {
-		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("red"));
-		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("blue"));
+		mainMenuPanel.setDimensions();
+		mainMenuPanel.setOrder(true);
 	}
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
-		optionPanel = new JPanel();
+		optionPanel.displayBorder("OPTIONS");
 
-		//smaller panel so that the options don't take the whole screen
-		JPanel optionPanel2 = new JPanel();
-		optionPanel2.setBorder(BorderFactory.createTitledBorder("OPTIONS"));
-		optionPanel2.setBackground(Color.white);
-		optionPanel2.setPreferredSize(new Dimension(630, 320));
-
-		//create a panel to contain the buttons
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBackground(Color.white);
-		buttonPanel.setPreferredSize(new Dimension(480, 30));
-
-		//create each player bindings panel
-		redPlayerBindings = new KeyBindingMenu("Red player bindings", this);
-		bluePlayerBindings = new KeyBindingMenu("Blue player bindings", this);
-		addAllKeySelectingPanels();
-
-		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"), "KeyBindings/redKeyBindingsDefault.txt");
-		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "KeyBindings/blueKeyBindingsDefault.txt");
-
-		addAllKeySelectingPanels();
-
-		/** save bindings */
-		JButton saveButton = new JButton("SAVE BINDINGS");
-		saveButton.setPreferredSize(new Dimension(150, 25));
-		saveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {   
-				saveOptions(false);
-				unsavedChanges = false;
-			}
-		});
-
-		/** back to main menu */
-		JButton backButton = new JButton("BACK");
-		backButton.setPreferredSize(new Dimension(150, 25));
-		backButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				if (!unsavedChanges) {
-					backToMainMenuFromOption();
-				} else {
-					backgroundPanel.remove(optionPanel);
-					backgroundPanel.add(saveQuitOptionsPanel);
-					reloadDisplay();
-				}
-			}
-		});
-
-		/** reset to default bindings */
-		JButton defaultButton = new JButton("RESET BINDINGS");
-		defaultButton.setPreferredSize(new Dimension(150, 25));
-		defaultButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {        
-				//check if non default key settings exist and delete those files
-				FileFunctions.deleteNonDefaultBindings();
-				//recreate the menu with default settings 
-				setBindings();
-				unsavedChanges = false;
-			}
-		});
-
-		//add the buttons to button panel
-		buttonPanel.add(saveButton);
-		buttonPanel.add(backButton);
-		buttonPanel.add(defaultButton);
-
-		//add the player's bindings panels to main panel
-		optionPanel2.add(redPlayerBindings);
-		optionPanel2.add(bluePlayerBindings);
-		//and the buttons at the bottm
-		//buttonPanel.setLocation(10, 500);
-		optionPanel2.add(buttonPanel);
-
-		optionPanel.add(optionPanel2);
+		optionPanel.setOrder(true);
 	}
-
-
-	//create an array list of all KeySelectingPanels
-	public void addAllKeySelectingPanels() {
-		allKeySelectingPanels.addAll(redPlayerBindings.getKeySelectingPanels());
-		allKeySelectingPanels.addAll(bluePlayerBindings.getKeySelectingPanels());
-	}
-
-
 
 	/** creates the panel that opens when pressing escape */
 	public void createEscapePanel() {
-		escapePanel = new JPanel();
-		escapePanel.setBorder(BorderFactory.createTitledBorder("PAUSE"));
-		escapePanel.setBackground(Color.white);
-		escapePanel.setPreferredSize(new Dimension(220, 90));
+		escapePanel.displayBorder("PAUSE");
 
 		/** go back to the main menu */
-		JButton backButton = new JButton("BACK TO MAIN MENU");
-		backButton.setPreferredSize(new Dimension(180, 25));
-		backButton.addActionListener(new ActionListener() {
+		escapePanel.addNewButton("BACK TO MAIN MENU", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//sets the content pane to the main menu and delete board (game has ended)
-				handleEscapePanel();
-				isDisplayingMainMenu = true;
-				frame.setContentPane(backgroundPanel);
-				gameLoop.togglePause();
+				toggleEscapePanel();
+
+				boardIO.exitGame();
+				boardIO.handleKeyListeners(frame, false);
+
+				displayMainMenu();
 			}
 		});
 
 		/** resume game */
-		JButton resumeButton = new JButton("RESUME");
-		resumeButton.setPreferredSize(new Dimension(180, 25));
-		resumeButton.addActionListener(new ActionListener() {
+		escapePanel.addNewButton("RESUME", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				handleEscapePanel();
+				toggleEscapePanel();
 			}
 		});
-		escapePanel.add(backButton);
-		escapePanel.add(resumeButton);
+		
+		escapePanel.setDimensions();
+		escapePanel.setOrder(true);
 	}
 
-
-	public void handleEscapePanel() {
+	public void toggleEscapePanel() {
 		//escape button
-		if (isDisplayingEscapePanel) {
-			boardGraphism.remove(escapePanel);
-		} else {
+		if (!isEscapePanelDisplayed) {
 			boardGraphism.add(escapePanel);
+			boardIO.togglePause(true);
+		} else {
+			boardGraphism.remove(escapePanel);
+			boardIO.togglePause(false);
 		}
-		gameLoop.togglePause();
-		isDisplayingEscapePanel = !isDisplayingEscapePanel;
+		isEscapePanelDisplayed = !isEscapePanelDisplayed;
 		frame.setVisible(true);
 	}
 
-
-
-	public void createSaveQuitOptionsPanel() {
-		saveQuitOptionsPanel = new JPanel();
-		saveQuitOptionsPanel.setBorder(BorderFactory.createTitledBorder("WARNING"));
-		saveQuitOptionsPanel.setBackground(Color.white);
-		saveQuitOptionsPanel.setPreferredSize(new Dimension(360, 85));
-
-		JLabel info = new JLabel("Some changes have not been saved");
-		info.setPreferredSize(new Dimension(250, 25));
-
-		/** resume game */
-		JButton saveQuitButton = new JButton("SAVE AND QUIT");
-		saveQuitButton.setPreferredSize(new Dimension(160, 25));
-		saveQuitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				backgroundPanel.remove(saveQuitOptionsPanel);
-				backgroundPanel.add(optionPanel);
-				reloadDisplay();
-				saveOptions(true);
-			}
-		});
-
-		/** go back to the main menu */
-		JButton cancelQuitButton = new JButton("CANCEL AND QUIT");
-		cancelQuitButton.setPreferredSize(new Dimension(160, 25));
-		cancelQuitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				backgroundPanel.remove(saveQuitOptionsPanel);				
-				backToMainMenuFromOption();
-			}
-		});
-
-		// add all the components
-		saveQuitOptionsPanel.add(info);
-		saveQuitOptionsPanel.add(saveQuitButton);
-		saveQuitOptionsPanel.add(cancelQuitButton);
-	}
-
-
-	public void createSaveFailedPanel() {
-		saveFailedPanel = new JPanel();
-		saveFailedPanel.setBorder(BorderFactory.createTitledBorder("WARNING"));
-		saveFailedPanel.setBackground(Color.white);
-		saveFailedPanel.setPreferredSize(new Dimension(275, 85));
-
-		JLabel info = new JLabel("There's a problem with your bindings");
-		info.setPreferredSize(new Dimension(250, 25));
-
-		/** resume game */
-		JButton saveFailedButton = new JButton("OK");
-		saveFailedButton.setPreferredSize(new Dimension(75, 25));
-		saveFailedButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				//displays the option panel
-				backgroundPanel.remove(saveFailedPanel);
-				backgroundPanel.add(optionPanel);
-				reloadDisplay();				
-			}
-		});
-
-		// add all the components
-		saveFailedPanel.add(info);
-		saveFailedPanel.add(saveFailedButton);
-	}
-
-
 	/** creates the multiplayerJPanel with its component*/
 	public void createMultiplayerPanel() {
-		multiplayerPanel = new JPanel();
-		multiplayerPanel.setBorder(BorderFactory.createTitledBorder("MULTIPLAYER"));
-		multiplayerPanel.setBackground(Color.white);
-		multiplayerPanel.setPreferredSize(new Dimension(130, 120));
+		multiplayerPanel.displayBorder("MULTIPLAYER");
 
 		//create a joinable game
-		JButton createButton = new JButton("CREATE GAME");
-		createButton.setPreferredSize(new Dimension(120, 25));
-		createButton.addActionListener(new ActionListener() {
+		multiplayerPanel.addNewButton("CREATE GAME", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//displays the creatingGame panel 
 				backgroundPanel.remove(multiplayerPanel);
 				backgroundPanel.add(createMultiplayerGamePanel);
-				reloadDisplay();
+				reloadMenuDisplay();
 				startOnlineGame();
 			}
 		});
 
-		//join an existing game
-		JButton joinButton = new JButton("JOIN GAME");
-		joinButton.setPreferredSize(new Dimension(120, 25));
-		joinButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				//displays the joiningGame panel 
-				backgroundPanel.remove(multiplayerPanel);
-				backgroundPanel.add(joinMultiplayerGamePanel);
-				reloadDisplay();			
-			}
-		});
+		multiplayerPanel.addNewButton("JOIN GAME", joinMultiplayerGamePanel);
+		multiplayerPanel.addNewButton("BACK");
 
-		//back to main menu
-		JButton backButton = new JButton("BACK");
-		backButton.setPreferredSize(new Dimension(120, 25));
-		backButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//displays the mainMenu panel 
-				backgroundPanel.remove(multiplayerPanel);
-				backgroundPanel.add(mainMenuPanel);
-				reloadDisplay();
-			}
-		});
-
-		multiplayerPanel.add(createButton);
-		multiplayerPanel.add(joinButton);
-		multiplayerPanel.add(backButton);
+		multiplayerPanel.setDimensions();
+		multiplayerPanel.setOrder(true);
 	}
-
 
 	/** creates the createMultiplayerGamePanel with its component*/
 	public void createCreateMultiplayerGamePanel() {
-		createMultiplayerGamePanel = new JPanel();
-		createMultiplayerGamePanel.setBorder(BorderFactory.createTitledBorder("CREATING A GAME"));
-		createMultiplayerGamePanel.setBackground(Color.white);
-		createMultiplayerGamePanel.setPreferredSize(new Dimension(320, 120));
+		createMultiplayerGamePanel.displayBorder("CREATING A GAME");
 
 		//create a joinable game
-		JLabel gameAvailable = new JLabel("Your game is available on : " + getPublicIPAddress());
-		gameAvailable.setPreferredSize(new Dimension(300, 25));
+		createMultiplayerGamePanel.add(new JLabel("Your game is available on : "));
 
-		//join an existing game
-		JLabel waiting = new JLabel("Waiting for your great enemy");
-		waiting.setPreferredSize(new Dimension(300, 25));
-
-		//back to main menu
-		JButton backButton = new JButton("BACK");
-		backButton.setPreferredSize(new Dimension(70, 25));
-		backButton.addActionListener(new ActionListener() {
+		Menu addressPanel = new Menu();
+		addressPanel.add(new JLabel(getPublicIPAddress()));
+		addressPanel.addNewButton("COPY", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//displays the mainMenu panel 
-				backgroundPanel.remove(createMultiplayerGamePanel);
-				backgroundPanel.add(multiplayerPanel);
-				reloadDisplay();
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(getPublicIPAddress()), null);
 			}
 		});
 
-		createMultiplayerGamePanel.add(gameAvailable);
-		createMultiplayerGamePanel.add(waiting);
-		createMultiplayerGamePanel.add(backButton);
-	}
+		createMultiplayerGamePanel.add(addressPanel);
 
+		//join an existing game
+		JLabel waiting = new JLabel("Waiting for your great enemy ...");
+	
+		Timer timer = new Timer(500, new ActionListener() {
+			String baseString = "...   ";
+			int beginning = 0;
+			public void actionPerformed(ActionEvent arg0) {
+				waiting.setText("Waiting for your great enemy " + (baseString + baseString).substring(beginning, beginning + 3));
+				beginning = (baseString.length() + beginning - 1)% baseString.length();
+			}
+		});
+		timer.start();
+
+		createMultiplayerGamePanel.add(waiting);
+
+		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel, frame);
+
+		//back to main menu
+		buttonPanel.addNewButton("BACK", new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//displays the mainMenu panel 
+				buttonPanel.menuInteraction();
+				timer.stop();
+			}
+		});
+
+		createMultiplayerGamePanel.add(buttonPanel);
+		createMultiplayerGamePanel.setOrder(true);
+	}
 
 	/** creates the joinMultiplayerGamePanel with its component*/
 	public void createJoinMultiplayerGamePanel() {
-		joinMultiplayerGamePanel = new JPanel();
-		joinMultiplayerGamePanel.setBorder(BorderFactory.createTitledBorder("JOIN A GAME"));
-		joinMultiplayerGamePanel.setBackground(Color.white);
-		joinMultiplayerGamePanel.setPreferredSize(new Dimension(550, 120));
+		joinMultiplayerGamePanel.displayBorder("JOIN A GAME");
 
 		//create a joinable game
-		JLabel enterIP = new JLabel("Enter your great enemy's server IP : ");
-		enterIP.setPreferredSize(new Dimension(300, 25));
+		joinMultiplayerGamePanel.add(new JLabel("Enter your great enemy's server IP : "));
 
 		//join an existing game
 		JTextField enemyIP = new JTextField();
-		enemyIP.setPreferredSize(new Dimension(500, 25));
+		joinMultiplayerGamePanel.add(enemyIP);
+
+		Menu buttonPanel = new Menu();
 
 		//back to main menu
-		JButton joinButton = new JButton("JOIN");
-		joinButton.setPreferredSize(new Dimension(70, 25));
-		joinButton.addActionListener(new ActionListener() {
+		buttonPanel.addNewButton("JOIN", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				joinOnlineGame(enemyIP.getText());
 			}
 		});
 
 		//back to main menu
-		JButton backButton = new JButton("BACK");
-		backButton.setPreferredSize(new Dimension(70, 25));
-		backButton.addActionListener(new ActionListener() {
+		buttonPanel.addNewButton("BACK");
+
+		buttonPanel.setOrder(false);
+
+		joinMultiplayerGamePanel.add(buttonPanel);
+		joinMultiplayerGamePanel.setDimensions();
+		joinMultiplayerGamePanel.setOrder(true);
+	}
+
+	/** creates the playerLeftPanel with its component*/
+	public void createPlayerLeftPanel() {
+		playerLeftPanel.displayBorder("GAME ENDED");
+
+		//create a joinable game
+		playerLeftPanel.add(new JLabel("The other player has cowardly left "));
+
+		//back to main menu
+		playerLeftPanel.addNewButton("BACK TO MAIN MENU", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//displays the multiplayer panel 
-				backgroundPanel.remove(joinMultiplayerGamePanel);
-				backgroundPanel.add(multiplayerPanel);
-				reloadDisplay();
+				//displays the multiplayer panel
+				boardIO.handleKeyListeners(frame, false);
+				backgroundPanel.removeAll();
+				playerLeftPanel.menuInteraction();
 			}
 		});
 
-		joinMultiplayerGamePanel.add(enterIP);
-		joinMultiplayerGamePanel.add(enemyIP);
-		joinMultiplayerGamePanel.add(joinButton);
-		joinMultiplayerGamePanel.add(backButton);
+		playerLeftPanel.setDimensions();
+		playerLeftPanel.setOrder(true);
 	}
 
+	/** creates the playerLeftPanel with its component*/
+	public void createEndGamePanel() {
+		endGamePanel.displayBorder("GAME ENDED");
 
+		//create a joinable game
+		endGamePanel.add(new JLabel("Well that was fun"));
 
-	/** reloads the displays (avoid former panels to be displayed) */
-	public void reloadDisplay() {
-		frame.setContentPane(backgroundPanel);
+		Menu buttonPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+
+		//restart
+		buttonPanel.addNewButton("RESTART", new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				boardGraphism.remove(endGamePanel);
+				boardIO.restartGame();
+			}
+		});
+
+		//back to main menu
+		buttonPanel.addNewButton("BACK TO MAIN MENU", new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				buttonPanel.menuInteraction();
+				boardIO.exitGame();
+			}
+		});
+
+		buttonPanel.setDimensions();
+		buttonPanel.setOrder(false);
+		endGamePanel.add(buttonPanel);
+		endGamePanel.setDimensions();
+		endGamePanel.setOrder(true);
+	}
+
+	/** creates the playerLeftPanel with its component*/
+	public void createConnectionErrorPanel() {
+		connectionErrorPanel.displayBorder("ERROR");
+		connectionErrorPanel.add(new JLabel("Couldn't connect to the server"));
+		connectionErrorPanel.addNewButton("BACK");
+		connectionErrorPanel.setOrder(true);
+	}
+
+	/** display connection error panel */
+	public void displayConnectionErrorPanel() {
+		backgroundPanel.removeAll();
+		backgroundPanel.add(connectionErrorPanel);
+		reloadMenuDisplay();
+	}
+
+	/** display player left panel */
+	public void displayPlayerLeftPanel() {
+		boardGraphism.add(playerLeftPanel);
+		boardIO.handleKeyListeners(frame, false);
 		frame.setVisible(true);
 	}
 
-
-	/** saves options if they are valid */
-	public void saveOptions(Boolean back) {
-		//saves the current (the ones being displayed) keyBindings if they are all unique
-		if (checkUnicity()) {
-			KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
-			KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
-			FileFunctions.saveBindings(redBindings, "KeyBindings/redKeyBindings.txt");
-			FileFunctions.saveBindings(blueBindings, "KeyBindings/blueKeyBindings.txt");
-			if (back) {
-				backToMainMenuFromOption();
-			}
-		} else {
-			backgroundPanel.remove(optionPanel);
-			backgroundPanel.add(saveFailedPanel);
-			reloadDisplay();
-		}
-	}
-
-
-	/** check if every binding is unique */
-	public boolean checkUnicity() {
-		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
-			for (KeySelectingPanel keySelectingPanel2 : allKeySelectingPanels) {
-				if (keySelectingPanel != keySelectingPanel2 && keySelectingPanel.getCurrentKeyBinding().getKeyValue() == keySelectingPanel2.getCurrentKeyBinding().getKeyValue()) {
-					return false;
-				}
-			}
-			//there must be a way to decrease complexity by half and avoid testing twice
-		}
-		return true;
-	}
-
-
-	/** displays main menu and cancel unsaved bindings changes */
-	public void backToMainMenuFromOption() {
-		//all options are saved
-		unsavedChanges = false;
-		//displays the main menu again    
-		backgroundPanel.remove(optionPanel);
-		backgroundPanel.add(mainMenuPanel);
-		isDisplayingMainMenu = true;
-		reloadDisplay();
-		//cancels changes if they are not saved
-		setBindings();
+	/** reloads the displays (avoid former panels to be displayed) */
+	public void reloadMenuDisplay() {
+		frame.setContentPane(backgroundPanel);
+		frame.setVisible(true);
 	}
 
 	/** Find public IP address */
@@ -652,32 +435,9 @@ public class MainMenu extends JFrame {
 		} 
 	}
 
-	public void setUnsavedChanges(Boolean bool) {
-		unsavedChanges = bool;
-	}
-
 	public Board getBoard() {
 		return board;
 	}
-
-	public KeyBindingMenu getRedPlayerBindingMenu() {
-		return redPlayerBindings;
-	}
-
-	public KeyBindingMenu getBluePlayerBindingMenu() {
-		return bluePlayerBindings;
-	}
-
-
-	/**Le jeu tourne dans un thread a part, il contient les timer (thread) de jeu et d'affichage,
-	 * Non : de jeu uniquement, depuis les modifications pour separer Local de Client/Server
-	 */
-	public class StartGame implements Runnable {
-		public void run() {
-			gameLoop.togglePause();
-		}
-	}
-
 
 	public class ClientRelatedKeyListener implements KeyListener {
 		@Override
@@ -692,11 +452,7 @@ public class MainMenu extends JFrame {
 
 			//escape
 			if (code == 27) {
-				if (frame.getContentPane() == backgroundPanel && !isDisplayingMainMenu) {
-					backToMainMenuFromOption();
-				} else if (frame.getContentPane() == boardGraphism) {
-					handleEscapePanel();
-				}
+				selectedMenu.menuInteraction();
 			}
 		}
 

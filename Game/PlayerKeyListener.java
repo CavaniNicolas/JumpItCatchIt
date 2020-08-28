@@ -20,20 +20,25 @@ public class PlayerKeyListener implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		String action = getKeyActionDescription(event.getKeyChar());
-		inputActions.togglePressedKeys(action, true);
-		boardIO.handleAction(inputActions);
+		handleKey(event, true);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event) {
-		String action = getKeyActionDescription(event.getKeyChar());
-		inputActions.togglePressedKeys(action, false);
-		boardIO.handleAction(inputActions);
+		handleKey(event, false);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent event) {
+	}
+
+	/** sends input action to the board if the key is valid */
+	public void handleKey(KeyEvent event, Boolean bool) {
+		String action = getKeyActionDescription(event.getKeyChar());
+		if (action != null) {
+			inputActions.togglePressedKeys(action, bool);
+			boardIO.handleAction(inputActions);
+		}
 	}
 
 	/** returns the action relative to the keyBinding used */

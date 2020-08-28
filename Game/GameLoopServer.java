@@ -5,10 +5,11 @@ public class GameLoopServer extends GameLoop {
 
 	public GameLoopServer(Board board, BoardServer boardServer) {
 		super(board);
+		this.boardServer = boardServer;
 	}
 
 	public void sendBoardToClients() {
-		boardServer.outputBoard();
+		boardServer.outputObjectToAll(board);
 	}
 
 }

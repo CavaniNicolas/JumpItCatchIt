@@ -20,8 +20,8 @@ public class FileFunctions {
 	}
 
 	/** return a KeyBinding object from a String path to a file */
-	public static KeyBindings getBindings(String path) {
-		KeyBindings keyBindings = null;
+	public static Object getObject(String path) {
+		Object obj = null;
 		ObjectInputStream ois;
 		// create an input flux to read an object from a file
 		try {
@@ -31,7 +31,7 @@ public class FileFunctions {
 							new File(path))));
 			try {
 				//create the object from the file
-				keyBindings = (KeyBindings)ois.readObject();
+				obj = ois.readObject();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -40,11 +40,11 @@ public class FileFunctions {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return keyBindings;
+		return obj;
 	}
 
 	/** saves a KeyBindings object to a file designated by a given path string */
-	public static void saveBindings(KeyBindings keyBindings, String path) {
+	public static void saveObject(Object obj, String path) {
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(
@@ -53,7 +53,7 @@ public class FileFunctions {
 							new File(path))));
 					
 			//write the bindings in a file
-			oos.writeObject(keyBindings);
+			oos.writeObject(obj);
 			//close the flux
 			oos.close();
 		} catch (Exception exc) {
@@ -96,8 +96,8 @@ public class FileFunctions {
 		blueKeyBindings.addBinding(new KeyBinding(m, "Shoot and push"));
 
 		//saves the new default bindings
-		saveBindings(redKeyBindings, pathRedKeyBindings);
-		saveBindings(blueKeyBindings, pathBlueKeyBindings);
+		saveObject(redKeyBindings, pathRedKeyBindings);
+		saveObject(blueKeyBindings, pathBlueKeyBindings);
 	}
 
 	public static void deleteNonDefaultBindings() {

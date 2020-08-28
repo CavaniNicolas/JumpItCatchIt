@@ -13,7 +13,7 @@ public class InputActions implements Serializable {
 	private boolean shieldPressed = false;
 	private boolean shootPushPressed = false;
 
-	// pointeur vers le character (non sérialisé)
+	// pointeur vers le character pour client local(non sérialisé)
 	private transient Character character;
 
 	public void togglePressedKeys(String action, Boolean toggle) {
@@ -80,8 +80,8 @@ public class InputActions implements Serializable {
 
 	@Override
 	public String toString() {
-		return "InputActions [character=" + character + ", grabPressed=" + grabPressed + ", jumpPressed=" + jumpPressed
-				+ ", leftPressed=" + leftPressed + ", rightPressed=" + rightPressed + ", shieldPressed=" + shieldPressed
-				+ ", shootPushPressed=" + shootPushPressed + "]";
+		return "InputActions [jumpPressed=" + jumpPressed + ", leftPressed=" + leftPressed 
+				+ ", rightPressed=" + rightPressed + ", grabPressed=" + grabPressed 
+				+ ", shieldPressed=" + shieldPressed + ", shootPushPressed=" + shootPushPressed + "]";
 	}
 }
