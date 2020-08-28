@@ -1,9 +1,6 @@
 package Game;
 
 import Game.Items.ItemBalls;
-import Menu.KeyBindings;
-import Menu.FileFunctions;
-
 import java.awt.Color;
 import java.io.Serializable;
 
@@ -200,5 +197,11 @@ public class Board implements Serializable {
 
 	public void setBoardGraphism(BoardGraphism boardGraphism) {
 		this.boardGraphism = boardGraphism;
+	}
+
+	@Override
+	public String toString() {
+		return "Board [characterBlue=" + characterBlue + ", characterRed=" + characterRed + ", itemBalls=" + itemBalls
+				+ "]";
 	}
 }

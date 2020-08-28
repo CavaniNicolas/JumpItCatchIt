@@ -87,8 +87,8 @@ public class BoardGraphism extends JPanel {
 		board.getCharacterBlue().drawProjectiles(g, this);
 
 		// Affiche la vie des joueurs
-		board.getCharacterRed().displayCharacterHUD(g, this);
-		board.getCharacterBlue().displayCharacterHUD(g, this);
+		//board.getCharacterRed().displayCharacterHUD(g, this);
+		//board.getCharacterBlue().displayCharacterHUD(g, this);
 	}
 
 

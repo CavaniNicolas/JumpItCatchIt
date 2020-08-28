@@ -2,12 +2,11 @@ package Game;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.awt.Graphics;
 
-public class Character extends Entity implements Serializable {
+public class Character extends Entity {
 	/** Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
 	private transient boolean isLeftCharacter; // Pourrait etre remplace par un ID
 
@@ -17,7 +16,7 @@ public class Character extends Entity implements Serializable {
 	private int lives = livesMax;
 
 	/** Booleens d'actions */
-	private ActionBooleans actionBooleans = new ActionBooleans();
+	private transient ActionBooleans actionBooleans = new ActionBooleans();
 
 	/** Booleens d'Input */
 	private transient InputActions inputActions;
@@ -692,4 +691,11 @@ public class Character extends Entity implements Serializable {
 		}
 
 	}
+
+	@Override
+	public String toString() {
+		return "Character [isSpawning=" + isSpawning + ", lives=" + lives
+				+ ", livesMax=" + livesMax + ", projectiles=" + projectiles + " " + super.toString() + "]";
+	}
+
 }

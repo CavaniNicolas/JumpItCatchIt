@@ -7,9 +7,8 @@ import javax.swing.Timer;
 /** the main loop of the game */
 public class GameLoop {
 	private final int updateEveryDt = 12;
-	private Board board;
+	protected Board board;
 	private Timer gamePlayTimer;
-	private Boolean isPlaying = false;
 	private GamePlayTimerListener gamePlayTimerListener = new GamePlayTimerListener();
 
 	public GameLoop(Board board) {
@@ -17,9 +16,8 @@ public class GameLoop {
 	}
 
 	/** changes the pause state */
-	public void togglePause() {
-		isPlaying = !isPlaying;
-		if (!isPlaying) {
+	public void togglePause(Boolean bool) {
+		if (bool) {
 			gamePlayTimer.stop();
 		} else {
 			gamePlayTimer = new Timer(updateEveryDt, gamePlayTimerListener);
@@ -35,10 +33,8 @@ public class GameLoop {
 		/**Action a effectuer lorsque le timer renvoie un event */
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			if (isPlaying) {
-				board.updateAll();
-				sendBoardToClients();
-			}
+			board.updateAll();
+			sendBoardToClients();
 		}
 	}
 }
