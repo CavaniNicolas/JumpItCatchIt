@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Items.ItemBalls;
+
 import java.awt.Color;
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * Gere le jeu
  */
 public class Board implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Les attributs graphiques et les fonctions d'affichage (les attributs sont
@@ -54,8 +56,8 @@ public class Board implements Serializable {
 	public void updateAllCollisionBorders() {
 
 		// Les personnages
-		characterRed.updateCollisionBorders(boardGraphism, characterBlue);
-		characterBlue.updateCollisionBorders(boardGraphism, characterRed);
+		characterRed.updateCollisionBorders(boardGraphism.getMainConstants().getReal(), boardGraphism.getCharacterConstants().getReal(), characterBlue);
+		characterBlue.updateCollisionBorders(boardGraphism.getMainConstants().getReal(), boardGraphism.getCharacterConstants().getReal(), characterRed);
 
 	}
 
@@ -75,8 +77,8 @@ public class Board implements Serializable {
 	public void updatePositionAndMoveAll() {
 
 		// Les personnages
-		characterRed.updatePosition(boardGraphism, characterBlue);
-		characterBlue.updatePosition(boardGraphism, characterRed);
+		characterRed.updatePosition(boardGraphism.getMainConstants().getReal(), boardGraphism.getCharacterConstants().getReal(), characterBlue);
+		characterBlue.updatePosition(boardGraphism.getMainConstants().getReal(), boardGraphism.getCharacterConstants().getReal(), characterRed);
 	}
 
 
@@ -84,8 +86,8 @@ public class Board implements Serializable {
 	public void checkActions() {
 
 		// Les personnages
-		characterRed.checkActions(boardGraphism);
-		characterBlue.checkActions(boardGraphism);
+		characterRed.checkActions(boardGraphism.getMainConstants().getReal(), boardGraphism.getProjectileConstants().getReal());
+		characterBlue.checkActions(boardGraphism.getMainConstants().getReal(), boardGraphism.getProjectileConstants().getReal());
 	}
 
 
@@ -105,7 +107,7 @@ public class Board implements Serializable {
 
 	/** Creer les items qui tombent au milieu du plateau */
 	public void createItems() {
-		itemBalls.createItems(boardGraphism);
+		itemBalls.createItems(boardGraphism.getMainConstants().getReal(), boardGraphism.getItemConstants().getReal());
 	}
 
 
@@ -121,10 +123,6 @@ public class Board implements Serializable {
 	public void initGame() {
 		isPlaying = false;
 
-
-		// Initialise les coordonnees reelles des objets
-		boardGraphism.initRealCoordsAttributes();
-
 		// On charge les objets (sans image) tout doit etre fonctionnel
 		// Les fonctions d'affichage s'occuperont d'afficher des images si elles
 		// existent, des carres sinon
@@ -134,10 +132,10 @@ public class Board implements Serializable {
 		InputActions blueCharacterInputActions = new InputActions();
 
 		// Creation des deux persos
-		characterRed = new Character(boardGraphism.getReal().getPrimaryXcoordLeft(),
-				boardGraphism.getReal().getGroundLevelYCoord(), true, Color.red, redCharacterInputActions, boardGraphism);
-		characterBlue = new Character(boardGraphism.getReal().getPrimaryXcoordRight(),
-				boardGraphism.getReal().getGroundLevelYCoord(), false, Color.blue, blueCharacterInputActions, boardGraphism);
+		characterRed = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordLeft(), boardGraphism.getMainConstants().getPlatformHeight(),
+				true, Color.red, redCharacterInputActions, boardGraphism.getCharacterConstants().getReal(), boardGraphism);
+		characterBlue = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordRight(), boardGraphism.getMainConstants().getPlatformHeight(),
+				false, Color.blue, blueCharacterInputActions, boardGraphism.getCharacterConstants().getReal(), boardGraphism);
 
 		// met les characters dans les objets inputActions correspondants
 		redCharacterInputActions.setCharacter(characterRed);
@@ -173,7 +171,6 @@ public class Board implements Serializable {
 	/* Getters */
 	/* ======= */
 
-
 	public void setIsPlaying(Boolean bool) {
 		isPlaying = bool;
 	}
@@ -199,9 +196,11 @@ public class Board implements Serializable {
 		this.boardGraphism = boardGraphism;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Board [characterBlue=" + characterBlue + ", characterRed=" + characterRed + ", itemBalls=" + itemBalls
 				+ "]";
 	}
+
 }

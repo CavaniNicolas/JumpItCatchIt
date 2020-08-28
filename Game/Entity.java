@@ -3,14 +3,13 @@ package Game;
 import java.io.Serializable;
 
 /**
- * Class Entity
- * <p>
- * Tous les objets qui vont pouvoir avoir un mouvement, (vitesse et
- * acceleration)
+ * Class Entity <p>
+ * Tous les objets qui vont pouvoir avoir un mouvement, (vitesse et acceleration)
  */
 public class Entity implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	/**Gravite */
+	/** Gravite */
 	protected transient final int GRAVITY = -20;
 
 	// Coordonnees de collisions minimales et maximales

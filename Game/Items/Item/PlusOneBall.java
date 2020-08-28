@@ -5,6 +5,8 @@ import Game.Items.ItemBall;
 import java.awt.Color;
 
 public class PlusOneBall extends ItemBall {
+	private static final long serialVersionUID = 1L;
+
 
 	/** Constructeur pour creer un item lors du jeu */
 	public PlusOneBall(int x, int y, int width, int height) {
