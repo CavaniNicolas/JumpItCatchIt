@@ -17,8 +17,6 @@ public class KeyOptionMenu extends Menu {
 	private KeyBindingMenu redPlayerBindings;
 	private KeyBindingMenu bluePlayerBindings;
 
-	private Boolean unsavedChanges = false;
-
 	//all the KeySelectingPanels
 	private ArrayList<KeySelectingPanel> allKeySelectingPanels = new ArrayList<KeySelectingPanel>();
 
@@ -37,13 +35,10 @@ public class KeyOptionMenu extends Menu {
 		Menu playerMovement = new Menu();
 		Menu buttonPanel = new Menu();
 
-		redPlayerBindings = new KeyBindingMenu();
+		redPlayerBindings = new KeyBindingMenu(FileFunctions.getPathFileToUse("red"), "KeyBindings/redKeyBindingsDefault.txt", this);
 		redPlayerBindings.displayBorder("Player movement");
-		bluePlayerBindings = new KeyBindingMenu();
+		bluePlayerBindings = new KeyBindingMenu(FileFunctions.getPathFileToUse("blue"), "KeyBindings/blueKeyBindingsDefault.txt", this);
 		bluePlayerBindings.displayBorder("Second player movement (local only)");
-
-		redPlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("red"), "KeyBindings/redKeyBindingsDefault.txt", this);
-		bluePlayerBindings.addKeySelectingPanels(FileFunctions.getPathFileToUse("blue"), "KeyBindings/blueKeyBindingsDefault.txt", this);
 
 		addAllKeySelectingPanels();
 
@@ -61,7 +56,6 @@ public class KeyOptionMenu extends Menu {
 		buttonPanel.addNewButton("SAVE", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {   
 				saveOptions(false);
-				unsavedChanges = false;
 			}
 		});
 
@@ -79,7 +73,6 @@ public class KeyOptionMenu extends Menu {
 				FileFunctions.deleteNonDefaultBindings();
 				//recreate the menu with default settings 
 				setBindings();
-				unsavedChanges = false;
 			}
 		});
 
@@ -110,7 +103,12 @@ public class KeyOptionMenu extends Menu {
 		});
 
 		/** go back to the main menu */
-		buttonPanel.addNewButton("CANCEL AND QUIT", menu);
+		buttonPanel.addNewButton("CANCEL AND QUIT", new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				menuInteraction(backgroundPanel, menu);
+				setBindings();
+			}
+		});
 
 		buttonPanel.setDimensions();
 		buttonPanel.setOrder(false);
@@ -135,9 +133,13 @@ public class KeyOptionMenu extends Menu {
 		saveFailedPanel.setOrder(true);
 	}
 
+	public Boolean checkChanges() {
+		return redPlayerBindings.checkChanges() && bluePlayerBindings.checkChanges();
+	}
+
 	/** back interaction */
 	public void menuInteraction() {
-		if (unsavedChanges) {
+		if (!checkChanges()) {
 			menuInteraction(backgroundPanel, saveQuitOptionsPanel);
 		} else {
 			menuInteraction(backgroundPanel, menu);
@@ -176,13 +178,6 @@ public class KeyOptionMenu extends Menu {
 		return true;
 	}
 
-	/** displays main menu and cancel unsaved bindings changes */
-	public void backToMainMenuFromOption() {
-		//cancels changes if they are not saved
-		setBindings();
-		unsavedChanges = false;
-	}
-
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
 	public void setBindings() {
 		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("red"));
@@ -192,9 +187,4 @@ public class KeyOptionMenu extends Menu {
 	public ArrayList<KeySelectingPanel> getAllKeySelectingPanels() {
 		return allKeySelectingPanels;
 	}
-
-	public void setUnsavedChanges(Boolean bool) {
-		unsavedChanges = bool;
-	}
-
 }

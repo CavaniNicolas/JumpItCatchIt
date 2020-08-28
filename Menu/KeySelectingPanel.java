@@ -1,7 +1,6 @@
 package Menu;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -111,9 +110,6 @@ public class KeySelectingPanel extends Menu {
 	
 		public void keyTyped(KeyEvent event) {	
 			String cara = String.valueOf((char)event.getKeyChar());
-			if (cara != selectingButton.getText()) {
-				keyOptionMenu.setUnsavedChanges(true);
-			}
 			//if (cara in validCaracters) {
 				selectingButton.setText(cara);
 			//}

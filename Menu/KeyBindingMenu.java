@@ -3,14 +3,13 @@ package Menu;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-
 public class KeyBindingMenu extends Menu {
 	private ArrayList<KeySelectingPanel> keySelectingPanels = new ArrayList<KeySelectingPanel>();
+	private KeyBindings keyBindings;
 
 	/** creates a new KeySelectingPanel based on a KeyBinding */
-	public void addKeySelectingPanels(String path, String defaultPath, KeyOptionMenu keyOptionMenu) {
-		KeyBindings keyBindings = (KeyBindings)FileFunctions.getObject(path);
+	public KeyBindingMenu(String path, String defaultPath, KeyOptionMenu keyOptionMenu) {
+		keyBindings = (KeyBindings)FileFunctions.getObject(path);
 
 		//a default path is added in the constructor to allow resetting a binding
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
@@ -53,5 +52,9 @@ public class KeyBindingMenu extends Menu {
 			panel.getLabel().setPreferredSize(new Dimension((int)width, (int)height));
 			panel.setOrder(false);
 		}
+	}
+
+	public Boolean checkChanges() {
+		return keyBindings.equals(getCurrentKeyBindings());
 	}
 }
