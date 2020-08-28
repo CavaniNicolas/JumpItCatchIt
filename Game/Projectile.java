@@ -31,20 +31,20 @@ public class Projectile extends Entity {
 
 
 	/**Constructeur du projectile */
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, MainConstants MC, ProjectileConstants PC, int rangeX, int damage, Color colorProjectile) {
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, MainConstants MCReal, ProjectileConstants PCReal, int rangeX, int damage, Color colorProjectile) {
 		super(x, y, speedX, speedY, accelX, accelY);
 		this.initX = x;
 		this.rangeX = rangeX;
 		this.damage = damage;
 		this.isActive = true;
 		this.colorProjectile = colorProjectile;
-		initGraphicAttributes(MC, PC);
+		initGraphicAttributes(MCReal, PCReal);
 	}
 
 
 	/**Constructeur pour un projectile horizontal */
-	public Projectile(int x, int y, int speedX, MainConstants MC, ProjectileConstants PC, int range, int damage, Color colorProjectile) {
-		this(x, y, speedX, 0, 0, 0, MC, PC, range, damage, colorProjectile);
+	public Projectile(int x, int y, int speedX, MainConstants MCReal, ProjectileConstants PCReal, int range, int damage, Color colorProjectile) {
+		this(x, y, speedX, 0, 0, 0, MCReal, PCReal, range, damage, colorProjectile);
 	}
 
 
@@ -72,9 +72,9 @@ public class Projectile extends Entity {
 
 
 	/**Initialise les champs graphiques */
-	public void initGraphicAttributes(MainConstants MC, ProjectileConstants PC) {
-		this.width = PC.getReal().getProjectileWidth();
-		this.height = PC.getReal().getProjectileHeight();
+	public void initGraphicAttributes(MainConstants MCReal, ProjectileConstants PCReal) {
+		this.width = PCReal.getProjectileWidth();
+		this.height = PCReal.getProjectileHeight();
 
 		// Si le projectile va vers la droite
 		if (speedX > 0) {
@@ -83,7 +83,7 @@ public class Projectile extends Entity {
 		// Si il va vers la gauche
 		} else {
 			this.minX = initX - rangeX;
-			this.maxX = MC.getReal().getMaxX();
+			this.maxX = MCReal.getMaxX();
 		}
 	}
 

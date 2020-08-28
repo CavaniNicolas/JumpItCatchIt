@@ -30,7 +30,7 @@ public class ItemBalls implements Serializable {
 
 
 	/** Creer les items qui tombent au milieu du plateau */
-	public void createItems(MainConstants MC, ItemConstants IC) {
+	public void createItems(MainConstants MCReal, ItemConstants ICReal) {
 
 		int nbItems = itemBalls.size();
 
@@ -40,7 +40,7 @@ public class ItemBalls implements Serializable {
 		if (nbItems == 0) {
 			
 			// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
-			newItem = createNewItemBall(IC);
+			newItem = createNewItemBall(ICReal);
 			// L'ajoute a la liste des Items en jeu
 			itemBalls.add(newItem);
 
@@ -58,10 +58,10 @@ public class ItemBalls implements Serializable {
 			} while (lastSpawnedItem == null && i <= nbItems);
 
 			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe
-			if (lastSpawnedItem.getY() < MC.getReal().getMaxY() - lastSpawnedItem.getHeight() + interItems) {
+			if (lastSpawnedItem.getY() < MCReal.getMaxY() - lastSpawnedItem.getHeight() + interItems) {
 				
 				// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
-				newItem = createNewItemBall(IC);
+				newItem = createNewItemBall(ICReal);
 				// L'ajoute a la liste des Items en jeu
 				itemBalls.add(newItem);
 			}
@@ -72,12 +72,12 @@ public class ItemBalls implements Serializable {
 
 
 	/** Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree */
-	public ItemBall createNewItemBall(ItemConstants IC) {
+	public ItemBall createNewItemBall(ItemConstants ICReal) {
 		// Position et dimensions d'une nouvel Item
-		int x = IC.getReal().getItemFirstX();
-		int y = IC.getReal().getItemFirstY();
-		int width = IC.getReal().getItemWidth();
-		int height = IC.getReal().getItemHeight();
+		int x = ICReal.getItemFirstX();
+		int y = ICReal.getItemFirstY();
+		int width = ICReal.getItemWidth();
+		int height = ICReal.getItemHeight();
 
 		ItemBall newItem = null;
 		ItemBallInit newItemInit = null;
