@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 /** a key + description of what it does in the game */
 public class KeyBinding implements Serializable {
+	private static final long serialVersionUID = 9194477366387674620L;
+
 	private int keyValue;
 	private String keyActionDescription;
 

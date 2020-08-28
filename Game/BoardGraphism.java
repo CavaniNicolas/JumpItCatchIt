@@ -14,7 +14,7 @@ import Game.ConstantsContainers.GraphicConstants.*;
  * Gere l'affichage
  */
 public class BoardGraphism extends JPanel {
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 888598770874902032L;
 
 	/** Le plateau de jeu */
 	Board board;
@@ -45,33 +45,25 @@ public class BoardGraphism extends JPanel {
 	public BoardGraphism(Board board) {
 		this.board = board;
 
-		initGraphicConstantsContainers();
+		createGraphicConstantsContainers();
 
 		gameDisplayTimer = new Timer(12, new GameDisplayTimerListener());
 	}
 
 
 	/**Creer les Containers a Constantes Graphiques */
-	public void initGraphicConstantsContainers() {
+	public void createGraphicConstantsContainers() {
 
-		mainConstants = new MainConstants(new MainConstants(), this.getWidth(), this.getHeight());
+		mainConstants = new MainConstants(new MainConstants());
 
-		double oneUnityWidth = mainConstants.getOneUnityWidth();
-		double oneUnityHeight = mainConstants.getOneUnityHeight();
-
-		characterConstants = new CharacterConstants(new CharacterConstants(), oneUnityWidth, oneUnityHeight);
-		projectileConstants = new ProjectileConstants(new ProjectileConstants(), oneUnityWidth, oneUnityHeight);
-		itemConstants = new ItemConstants(new ItemConstants(), mainConstants.getReal().getMaxX(), mainConstants.getReal().getPlatformHeight(), oneUnityWidth, oneUnityHeight);
-		HUDConstants = new HUDConstants(new HUDConstants(), oneUnityWidth, oneUnityHeight);
-		grabConstants = new GrabConstants(new GrabConstants(), oneUnityWidth, oneUnityHeight);
+		characterConstants = new CharacterConstants(new CharacterConstants());
+		projectileConstants = new ProjectileConstants(new ProjectileConstants());
+		itemConstants = new ItemConstants(new ItemConstants(mainConstants.getReal().getMaxX(), mainConstants.getReal().getMaxY()));
+		HUDConstants = new HUDConstants(new HUDConstants());
+		grabConstants = new GrabConstants(new GrabConstants());
 
 	}
 
-
-	/**Actualise l'affichage graphique */
-	public void updateWindow() {
-		repaint();
-	}
 
 	/** starts the game display timer */
 	public void startDisplaying() {
@@ -86,6 +78,9 @@ public class BoardGraphism extends JPanel {
 	 * <p>
 	 * Les fonctions drawTruc sont pour les objets en mouvement Lesfonctions
 	 * displayTruc sont pour les objets fixes
+	 * <p>
+	 * TRES IMPORTANT : pour que this.getWidth() et this.getHeight() acquierent leur premiere valeur
+	 * paintComponent() doit etre appllee au moins une fois ! Avant cela, la valeur de retour est 0.
 	 */
 	public void paintComponent(Graphics g) {
 		// Initialisation des attributs graphiques, effectuee a chaque
@@ -116,6 +111,17 @@ public class BoardGraphism extends JPanel {
 	public void updateGraphicCoordsAttributes() {
 		if (!isGraphicUpdateDone) {
 
+			mainConstants.updateConstantGraphicAttributes(this.getWidth(), this.getHeight());
+
+			double oneUnityWidth = mainConstants.getOneUnityWidth();
+			double oneUnityHeight = mainConstants.getOneUnityHeight();
+
+			characterConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+			projectileConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+			itemConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+			HUDConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+			grabConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+
 			// Initialisation terminee
 			this.isGraphicUpdateDone = true;
 		}
@@ -124,22 +130,25 @@ public class BoardGraphism extends JPanel {
 
 	/**Affiche les plateformes des deux joueurs */
 	public void displayPlatforms(Graphics g) {
+		int maxX = mainConstants.getMaxX();
+		int maxY = mainConstants.getMaxY();
+
 		int platformWidth = mainConstants.getPlatformWidth();
 		int platformHeight = mainConstants.getPlatformHeight();
 
 		// Le fond est gris clair
 		g.setColor(Color.lightGray);
-		g.fillRect(0, 0, mainConstants.getMaxX(), mainConstants.getMaxY());
+		g.fillRect(0, 0, maxX, maxY);
 
 		// Plateforme de gauche
 		Color darkRed = new Color(92, 30, 31);
 		g.setColor(darkRed);
-		g.fillRect(0, platformHeight, platformWidth, platformHeight);
+		g.fillRect(0, maxY - platformHeight, platformWidth, platformHeight);
 
 		// Plateforme de droite
 		Color darkBlue = new Color(20, 45, 93);
 		g.setColor(darkBlue);
-		g.fillRect(mainConstants.getMaxX() - platformWidth, platformHeight, platformWidth, platformHeight);
+		g.fillRect(maxX - platformWidth, maxY - platformHeight, platformWidth, platformHeight);
 	}
 	
 	
@@ -149,8 +158,9 @@ public class BoardGraphism extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			
-			updateWindow();
-			
+			//Actualise l'affichage graphique
+			repaint();
+
 		}
 	}
 

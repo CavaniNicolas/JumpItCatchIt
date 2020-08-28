@@ -13,7 +13,9 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 
 public class BackgroundPanel extends JPanel {
-	//background color/image
+	private static final long serialVersionUID = -432619927090184212L;
+
+	// background color/image
 	private String pathToBackground = "assets/background.JPG";
 	private Image background;
 	private JLabel title;

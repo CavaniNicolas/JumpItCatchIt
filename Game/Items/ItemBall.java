@@ -12,8 +12,7 @@ import java.awt.Image;
  * Item du jeu <p>
  * La position (x,y) de ItemBall est au centre du cercle */
 public class ItemBall extends Entity {
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 4045767608716809819L;
 
 	/** Couleur de l'Item, chaque item a une couleur par defaut */
 	protected transient Color colorItem;

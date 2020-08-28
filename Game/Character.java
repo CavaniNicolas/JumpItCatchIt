@@ -15,9 +15,12 @@ import java.awt.Graphics;
  * contient le personnage, toutes ses actions, positions, etats... <p>
  * La position (x,y) du Character est en bas au milieu du rectangle */
 public class Character extends Entity {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 4168430883476917014L;
 
-	/**Permet de distinguer les deux persos, l'un est celui de gauche au depart et l'autre celui de droite */
+	/**
+	 * Permet de distinguer les deux persos, l'un est celui de gauche au depart et
+	 * l'autre celui de droite
+	 */
 	private transient boolean isLeftCharacter; // Pourrait etre remplace par un ID
 
 	/**Nombre de vies max (en moities de coeur) */

@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Gere le jeu
  */
 public class Board implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2617925356759498421L;
 
 	/**
 	 * Les attributs graphiques et les fonctions d'affichage (les attributs sont

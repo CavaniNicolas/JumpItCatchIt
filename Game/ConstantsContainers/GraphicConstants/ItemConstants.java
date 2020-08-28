@@ -22,19 +22,31 @@ public class ItemConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
-	public ItemConstants() {
+	public ItemConstants(int maxXReal, int maxYReal) {
 		this.real = null;
+
+		itemFirstX = maxXReal / 2;
+		itemFirstY = maxYReal + itemHeight / 2;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public ItemConstants(ItemConstants real, int maxXReal, int maxYReal, double oneUnityWidth, double oneUnityHeight) {
+	public ItemConstants(ItemConstants real) {
 		this.real = real;
-		itemFirstX = maxXReal / 2;
-		itemFirstY = maxYReal + itemHeight / 2;
 
-		updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+		itemFirstX = real.itemFirstX;
+		itemFirstY = real.itemFirstY;
 	}
+
+
+	// /** Constructeur pour le stockage des constantes coordonnees Graphiques */
+	// public ItemConstants(ItemConstants real, int maxXReal, int maxYReal, double oneUnityWidth, double oneUnityHeight) {
+	// 	this.real = real;
+	// 	itemFirstX = maxXReal / 2;
+	// 	itemFirstY = maxYReal + itemHeight / 2;
+
+	// 	updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+	// }
 
 
 	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */

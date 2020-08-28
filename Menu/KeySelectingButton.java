@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class KeySelectingButton extends JButton implements KeyListener, ActionListener {
+	private static final long serialVersionUID = -5409953146895160756L;
+
 	private boolean isPressed = false;
 
 	public void keyPressed(KeyEvent event) {

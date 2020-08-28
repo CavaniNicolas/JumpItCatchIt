@@ -33,10 +33,16 @@ public class CharacterConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public CharacterConstants(CharacterConstants real, double oneUnityWidth, double oneUnityHeight) {
+	public CharacterConstants(CharacterConstants real) {
 		this.real = real;
-		updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 	}
+
+
+	// /** Constructeur pour le stockage des constantes coordonnees Graphiques */
+	// public CharacterConstants(CharacterConstants real, double oneUnityWidth, double oneUnityHeight) {
+	// 	this.real = real;
+	// 	updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
+	// }
 
 
 	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */

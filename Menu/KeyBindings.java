@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /** an arrayList of all the keyBindings of a player */
 public class KeyBindings implements Serializable {
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = -2235563260966788434L;
 
 	private ArrayList<KeyBinding> keyBindings;
 

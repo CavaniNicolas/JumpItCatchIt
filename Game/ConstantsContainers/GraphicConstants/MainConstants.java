@@ -36,10 +36,16 @@ public class MainConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public MainConstants(MainConstants real, int boardJPanelWidth, int boardJPanelHeight) {
+	public MainConstants(MainConstants real) {
 		this.real = real;
-		updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
 	}
+
+
+	// /** Constructeur pour le stockage des constantes coordonnees Graphiques */
+	// public MainConstants(MainConstants real, int boardJPanelWidth, int boardJPanelHeight) {
+	// 	this.real = real;
+	// 	updateConstantGraphicAttributes(boardJPanelWidth, boardJPanelHeight);
+	// }
 
 
 	/**Actualise les attributs constants des coordonnees graphiques a partir des coordonnees reelles et de la taille de la fenetre */

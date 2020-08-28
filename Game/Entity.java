@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Tous les objets qui vont pouvoir avoir un mouvement, (vitesse et acceleration)
  */
 public class Entity implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5724559282425349586L;
 
 	/** Gravite */
 	protected transient final int GRAVITY = -20;
