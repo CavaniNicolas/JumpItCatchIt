@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
+import jdk.incubator.jpackage.main.Main;
 import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
 
 import java.awt.Graphics;
@@ -494,13 +496,13 @@ public class Character extends Entity {
 
 
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
-	public void checkActions(BoardGraphism boardGraphism) {
-		checkShoot(boardGraphism);
+	public void checkActions(MainConstants MC, ProjectileConstants PC) {
+		checkShoot(MC, PC);
 	}
 
 
 	/** Creer une entite Projectile */
-	public void checkShoot(BoardGraphism boardGraphism) {
+	public void checkShoot(MainConstants MC, ProjectileConstants PC) {
 
 		/**Si on appuie sur Shoot et qu'on peut shoot */
 		if (inputActions.getShootPushPressed() && actionBooleans.canShoot) {
@@ -508,11 +510,11 @@ public class Character extends Entity {
 			// Tire vers la droite
 			if (isOnLeftSide) {
 				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
-									boardGraphism, rangeProjectile, damageProjectile, colorProjectile) );
+									MC, PC, rangeProjectile, damageProjectile, colorProjectile) );
 			// Tire vers la gauche
 			} else {
 				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), - speedProjectile,
-									boardGraphism, rangeProjectile, damageProjectile, colorProjectile) );
+									MC, PC, rangeProjectile, damageProjectile, colorProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite
@@ -579,7 +581,7 @@ public class Character extends Entity {
 	public void drawCharacter(Graphics g, MainConstants MC, CharacterConstants CC) {
 		g.setColor(colorCharacter);
 		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
-		int y = (int)((double)(MC.getMaxY() - (this.y + this.height)) * MC.getOneUnityHeight());
+		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height)) * MC.getOneUnityHeight());
 		int width = CC.getCharacterWidth();
 		int height = CC.getCharacterHeight();
 		g.fillRect(x, y, width, height);
@@ -587,9 +589,9 @@ public class Character extends Entity {
 
 
 	/**Dessine les projectiles de ce personnage */
-	public void drawProjectiles(Graphics g, BoardGraphism boardGraphism) {
+	public void drawProjectiles(Graphics g, MainConstants MC, ProjectileConstants PC) {
 		for (int i=0; i<projectiles.size(); i++) {
-			projectiles.get(i).drawProjectile(g, boardGraphism);
+			projectiles.get(i).drawProjectile(g, MC, PC);
 		}
 	}
 

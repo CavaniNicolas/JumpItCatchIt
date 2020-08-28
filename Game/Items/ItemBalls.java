@@ -1,6 +1,7 @@
 package Game.Items;
 
-import Game.BoardGraphism;
+import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.ItemConstants;
 import Game.Items.Item.*;
 
 import java.awt.Graphics;
@@ -29,7 +30,7 @@ public class ItemBalls implements Serializable {
 
 
 	/** Creer les items qui tombent au milieu du plateau */
-	public void createItems(BoardGraphism boardGraphism) {
+	public void createItems(MainConstants MC, ItemConstants IC) {
 
 		int nbItems = itemBalls.size();
 
@@ -39,7 +40,7 @@ public class ItemBalls implements Serializable {
 		if (nbItems == 0) {
 			
 			// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
-			newItem = createNewItemBall(boardGraphism);
+			newItem = createNewItemBall(IC);
 			// L'ajoute a la liste des Items en jeu
 			itemBalls.add(newItem);
 
@@ -57,10 +58,10 @@ public class ItemBalls implements Serializable {
 			} while (lastSpawnedItem == null && i <= nbItems);
 
 			// On ajoute l'item a la liste si celui qui le precede est suffisament tombe
-			if (lastSpawnedItem.getY() < boardGraphism.getMaxY() - lastSpawnedItem.getHeight() + interItems) {
+			if (lastSpawnedItem.getY() < MC.getReal().getMaxY() - lastSpawnedItem.getHeight() + interItems) {
 				
 				// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
-				newItem = createNewItemBall(boardGraphism);
+				newItem = createNewItemBall(IC);
 				// L'ajoute a la liste des Items en jeu
 				itemBalls.add(newItem);
 			}
@@ -71,12 +72,12 @@ public class ItemBalls implements Serializable {
 
 
 	/** Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree */
-	public ItemBall createNewItemBall(BoardGraphism boardGraphism) {
+	public ItemBall createNewItemBall(ItemConstants IC) {
 		// Position et dimensions d'une nouvel Item
-		int x = boardGraphism.getReal().getItemFirstX();
-		int y = boardGraphism.getReal().getItemFirstY();
-		int width = boardGraphism.getReal().getItemWidth();
-		int height = boardGraphism.getReal().getItemHeight();
+		int x = IC.getReal().getItemFirstX();
+		int y = IC.getReal().getItemFirstY();
+		int width = IC.getReal().getItemWidth();
+		int height = IC.getReal().getItemHeight();
 
 		ItemBall newItem = null;
 		ItemBallInit newItemInit = null;
@@ -207,12 +208,12 @@ public class ItemBalls implements Serializable {
 
 
 	/** Affiche les items */
-	public void drawItems(Graphics g, BoardGraphism boardGraphism) {
+	public void drawItems(Graphics g, MainConstants MC, ItemConstants IC) {
 		ItemBall ib = null;
 		for (int i=0; i<itemBalls.size(); i++) {
 			ib = itemBalls.get(i);
 			if (ib != null) {
-				itemBalls.get(i).drawItem(g, boardGraphism);
+				itemBalls.get(i).drawItem(g, MC, IC);
 			}
 		}
 	}

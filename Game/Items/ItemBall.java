@@ -1,7 +1,8 @@
 package Game.Items;
 
 import Game.Entity;
-import Game.BoardGraphism;
+import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.ItemConstants;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -32,12 +33,12 @@ public class ItemBall extends Entity {
 
 
 	/** Affiche l'item */
-	public void drawItem(Graphics g, BoardGraphism boardGraphism) {
+	public void drawItem(Graphics g, MainConstants MC, ItemConstants IC) {
 		g.setColor(colorItem);
-		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height / 2)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = boardGraphism.getGraphic().getItemWidth();
-		int height = boardGraphism.getGraphic().getItemHeight();
+		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
+		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height / 2)) * MC.getOneUnityHeight());
+		int width = IC.getItemWidth();
+		int height = IC.getItemHeight();
 		g.fillOval(x, y, width, height);
 	}
 

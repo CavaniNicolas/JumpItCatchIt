@@ -2,6 +2,10 @@ package Game;
 
 import java.awt.Graphics;
 import java.awt.Image;
+
+import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
+
 import java.awt.Color;
 
 /**Class Projectile <p>
@@ -27,20 +31,20 @@ public class Projectile extends Entity {
 
 
 	/**Constructeur du projectile */
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, BoardGraphism boardGraphism, int rangeX, int damage, Color colorProjectile) {
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, MainConstants MC, ProjectileConstants PC, int rangeX, int damage, Color colorProjectile) {
 		super(x, y, speedX, speedY, accelX, accelY);
 		this.initX = x;
 		this.rangeX = rangeX;
 		this.damage = damage;
 		this.isActive = true;
 		this.colorProjectile = colorProjectile;
-		initGraphicAttributes(boardGraphism);
+		initGraphicAttributes(MC, PC);
 	}
 
 
 	/**Constructeur pour un projectile horizontal */
-	public Projectile(int x, int y, int speedX, BoardGraphism boardGraphism, int range, int damage, Color colorProjectile) {
-		this(x, y, speedX, 0, 0, 0, boardGraphism, range, damage, colorProjectile);
+	public Projectile(int x, int y, int speedX, MainConstants MC, ProjectileConstants PC, int range, int damage, Color colorProjectile) {
+		this(x, y, speedX, 0, 0, 0, MC, PC, range, damage, colorProjectile);
 	}
 
 
@@ -57,20 +61,20 @@ public class Projectile extends Entity {
 
 
 	/**Dessine le projectile */
-	public void drawProjectile(Graphics g, BoardGraphism boardGraphism) {
+	public void drawProjectile(Graphics g, MainConstants MC, ProjectileConstants PC) {
 		g.setColor(colorProjectile);
-		int x = (int)((double)(this.x - this.width / 2) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double)(boardGraphism.getMaxY() - (this.y + this.height / 2)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = boardGraphism.getGraphic().getProjectileWidth();
-		int height = boardGraphism.getGraphic().getProjectileHeight();
+		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
+		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height / 2)) * MC.getOneUnityHeight());
+		int width = PC.getProjectileWidth();
+		int height = PC.getProjectileHeight();
 		g.fillOval(x, y, width, height);
 	}
 
 
 	/**Initialise les champs graphiques */
-	public void initGraphicAttributes(BoardGraphism boardGraphism) {
-		this.width = boardGraphism.getReal().getProjectileWidth();
-		this.height = boardGraphism.getReal().getProjectileHeight();
+	public void initGraphicAttributes(MainConstants MC, ProjectileConstants PC) {
+		this.width = PC.getReal().getProjectileWidth();
+		this.height = PC.getReal().getProjectileHeight();
 
 		// Si le projectile va vers la droite
 		if (speedX > 0) {
@@ -79,7 +83,7 @@ public class Projectile extends Entity {
 		// Si il va vers la gauche
 		} else {
 			this.minX = initX - rangeX;
-			this.maxX = boardGraphism.getMaxX();
+			this.maxX = MC.getReal().getMaxX();
 		}
 	}
 

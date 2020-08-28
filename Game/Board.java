@@ -56,8 +56,8 @@ public class Board implements Serializable {
 	public void updateAllCollisionBorders() {
 
 		// Les personnages
-		characterRed.updateCollisionBorders(boardGraphism, characterBlue);
-		characterBlue.updateCollisionBorders(boardGraphism, characterRed);
+		characterRed.updateCollisionBorders(boardGraphism.getMainConstants(), boardGraphism.getCharacterConstants(), characterBlue);
+		characterBlue.updateCollisionBorders(boardGraphism.getMainConstants(), boardGraphism.getCharacterConstants(), characterRed);
 
 	}
 
@@ -77,8 +77,8 @@ public class Board implements Serializable {
 	public void updatePositionAndMoveAll() {
 
 		// Les personnages
-		characterRed.updatePosition(boardGraphism, characterBlue);
-		characterBlue.updatePosition(boardGraphism, characterRed);
+		characterRed.updatePosition(boardGraphism.getMainConstants(), boardGraphism.getCharacterConstants(), characterBlue);
+		characterBlue.updatePosition(boardGraphism.getMainConstants(), boardGraphism.getCharacterConstants(), characterRed);
 	}
 
 
@@ -86,8 +86,8 @@ public class Board implements Serializable {
 	public void checkActions() {
 
 		// Les personnages
-		characterRed.checkActions(boardGraphism);
-		characterBlue.checkActions(boardGraphism);
+		characterRed.checkActions(boardGraphism.getMainConstants(), boardGraphism.getProjectileConstants());
+		characterBlue.checkActions(boardGraphism.getMainConstants(), boardGraphism.getProjectileConstants());
 	}
 
 
@@ -107,7 +107,7 @@ public class Board implements Serializable {
 
 	/** Creer les items qui tombent au milieu du plateau */
 	public void createItems() {
-		itemBalls.createItems(boardGraphism);
+		itemBalls.createItems(boardGraphism.getMainConstants(), boardGraphism.getItemConstants());
 	}
 
 
@@ -132,10 +132,10 @@ public class Board implements Serializable {
 		InputActions blueCharacterInputActions = new InputActions();
 
 		// Creation des deux persos
-		characterRed = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordLeft(),
-				boardGraphism.getMainConstants().getPlatformHeight(), true, Color.red, redCharacterInputActions, boardGraphism);
-		characterBlue = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordRight(),
-				boardGraphism.getMainConstants().getPlatformHeight(), false, Color.blue, blueCharacterInputActions, boardGraphism);
+		characterRed = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordLeft(), boardGraphism.getMainConstants().getPlatformHeight(),
+				true, Color.red, redCharacterInputActions, boardGraphism.getCharacterConstants(), boardGraphism);
+		characterBlue = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordRight(), boardGraphism.getMainConstants().getPlatformHeight(),
+				false, Color.blue, blueCharacterInputActions, boardGraphism.getCharacterConstants(), boardGraphism);
 
 		// met les characters dans les objets inputActions correspondants
 		redCharacterInputActions.setCharacter(characterRed);
