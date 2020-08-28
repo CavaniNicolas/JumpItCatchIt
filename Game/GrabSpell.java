@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Graphics;
 
+import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.GrabConstants;
+
 
 /**Class GrabSpell <p>
  * Le grab du joueur <p>
@@ -44,12 +47,12 @@ public class GrabSpell {
 
 
 	/**Dessine le grab */
-	public void drawGrab(Graphics g, BoardGraphism boardGraphism) {
+	public void drawGrab(Graphics g, MainConstants MC, GrabConstants GC) {
 		g.setColor(colorGrab);
-		int x = (int)((double) (this.x) * boardGraphism.getGraphic().getOneUnityWidth());
-		int y = (int)((double) (boardGraphism.getMaxY() - (this.y + boardGraphism.getReal().getGrabHeight() / 2)) * boardGraphism.getGraphic().getOneUnityHeight());
-		int width = (int)((double) (this.width * boardGraphism.getGraphic().getOneUnityWidth()));
-		int height = boardGraphism.getGraphic().getGrabHeight();
+		int x = (int)((double) (this.x) * MC.getOneUnityWidth());
+		int y = (int)((double) (MC.getReal().getMaxY() - (this.y + GC.getReal().getGrabHeight() / 2)) * MC.getOneUnityHeight());
+		int width = (int)((double) (this.width * MC.getOneUnityWidth()));
+		int height = GC.getGrabHeight();
 		g.fillRect(x, y, width, height);
 	}
 

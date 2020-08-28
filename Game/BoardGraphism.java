@@ -34,6 +34,8 @@ public class BoardGraphism extends JPanel {
 	private ItemConstants itemConstants;
 	/**HUDConstants Graphiques*/
 	private HUDConstants HUDConstants;
+	/**GrabConstants Graphiques*/
+	private GrabConstants grabConstants;
 
 
 	/**Timer d'affichage du jeu */
@@ -61,6 +63,7 @@ public class BoardGraphism extends JPanel {
 		projectileConstants = new ProjectileConstants(new ProjectileConstants(), oneUnityWidth, oneUnityHeight);
 		itemConstants = new ItemConstants(new ItemConstants(), mainConstants.getReal().getMaxX(), mainConstants.getReal().getPlatformHeight(), oneUnityWidth, oneUnityHeight);
 		HUDConstants = new HUDConstants(new HUDConstants(), oneUnityWidth, oneUnityHeight);
+		grabConstants = new GrabConstants(new GrabConstants(), oneUnityWidth, oneUnityHeight);
 
 	}
 
