@@ -52,7 +52,7 @@ public class KeySelectingPanel extends Menu {
 		//if changing to an available state, check the former similar panel to change it as well
 		for (KeySelectingPanel similarKeySelectingPanel : similarKeySelectingPanels) {
 			similarKeySelectingPanel.getSimilarKeySelectingPanels().clear();
-			similarKeySelectingPanel.getButton().setBackground(Color.white);
+			similarKeySelectingPanel.checkAvailability();
 		}
 		//resets to available before testing again
 		similarKeySelectingPanels.clear();
