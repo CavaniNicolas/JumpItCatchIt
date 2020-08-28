@@ -1,9 +1,13 @@
-package Game;
+package Game.Network;
 
-import javax.swing.JFrame;
-
+import Game.Board;
+import Game.GameLoop;
+import Game.InputActions;
+import Game.PlayerKeyListener;
 import Menu.FileFunctions;
 import Menu.KeyBindings;
+
+import javax.swing.JFrame;
 
 /** handles the key listeners and game for local game */
 public class BoardLocal extends BoardIO {

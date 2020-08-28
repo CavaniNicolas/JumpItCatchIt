@@ -1,5 +1,6 @@
 package Game;
 
+import Game.Network.BoardIO;
 import Menu.KeyBindings;
 import Menu.KeyBinding;
 

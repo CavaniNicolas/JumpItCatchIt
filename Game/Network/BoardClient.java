@@ -1,5 +1,9 @@
-package Game;
+package Game.Network;
 
+import Game.Board;
+import Game.BoardGraphism;
+import Game.PlayerKeyListener;
+import Game.InputActions;
 import Menu.FileFunctions;
 import Menu.KeyBindings;
 import Menu.MainMenu;

@@ -1,4 +1,6 @@
-package Game;
+package Game.Network;
+
+import Game.InputActions;
 
 import javax.swing.JFrame;
 

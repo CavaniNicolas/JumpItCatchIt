@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Network.BoardServer;
+
 public class GameLoopServer extends GameLoop {
 	private BoardServer boardServer;
 

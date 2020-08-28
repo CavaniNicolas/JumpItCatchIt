@@ -1,6 +1,7 @@
 package Game;
 
-import Game.Items.ItemBalls;
+import Game.Gameplay.Character;
+import Game.Gameplay.Items.ItemBalls;
 
 import java.awt.Color;
 import java.io.Serializable;
@@ -133,9 +134,9 @@ public class Board implements Serializable {
 
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordLeft(), boardGraphism.getMainConstants().getPlatformHeight(),
-				true, Color.red, redCharacterInputActions, boardGraphism.getCharacterConstants().getReal(), boardGraphism);
+				true, Color.red, redCharacterInputActions, boardGraphism.getCharacterConstants().getReal());
 		characterBlue = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordRight(), boardGraphism.getMainConstants().getPlatformHeight(),
-				false, Color.blue, blueCharacterInputActions, boardGraphism.getCharacterConstants().getReal(), boardGraphism);
+				false, Color.blue, blueCharacterInputActions, boardGraphism.getCharacterConstants().getReal());
 
 		// met les characters dans les objets inputActions correspondants
 		redCharacterInputActions.setCharacter(characterRed);

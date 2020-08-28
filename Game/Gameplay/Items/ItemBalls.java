@@ -1,8 +1,8 @@
-package Game.Items;
+package Game.Gameplay.Items;
 
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
 import Game.ConstantsContainers.GraphicConstants.ItemConstants;
-import Game.Items.Item.*;
+import Game.Gameplay.Items.Item.*;
 
 import java.awt.Graphics;
 import java.io.Serializable;

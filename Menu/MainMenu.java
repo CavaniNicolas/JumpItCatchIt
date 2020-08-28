@@ -1,11 +1,11 @@
 package Menu;
 
 import Game.Board;
-import Game.BoardClient;
 import Game.BoardGraphism;
-import Game.BoardIO;
-import Game.BoardLocal;
-import Game.BoardServer;
+import Game.Network.BoardClient;
+import Game.Network.BoardIO;
+import Game.Network.BoardLocal;
+import Game.Network.BoardServer;
 
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
