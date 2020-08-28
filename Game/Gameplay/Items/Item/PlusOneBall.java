@@ -1,11 +1,11 @@
-package Game.Items.Item;
+package Game.Gameplay.Items.Item;
 
-import Game.Items.ItemBall;
+import Game.Gameplay.Items.ItemBall;
 
 import java.awt.Color;
 
 public class PlusOneBall extends ItemBall {
-
+	private static final long serialVersionUID = -8612956912026402260L;
 
 	/** Constructeur pour creer un item lors du jeu */
 	public PlusOneBall(int x, int y, int width, int height) {

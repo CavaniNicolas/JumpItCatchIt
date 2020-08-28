@@ -1,15 +1,14 @@
-package Game;
+package Game.Gameplay;
 
-import java.awt.Color;
-import java.awt.Image;
-import java.util.ArrayList;
-
+import Game.InputActions;
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
 import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
 import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
 
 import java.awt.Graphics;
-
+import java.awt.Color;
+import java.awt.Image;
+import java.util.ArrayList;
 
 /** Class Character <p>
  * contient le personnage, toutes ses actions, positions, etats... <p>
@@ -108,7 +107,7 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, CharacterConstants CCReal, BoardGraphism boardGraphism) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, CharacterConstants CCReal) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
@@ -120,8 +119,8 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, CharacterConstants CCReal, BoardGraphism boardGraphism) {
-		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, CCReal, boardGraphism);
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, CharacterConstants CCReal) {
+		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, CCReal);
 	}
 
 

@@ -1,5 +1,7 @@
 package Game;
 
+import Game.Gameplay.Character;
+
 import java.io.Serializable;
 
 public class InputActions implements Serializable {

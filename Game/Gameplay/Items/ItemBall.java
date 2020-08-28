@@ -1,6 +1,6 @@
-package Game.Items;
+package Game.Gameplay.Items;
 
-import Game.Entity;
+import Game.Gameplay.Entity;
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
 import Game.ConstantsContainers.GraphicConstants.ItemConstants;
 

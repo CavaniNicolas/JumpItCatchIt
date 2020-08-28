@@ -1,4 +1,9 @@
-package Game;
+package Game.Network;
+
+import Game.Board;
+import Game.BoardGraphism;
+import Game.GameLoopServer;
+import Game.InputActions;
 
 import java.net.*;
 import java.util.ArrayList;
