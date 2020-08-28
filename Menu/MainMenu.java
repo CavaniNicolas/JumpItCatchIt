@@ -6,7 +6,6 @@ import Game.BoardGraphism;
 import Game.BoardIO;
 import Game.BoardLocal;
 import Game.BoardServer;
-import Game.GameLoop;
 
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
@@ -27,8 +26,6 @@ public class MainMenu extends JFrame {
 	
 	/**Contient le jeu */
 	private Board board;
-
-	/** contient le client ou le jeu local */
 	private BoardIO boardIO;
 	
 	//main menu panels
@@ -97,11 +94,7 @@ public class MainMenu extends JFrame {
 		createEndGamePanel();
 		createConnectionErrorPanel();
 
-    	/** display main menu*/
-		backgroundPanel.add(mainMenuPanel);
-		isDisplayingMainMenu = true;
-		this.frame.setContentPane(backgroundPanel);
-		this.frame.setVisible(true);
+		displayMainMenu();
 	}
 
 
@@ -171,6 +164,7 @@ public class MainMenu extends JFrame {
 	public void displayMainMenu() {
 		//displays the game panel
 		backgroundPanel.removeAll();
+		backgroundPanel.add(backgroundPanel.getLabel());
 		backgroundPanel.add(mainMenuPanel);
 		isDisplayingMainMenu = true;
 		reloadMenuDisplay();
@@ -318,10 +312,7 @@ public class MainMenu extends JFrame {
 				boardIO.exitGame();
 				boardIO.handleKeyListeners(frame, false);
 
-				isDisplayingMainMenu = true;
-				backgroundPanel.removeAll();
-				backgroundPanel.add(mainMenuPanel);
-				frame.setContentPane(backgroundPanel);
+				displayMainMenu();
 			}
 		});
 
