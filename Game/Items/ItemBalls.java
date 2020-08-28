@@ -9,9 +9,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ItemBalls implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5243564254587031491L;
 
-	/** Tableau contenant les valeurs constantes de chaque Item, ces valeurs sont utiles a la generation des items et a leur initialisation */
+	/**
+	 * Tableau contenant les valeurs constantes de chaque Item, ces valeurs sont
+	 * utiles a la generation des items et a leur initialisation
+	 */
 	private transient ArrayList<ItemBallInit> allExistingBalls = new ArrayList<ItemBallInit>();
 
 	/** Tableau contenant les items actuellement sur le plateau */

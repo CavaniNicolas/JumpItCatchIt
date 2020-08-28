@@ -9,7 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class KeyOptionMenu extends Menu {
-	//attributes relative to the option menu
+	private static final long serialVersionUID = 7808677089473693746L;
+
+	// attributes relative to the option menu
 	private Menu saveQuitOptionsPanel;
 	private Menu saveFailedPanel;
 

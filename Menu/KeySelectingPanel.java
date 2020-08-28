@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class KeySelectingPanel extends Menu {
+	private static final long serialVersionUID = 3423093562134470104L;
+
 	private JButton selectingButton;
 	private JLabel label;
 	private JButton resetButton;

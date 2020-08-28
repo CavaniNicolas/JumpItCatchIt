@@ -11,7 +11,8 @@ import javax.swing.JFrame;
  * Gere la fenetre et les saisies clavier
 */
 public class MainGame extends JFrame {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1816999198544107363L;
+
 	private MainMenu mainMenu;
 
 	public MainGame() {

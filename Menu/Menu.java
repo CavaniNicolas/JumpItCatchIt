@@ -11,6 +11,8 @@ import java.awt.Color;
 import java.awt.Component;
 
 public class Menu extends JPanel {
+	private static final long serialVersionUID = -5397491825495901493L;
+
 	protected double width = 0;
 	protected double height = 0;
 	protected final int widthMargin = 15;

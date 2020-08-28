@@ -21,9 +21,9 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class MainMenu extends JFrame {
-	private static final long serialVersionUID = 4L;
-	
-	/**Contient le jeu */
+	private static final long serialVersionUID = -3619542431333472213L;
+
+	/** Contient le jeu */
 	private Board board;
 	private BoardIO boardIO;
 	

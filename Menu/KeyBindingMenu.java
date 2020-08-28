@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 public class KeyBindingMenu extends Menu {
+	private static final long serialVersionUID = 2018355376623911571L;
+
 	private ArrayList<KeySelectingPanel> keySelectingPanels = new ArrayList<KeySelectingPanel>();
 	private KeyBindings keyBindings;
 

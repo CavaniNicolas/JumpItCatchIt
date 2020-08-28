@@ -11,8 +11,7 @@ import java.awt.Color;
 /**Class Projectile <p>
  * La position (x,y) du Projectile est au centre du cercle */
 public class Projectile extends Entity {
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 827208985306185938L;
 
 	/** Position initiale en X */
 	private transient int initX;
