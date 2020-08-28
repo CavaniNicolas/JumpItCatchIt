@@ -28,10 +28,8 @@ public class MainMenu extends JFrame {
 	/**Contient le jeu */
 	private Board board;
 
+	/** contient le client ou le jeu local */
 	private BoardIO boardIO;
-
-	/**Contient la boucle principale de calcul du jeu */
-	private GameLoop gameLoop;
 	
 	//main menu panels
 	private Menu mainMenuPanel;
@@ -111,8 +109,6 @@ public class MainMenu extends JFrame {
 	public void startLocalGame() {
 		isDisplayingMainMenu = false;
 
-		gameLoop = new GameLoop(board);
-
 		//init game
 		board.initGame();
 		boardIO = new BoardLocal(board);
@@ -129,8 +125,6 @@ public class MainMenu extends JFrame {
 
 	/** starts the online board and sets the frame to display it */
 	public void startOnlineGame() {
-		gameLoop = new GameLoop(board);
-
 		Thread threadServer = new Thread(new BoardServer());
 		threadServer.start();
 
