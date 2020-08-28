@@ -3,26 +3,18 @@ package Menu;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 public class KeyBindingMenu extends Menu {
-	private ArrayList<KeySelectingPanel> keySelectingPanels;
-	private MainMenu mainMenu;
-
-	public KeyBindingMenu(String name, MainMenu mainMenu) {
-		super();
-		this.mainMenu = mainMenu;
-		//JPanel binding player
-		displayBorder(name);
-
-		keySelectingPanels = new ArrayList<KeySelectingPanel>();
-	}
+	private ArrayList<KeySelectingPanel> keySelectingPanels = new ArrayList<KeySelectingPanel>();
 
 	/** creates a new KeySelectingPanel based on a KeyBinding */
-	public void addKeySelectingPanels(String path, String defaultPath) {
+	public void addKeySelectingPanels(String path, String defaultPath, KeyOptionMenu keyOptionMenu) {
 		KeyBindings keyBindings = (KeyBindings)FileFunctions.getObject(path);
 
 		//a default path is added in the constructor to allow resetting a binding
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
-			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath, mainMenu);
+			KeySelectingPanel keySelectingPanel = new KeySelectingPanel(keyBindings.getKeyBindings().get(i), i, defaultPath, keyOptionMenu);
 			keySelectingPanels.add(keySelectingPanel);
 			this.add(keySelectingPanel);
 		}

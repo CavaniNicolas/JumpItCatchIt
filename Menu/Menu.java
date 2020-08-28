@@ -49,10 +49,7 @@ public class Menu extends JPanel {
 		JButton button = new JButton(name);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				backgroundPanel.remove(self);
-				backgroundPanel.add(menu);
-				frame.setContentPane(backgroundPanel);
-				frame.setVisible(true);
+				menuInteraction(backgroundPanel, menu);
 			}
 		});
 		this.add(button);
@@ -63,13 +60,19 @@ public class Menu extends JPanel {
 		JButton button = new JButton(name);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				backInteraction();
+				menuInteraction();
 			}
 		});
 		this.add(button);
 	}
 
-	public void backInteraction() {
+	/** back interaction */
+	public void menuInteraction() {
+		menuInteraction(backgroundPanel, menu);
+	}
+
+	/** go to a specfic menu */
+	public void menuInteraction(BackgroundPanel backgroundPanel, Menu menu) {
 		backgroundPanel.remove(self);
 		backgroundPanel.add(menu);
 		frame.setContentPane(backgroundPanel);

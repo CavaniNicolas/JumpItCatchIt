@@ -15,12 +15,12 @@ public class KeySelectingPanel extends Menu {
 	private JLabel label;
 	private JButton resetButton;
 	private ArrayList<KeySelectingPanel> similarKeySelectingPanels;
-	private MainMenu mainMenu;
+	private KeyOptionMenu keyOptionMenu;
 
-	public KeySelectingPanel(KeyBinding keyBinding, int position, String path, MainMenu mainMenu) {
+	public KeySelectingPanel(KeyBinding keyBinding, int position, String path, KeyOptionMenu keyOptionMenu) {
 		super();
 		similarKeySelectingPanels = new ArrayList<KeySelectingPanel>();
-		this.mainMenu = mainMenu;
+		this.keyOptionMenu = keyOptionMenu;
 
 		label = new JLabel();
 		selectingButton = new JButton();
@@ -58,14 +58,9 @@ public class KeySelectingPanel extends Menu {
 		//resets to available before testing again
 		similarKeySelectingPanels.clear();
 		selectingButton.setBackground(Color.white);
-
-		//create an array list of all KeySelectingPanels
-		ArrayList<KeySelectingPanel> allKeySelectingPanels = new ArrayList<KeySelectingPanel>();
-		allKeySelectingPanels.addAll(mainMenu.getRedPlayerBindingMenu().getKeySelectingPanels());
-		allKeySelectingPanels.addAll(mainMenu.getBluePlayerBindingMenu().getKeySelectingPanels());
 		
 		//check all the other panels for similar panels
-		for (KeySelectingPanel keySelectingPanel : allKeySelectingPanels) {
+		for (KeySelectingPanel keySelectingPanel : keyOptionMenu.getAllKeySelectingPanels()) {
 			if (keySelectingPanel != this && keySelectingPanel.getButton().getText().equals(this.selectingButton.getText())) {
 				//add the similar panel to the list of similar panels
 				similarKeySelectingPanels.add(keySelectingPanel);
@@ -116,8 +111,8 @@ public class KeySelectingPanel extends Menu {
 	
 		public void keyTyped(KeyEvent event) {	
 			String cara = String.valueOf((char)event.getKeyChar());
-			if (!cara.equals(selectingButton.getText())) {
-				mainMenu.setUnsavedChanges(true);
+			if (cara != selectingButton.getText()) {
+				keyOptionMenu.setUnsavedChanges(true);
 			}
 			//if (cara in validCaracters) {
 				selectingButton.setText(cara);
