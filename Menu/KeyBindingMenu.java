@@ -38,8 +38,8 @@ public class KeyBindingMenu extends Menu {
 	/** return current key bindings */
 	public KeyBindings getCurrentKeyBindings() {
 		KeyBindings currentKeyBindings = new KeyBindings();
-		for (KeySelectingPanel keySelectingPanel : keySelectingPanels) {
-			currentKeyBindings.addBinding(keySelectingPanel.getCurrentKeyBinding());
+		for (int i = 0; i < keySelectingPanels.size(); i++) {
+			currentKeyBindings.addBinding(keySelectingPanels.get(i).getCurrentKeyBinding());
 		}
 		return currentKeyBindings;
 	}

@@ -30,8 +30,10 @@ public class KeyBindings implements Serializable {
 		if (keyBindings.size() != kb.getKeyBindings().size()) {
 			return false;
 		}
+		System.out.println("here");
 		for (int i = 0; i < keyBindings.size(); i++) {
 			if (keyBindings.get(i) != kb.getKeyBindings().get(i)) {
+				System.out.println(i);
 				return false;
 			}
 		}

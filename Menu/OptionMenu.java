@@ -4,6 +4,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.OverlayLayout;
+
 import java.awt.event.ActionEvent;
 
 public class OptionMenu extends Menu {

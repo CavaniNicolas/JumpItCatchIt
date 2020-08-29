@@ -67,13 +67,13 @@ public class KeyOptionMenu extends OptionContentMenu {
 	@Override
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
 	public void setAllOptions() {
-		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/redPlayerBindings.txt", "KeyBindings/redPlayerBindingsDefault.txt"));
-		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/bluePlayerBindings.txt", "KeyBindings/bluePlayerBindingsDefault.txt"));
+		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/redKeyBindings.txt", "KeyBindings/redKeyBindingsDefault.txt"));
+		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/blueKeyBindings.txt", "KeyBindings/blueKeyBindingsDefault.txt"));
 	}
 
 	@Override
 	public void saveOptions() {
-		FileFunctions.saveObject(redPlayerBindings, "KeyBindings/redPlayerBindings.txt");
-		FileFunctions.saveObject(bluePlayerBindings, "KeyBindings/bluePlayerBindings.txt");
+		FileFunctions.saveObject(redPlayerBindings.getCurrentKeyBindings(), "KeyBindings/redKeyBindings.txt");
+		FileFunctions.saveObject(bluePlayerBindings.getCurrentKeyBindings(), "KeyBindings/blueKeyBindings.txt");
 	}
 }

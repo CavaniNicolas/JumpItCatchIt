@@ -19,7 +19,7 @@ public class Menu extends JPanel {
 	protected final int heightMargin = 15;
 	protected int borderMargin = 0;
 	protected Menu self = this;
-	protected BackgroundPanel backgroundPanel;
+	protected JPanel backgroundPanel;
 	protected Menu menu;
 	protected JFrame frame;
 
@@ -27,7 +27,7 @@ public class Menu extends JPanel {
 		this(null, null, null);
 	}
 
-	public Menu(BackgroundPanel backgroundPanel, Menu menu, JFrame frame) {
+	public Menu(JPanel backgroundPanel, Menu menu, JFrame frame) {
 		this.setBackground(Color.white);
 		this.backgroundPanel = backgroundPanel;
 		this.menu = menu;
@@ -74,7 +74,7 @@ public class Menu extends JPanel {
 	}
 
 	/** go to a specfic menu */
-	public void menuInteraction(BackgroundPanel backgroundPanel, Menu menu) {
+	public void menuInteraction(JPanel backgroundPanel, Menu menu) {
 		backgroundPanel.remove(self);
 		backgroundPanel.add(menu);
 		frame.setContentPane(backgroundPanel);

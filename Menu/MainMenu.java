@@ -191,6 +191,8 @@ public class MainMenu extends JFrame {
 
 		mainMenuPanel.setDimensions();
 		mainMenuPanel.setOrder(true);
+
+		mainMenuPanel.setOpaque(false);
 	}
 
 	/** initiates the components of the menu */
