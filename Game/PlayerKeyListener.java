@@ -1,8 +1,7 @@
 package Game;
 
 import Game.Network.BoardIO;
-import Menu.KeyBindings;
-import Menu.KeyBinding;
+import Menu.Options.KeyBindings.*;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

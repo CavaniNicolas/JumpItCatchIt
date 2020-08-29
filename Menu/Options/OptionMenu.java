@@ -1,4 +1,4 @@
-package Menu;
+package Menu.Options;
 
 import java.awt.event.ActionListener;
 
@@ -6,21 +6,29 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.OverlayLayout;
 
+import Menu.BackgroundPanel;
+import Menu.FileFunctions;
+import Menu.Menu;
+
 import java.awt.event.ActionEvent;
 
+/** this is actually a jpanel to be used to have overlapping menus + option menu */
 public class OptionMenu extends Menu {
 	// attributes relative to the option menu
 	private Menu saveQuitOptionsPanel;
 	private Menu saveFailedPanel;
 	private Menu buttonPanel;
+	private Menu optionMenu;
 
 	/** the menu containing the elements to be saved.. (implements an interface) */
 	private OptionContentMenu optionContentMenu;
 
 	public OptionMenu(OptionContentMenu optionContentMenu, BackgroundPanel backgroundPanel, Menu menu, JFrame frame) {
 		super(backgroundPanel, menu, frame);
+		this.setLayout(new OverlayLayout(this));
 
 		this.optionContentMenu = optionContentMenu;
+		optionMenu = new Menu();
 		buttonPanel = new Menu();
 		saveQuitOptionsPanel = new Menu();
 		saveFailedPanel = new Menu();
@@ -29,9 +37,11 @@ public class OptionMenu extends Menu {
 		createSaveQuitOptionsPanel();
 		createSaveFailedPanel();
 
-		this.add(optionContentMenu);
-		this.add(buttonPanel);
-		setOrder(true);
+		optionMenu.add(optionContentMenu);
+		optionMenu.add(buttonPanel);
+		optionMenu.setOrder(true);
+
+		this.add(optionMenu);
 	}
 
 	public void createOptionButtons() {

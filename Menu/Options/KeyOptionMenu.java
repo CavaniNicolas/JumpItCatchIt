@@ -1,6 +1,8 @@
-package Menu;
+package Menu.Options;
 
 import java.util.ArrayList;
+
+import Menu.FileFunctions;
 
 public class KeyOptionMenu extends OptionContentMenu {
 	private static final long serialVersionUID = 7808677089473693746L;

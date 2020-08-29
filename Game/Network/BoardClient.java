@@ -5,7 +5,7 @@ import Game.BoardGraphism;
 import Game.PlayerKeyListener;
 import Game.InputActions;
 import Menu.FileFunctions;
-import Menu.KeyBindings;
+import Menu.Options.KeyBindings.KeyBindings;
 import Menu.MainMenu;
 
 import java.net.*;

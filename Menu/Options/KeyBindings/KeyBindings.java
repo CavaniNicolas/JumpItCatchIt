@@ -1,4 +1,4 @@
-package Menu;
+package Menu.Options.KeyBindings;
 
 import java.io.Serializable;
 import java.util.ArrayList;

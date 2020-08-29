@@ -1,7 +1,11 @@
-package Menu;
+package Menu.Options;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+
+import Menu.FileFunctions;
+import Menu.Menu;
+import Menu.Options.KeyBindings.*;
 
 public class KeyBindingMenu extends Menu {
 	private static final long serialVersionUID = 2018355376623911571L;

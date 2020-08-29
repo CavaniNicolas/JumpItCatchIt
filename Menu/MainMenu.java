@@ -6,6 +6,8 @@ import Game.Network.BoardClient;
 import Game.Network.BoardIO;
 import Game.Network.BoardLocal;
 import Game.Network.BoardServer;
+import Menu.Options.KeyOptionMenu;
+import Menu.Options.OptionMenu;
 
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;

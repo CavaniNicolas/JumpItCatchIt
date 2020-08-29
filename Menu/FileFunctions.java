@@ -8,6 +8,8 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+import Menu.Options.KeyBindings.*;
+
 public class FileFunctions {
 	
 	/** sets the players bindings to their correct value */

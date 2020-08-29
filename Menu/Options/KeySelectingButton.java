@@ -1,4 +1,4 @@
-package Menu;
+package Menu.Options;
 
 import javax.swing.JButton;
 import java.awt.event.KeyEvent;

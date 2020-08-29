@@ -1,4 +1,6 @@
-package Menu;
+package Menu.Options;
+
+import Menu.Menu;
 
 public class OptionContentMenu extends Menu {
 	public void setAllOptions() {}

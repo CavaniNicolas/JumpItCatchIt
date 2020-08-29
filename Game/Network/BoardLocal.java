@@ -5,7 +5,7 @@ import Game.GameLoop;
 import Game.InputActions;
 import Game.PlayerKeyListener;
 import Menu.FileFunctions;
-import Menu.KeyBindings;
+import Menu.Options.KeyBindings.KeyBindings;
 
 import javax.swing.JFrame;
 
