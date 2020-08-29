@@ -9,14 +9,15 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
 public class FileFunctions {
+	
 	/** sets the players bindings to their correct value */
-	public static String getPathFileToUse(String color) {
+	public static String getPathFileToUse(String path, String defaultPath) {
 		//check if non default key settings exist
-		File f = new File("KeyBindings/" + color + "KeyBindings.txt");
-		if(!f.exists() || f.isDirectory()) {
-			return "KeyBindings/" + color + "KeyBindingsDefault.txt";
+		File f = new File(path);
+		if(f.exists() && !f.isDirectory()) {
+			return path;
 		}
-		return "KeyBindings/" + color + "KeyBindings.txt";
+		return defaultPath;
 	}
 
 	/** return a KeyBinding object from a String path to a file */

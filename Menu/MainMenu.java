@@ -144,7 +144,7 @@ public class MainMenu extends JFrame {
 	public void createMenus() {
 		mainMenuPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
 
-		optionPanel = new KeyOptionMenu(backgroundPanel, mainMenuPanel, frame);
+		optionPanel = new OptionMenu(new KeyOptionMenu(), backgroundPanel, mainMenuPanel, frame);
 		multiplayerPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
 
 		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel, frame);

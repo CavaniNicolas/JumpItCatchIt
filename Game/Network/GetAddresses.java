@@ -1,4 +1,4 @@
-package Menu;
+package Game.Network;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

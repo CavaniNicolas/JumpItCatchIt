@@ -11,7 +11,7 @@ public class KeyBindingMenu extends Menu {
 
 	/** creates a new KeySelectingPanel based on a KeyBinding */
 	public KeyBindingMenu(String path, String defaultPath, KeyOptionMenu keyOptionMenu) {
-		keyBindings = (KeyBindings)FileFunctions.getObject(path);
+		keyBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse(path, defaultPath));
 
 		//a default path is added in the constructor to allow resetting a binding
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {

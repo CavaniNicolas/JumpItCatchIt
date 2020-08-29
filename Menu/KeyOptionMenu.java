@@ -2,18 +2,8 @@ package Menu;
 
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-public class KeyOptionMenu extends Menu {
+public class KeyOptionMenu extends OptionContentMenu {
 	private static final long serialVersionUID = 7808677089473693746L;
-
-	// attributes relative to the option menu
-	private Menu saveQuitOptionsPanel;
-	private Menu saveFailedPanel;
 
 	//key binding sub menus
 	private KeyBindingMenu redPlayerBindings;
@@ -22,24 +12,15 @@ public class KeyOptionMenu extends Menu {
 	//all the KeySelectingPanels
 	private ArrayList<KeySelectingPanel> allKeySelectingPanels = new ArrayList<KeySelectingPanel>();
 
-	public KeyOptionMenu(BackgroundPanel backgroundPanel, Menu menu, JFrame frame) {
-		super(backgroundPanel, menu, frame);
-
-		saveFailedPanel = new Menu(backgroundPanel, this, frame);
-		saveQuitOptionsPanel = new Menu();
-
+	public KeyOptionMenu() {
+		super();
 		createOptionMenu();
-		createSaveFailedPanel();
-		createSaveQuitOptionsPanel();
 	}
 
 	public void createOptionMenu() {
-		Menu playerMovement = new Menu();
-		Menu buttonPanel = new Menu();
-
-		redPlayerBindings = new KeyBindingMenu(FileFunctions.getPathFileToUse("red"), "KeyBindings/redKeyBindingsDefault.txt", this);
+		redPlayerBindings = new KeyBindingMenu("KeyBindings/redKeyBindings.txt", "KeyBindings/redKeyBindingsDefault.txt", this);
 		redPlayerBindings.displayBorder("Player movement");
-		bluePlayerBindings = new KeyBindingMenu(FileFunctions.getPathFileToUse("blue"), "KeyBindings/blueKeyBindingsDefault.txt", this);
+		bluePlayerBindings = new KeyBindingMenu("KeyBindings/blueKeyBindings.txt", "KeyBindings/blueKeyBindingsDefault.txt", this);
 		bluePlayerBindings.displayBorder("Second player movement (local only)");
 
 		addAllKeySelectingPanels();
@@ -49,103 +30,10 @@ public class KeyOptionMenu extends Menu {
 		bluePlayerBindings.setDimensions();
 		bluePlayerBindings.setOrder(true);
 		
-		playerMovement.add(redPlayerBindings);
-		playerMovement.add(bluePlayerBindings);
-		playerMovement.setDimensions();
-		playerMovement.setOrder(false);
-
-		/** save bindings */
-		buttonPanel.addNewButton("SAVE", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {   
-				saveOptions(false);
-			}
-		});
-
-		/** back to main menu */
-		buttonPanel.addNewButton("BACK", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {        
-				menuInteraction();
-			}
-		});
-
-		/** reset to default bindings */
-		buttonPanel.addNewButton("RESET BINDINGS", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {        
-				//check if non default key settings exist and delete those files
-				FileFunctions.deleteNonDefaultBindings();
-				//recreate the menu with default settings 
-				setBindings();
-			}
-		});
-
-		//make it horizontal
-		buttonPanel.setDimensions();
-		buttonPanel.setOrder(false);
-
-		//add the panels/menus
-		this.add(playerMovement);
-		this.add(buttonPanel);
-
-		this.setOrder(true);
-	}
-
-	public void createSaveQuitOptionsPanel() {
-		saveQuitOptionsPanel.displayBorder("WARNING");
-
-		saveQuitOptionsPanel.add(new JLabel("Some changes have not been saved"));
-
-		Menu buttonPanel = new Menu();
-
-		/** resume game */
-		buttonPanel.addNewButton("SAVE AND QUIT", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				menuInteraction(backgroundPanel, menu);
-				saveOptions(true);
-			}
-		});
-
-		/** go back to the main menu */
-		buttonPanel.addNewButton("CANCEL AND QUIT", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				menuInteraction(backgroundPanel, menu);
-				setBindings();
-			}
-		});
-
-		buttonPanel.setDimensions();
-		buttonPanel.setOrder(false);
-
-		// add all the components
-		saveQuitOptionsPanel.add(buttonPanel);
-
-		saveQuitOptionsPanel.setDimensions();
-		saveQuitOptionsPanel.setOrder(true);
-	}
-
-	public void createSaveFailedPanel() {
-		saveFailedPanel.displayBorder("WARNING");
-
-		JLabel info = new JLabel("There's a problem with your bindings");
-		saveFailedPanel.add(info);
-
-		/** resume game */
-		saveFailedPanel.addNewButton("OK");
-
-		saveFailedPanel.setDimensions();		
-		saveFailedPanel.setOrder(true);
-	}
-
-	public Boolean checkChanges() {
-		return redPlayerBindings.checkChanges() && bluePlayerBindings.checkChanges();
-	}
-
-	/** back interaction */
-	public void menuInteraction() {
-		if (!checkChanges()) {
-			menuInteraction(backgroundPanel, saveQuitOptionsPanel);
-		} else {
-			menuInteraction(backgroundPanel, menu);
-		}
+		this.add(redPlayerBindings);
+		this.add(bluePlayerBindings);
+		this.setDimensions();
+		this.setOrder(false);
 	}
 
 	//create an array list of all KeySelectingPanels
@@ -154,22 +42,18 @@ public class KeyOptionMenu extends Menu {
 		allKeySelectingPanels.addAll(bluePlayerBindings.getKeySelectingPanels());
 	}
 
-	/** saves options if they are valid */
-	public void saveOptions(Boolean back) {
-		//saves the current (the ones being displayed) keyBindings if they are all unique
-		if (checkUnicity()) {
-			KeyBindings redBindings = redPlayerBindings.getCurrentKeyBindings();
-			KeyBindings blueBindings = bluePlayerBindings.getCurrentKeyBindings();
-			FileFunctions.saveObject(redBindings, "KeyBindings/redKeyBindings.txt");
-			FileFunctions.saveObject(blueBindings, "KeyBindings/blueKeyBindings.txt");
-		} else {
-			menuInteraction(backgroundPanel, saveFailedPanel);
-		}
+	public ArrayList<KeySelectingPanel> getAllKeySelectingPanels() {
+		return allKeySelectingPanels;
 	}
 
+	@Override
+	public Boolean checkChanges() {
+		return redPlayerBindings.checkChanges() && bluePlayerBindings.checkChanges();
+	}
 
+	@Override
 	/** check if every binding is unique */
-	public boolean checkUnicity() {
+	public Boolean checkValidity() {
 		for (int i = 0; i < allKeySelectingPanels.size(); i++) {
 			for (int j = i + 1; j < allKeySelectingPanels.size(); j++) {
 				if (allKeySelectingPanels.get(i).getCurrentKeyBinding().getKeyValue() == allKeySelectingPanels.get(j).getCurrentKeyBinding().getKeyValue()) {
@@ -180,13 +64,16 @@ public class KeyOptionMenu extends Menu {
 		return true;
 	}
 
+	@Override
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
-	public void setBindings() {
-		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("red"));
-		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("blue"));
+	public void setAllOptions() {
+		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/redPlayerBindings.txt", "KeyBindings/redPlayerBindingsDefault.txt"));
+		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/bluePlayerBindings.txt", "KeyBindings/bluePlayerBindingsDefault.txt"));
 	}
 
-	public ArrayList<KeySelectingPanel> getAllKeySelectingPanels() {
-		return allKeySelectingPanels;
+	@Override
+	public void saveOptions() {
+		FileFunctions.saveObject(redPlayerBindings, "KeyBindings/redPlayerBindings.txt");
+		FileFunctions.saveObject(bluePlayerBindings, "KeyBindings/bluePlayerBindings.txt");
 	}
 }
