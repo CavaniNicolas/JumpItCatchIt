@@ -450,11 +450,14 @@ public class MainMenu {
 
 		@Override
 		public void keyTyped(KeyEvent event) {
+			System.out.println("hello");
 			int code = event.getKeyChar();
 
 			//escape
 			if (code == 27) {
-				//menuPanel.getComponent(menuPanel.getComponentCount()-1).menuInteraction();
+				System.out.println("exiting");
+				Menu menu =  (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
+				menu.menuInteraction();
 			}
 		}
 

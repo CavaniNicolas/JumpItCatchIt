@@ -26,8 +26,8 @@ public class BoardLocal extends BoardIO {
 		gameLoop = new GameLoop(this.board);
 
 		// On récupère les keyBindings des joueurs
-		KeyBindings redPlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("KeyBindings/redPlayerBindings.txt", "KeyBindings/redPlayerBindingsDefault.txt"));
-		KeyBindings bluePlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("KeyBindings/bluePlayerBindings.txt", "KeyBindings/bluePlayerBindingsDefault.txt"));
+		KeyBindings redPlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("optionSaves/redKeyBindings.txt", "optionSaves/redKeyBindingsDefault.txt"));
+		KeyBindings bluePlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("optionSaves/blueKeyBindings.txt", "optionSaves/blueKeyBindingsDefault.txt"));
 
 		//on crée les listeners correspondant
 		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, board.getCharacterRed().getInputActions());

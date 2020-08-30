@@ -20,9 +20,9 @@ public class KeyOptionMenu extends OptionContentMenu {
 	}
 
 	public void createOptionMenu() {
-		redPlayerBindings = new KeyBindingMenu("KeyBindings/redKeyBindings.txt", "KeyBindings/redKeyBindingsDefault.txt", this);
+		redPlayerBindings = new KeyBindingMenu("optionSaves/redKeyBindings.txt", "optionSaves/redKeyBindingsDefault.txt", this);
 		redPlayerBindings.displayBorder("Player movement");
-		bluePlayerBindings = new KeyBindingMenu("KeyBindings/blueKeyBindings.txt", "KeyBindings/blueKeyBindingsDefault.txt", this);
+		bluePlayerBindings = new KeyBindingMenu("optionSaves/blueKeyBindings.txt", "optionSaves/blueKeyBindingsDefault.txt", this);
 		bluePlayerBindings.displayBorder("Second player movement (local only)");
 
 		addAllKeySelectingPanels();
@@ -69,13 +69,13 @@ public class KeyOptionMenu extends OptionContentMenu {
 	@Override
 	/** sets the binding in the bindingMenus to default or personalized bindings according to the existence of personalized bindings */
 	public void setAllOptions() {
-		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/redKeyBindings.txt", "KeyBindings/redKeyBindingsDefault.txt"));
-		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("KeyBindings/blueKeyBindings.txt", "KeyBindings/blueKeyBindingsDefault.txt"));
+		redPlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("optionSaves/redKeyBindings.txt", "optionSaves/redKeyBindingsDefault.txt"));
+		bluePlayerBindings.setAllBindings(FileFunctions.getPathFileToUse("optionSaves/blueKeyBindings.txt", "optionSaves/blueKeyBindingsDefault.txt"));
 	}
 
 	@Override
 	public void saveOptions() {
-		FileFunctions.saveObject(redPlayerBindings.getCurrentKeyBindings(), "KeyBindings/redKeyBindings.txt");
-		FileFunctions.saveObject(bluePlayerBindings.getCurrentKeyBindings(), "KeyBindings/blueKeyBindings.txt");
+		FileFunctions.saveObject(redPlayerBindings.getCurrentKeyBindings(), "optionSaves/redKeyBindings.txt");
+		FileFunctions.saveObject(bluePlayerBindings.getCurrentKeyBindings(), "optionSaves/blueKeyBindings.txt");
 	}
 }

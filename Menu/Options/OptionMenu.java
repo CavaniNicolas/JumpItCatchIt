@@ -1,9 +1,7 @@
 package Menu.Options;
 
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.event.MouseInputAdapter;
 
 import Menu.BackgroundPanel;
 import Menu.FileFunctions;

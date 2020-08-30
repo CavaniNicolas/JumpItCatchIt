@@ -102,6 +102,11 @@ public class BackgroundPanel extends JPanel {
 
 	public void removeMenu(Menu menu) {
 		menuPanel.remove(menu);
+		Component[] components = menuPanel.getComponents();
+		menuPanel.removeAll();
+		for (Component component : components) {
+			menuPanel.add(component);
+		}
 		frame.setVisible(true);
 	}
 
