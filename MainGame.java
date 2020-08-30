@@ -34,6 +34,7 @@ public class MainGame extends JFrame {
 		int width = (int)(screenSize.getWidth() * 0.8);
 		int height = (int)(screenSize.getHeight() * 0.9);
 		this.setSize(width, height);
+		//this.setLocationRelativeTo(null);
 		this.setLocation( (int)(screenSize.getWidth() * 0.1), (int)(screenSize.getHeight() * 0.05) );
 
 		// this.setResizable(false);

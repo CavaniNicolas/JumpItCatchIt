@@ -3,12 +3,16 @@ package Menu;
 import java.io.File;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Image;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
@@ -19,13 +23,29 @@ public class BackgroundPanel extends JPanel {
 	// background color/image
 	private String pathToBackground = "assets/background.JPG";
 	private Image background;
-	private JLabel title;
 	private Color backgroundColor = Color.black;
 
-	public BackgroundPanel() {
+	private JLabel title;
+	private JPanel menuPanel;
+
+	private JFrame frame;
+
+	public BackgroundPanel(JFrame frame) {
+		this.frame = frame;
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setBackground(backgroundColor);
+		createBackground();
+		if (background != null) {
+			repaint();
+		}
+
+		menuPanel = new JPanel();
+		menuPanel.setOpaque(false);
+		menuPanel.setLayout(new OverlayLayout(menuPanel));
+		menuPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		title = new JLabel("JUMP IT CATCH IT");
-		title.setPreferredSize(new Dimension(1000, 100));
-		//this.setLayout(new OverlayLayout(this));
+		title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		//create a font from a file
 		Font font;
@@ -38,13 +58,15 @@ public class BackgroundPanel extends JPanel {
 			ex.printStackTrace();
 		}
 
+		//title on top, menu centred
 		this.add(title);
-		this.setPreferredSize(new Dimension(1600, 1000));
-		this.setBackground(backgroundColor);
-		createBackground();
-		if (background != null) {
-			repaint();
-		}
+		this.add(Box.createVerticalGlue());
+		this.add(menuPanel);
+		this.add(Box.createVerticalGlue());
+	}
+
+	public JPanel getMenuPanel() {
+		return menuPanel;
 	}
 
 	/** create the background image */
@@ -56,12 +78,41 @@ public class BackgroundPanel extends JPanel {
 			background = null;
 			e.printStackTrace();
 		}
-		background = background.getScaledInstance(1175, 1000, Image.SCALE_DEFAULT);
+	}
+
+	/** adds a menu */
+	public void addMenu(Menu menu, Boolean overlaying) {
+		//on top of the others 
+		if (overlaying) {
+			Component[] components = menuPanel.getComponents();
+			menuPanel.removeAll();
+			menu.setFocusable(true);
+			menuPanel.add(menu);
+			for (Component component : components) {
+				component.setFocusable(false);
+				menuPanel.add(component);
+			}
+		//replacing the others
+		} else {
+			menuPanel.removeAll();
+			menuPanel.add(menu);
+		}
+		frame.setVisible(true);
+	}
+
+	public void removeMenu(Menu menu) {
+		menuPanel.remove(menu);
+		frame.setVisible(true);
+	}
+
+	@Override
+	public boolean isOptimizedDrawingEnabled() {
+		return false;
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(background, 0, 0, null);
+		g.drawImage(background.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT), 0, 0, null);
 	}
 
 	public JLabel getLabel() {

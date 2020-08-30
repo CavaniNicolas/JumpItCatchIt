@@ -1,9 +1,9 @@
 package Menu.Options;
 
 import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.event.MouseInputAdapter;
 
 import Menu.BackgroundPanel;
 import Menu.FileFunctions;
@@ -22,14 +22,12 @@ public class OptionMenu extends Menu {
 	/** the menu containing the elements to be saved.. (implements an interface) */
 	private OptionContentMenu optionContentMenu;
 
-	public OptionMenu(OptionContentMenu optionContentMenu, BackgroundPanel backgroundPanel, Menu menu, JFrame frame) {
-		super(backgroundPanel, menu, frame);
+	public OptionMenu(OptionContentMenu optionContentMenu, BackgroundPanel backgroundPanel, Menu menu) {
+		super(backgroundPanel, menu);
 
 		this.optionContentMenu = optionContentMenu;
 		optionMenu = new Menu();
 		buttonPanel = new Menu();
-		saveQuitOptionsPanel = new Menu();
-		saveFailedPanel = new Menu();
 
 		createOptionButtons();
 		createSaveQuitOptionsPanel();
@@ -47,13 +45,13 @@ public class OptionMenu extends Menu {
 		/** save bindings */
 		buttonPanel.addNewButton("SAVE", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {   
-				saveOptions();
+				saveOptions(false);
 			}
 		});
 
 		/** back to main menu */
 		buttonPanel.addNewButton("BACK", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {        
+			public void actionPerformed(ActionEvent arg0) {   
 				menuInteraction();
 			}
 		});
@@ -74,6 +72,7 @@ public class OptionMenu extends Menu {
 	}
 	
 	public void createSaveQuitOptionsPanel() {
+		saveQuitOptionsPanel = new Menu();
 		saveQuitOptionsPanel.displayBorder("WARNING");
 
 		saveQuitOptionsPanel.add(new JLabel("Some changes have not been saved"));
@@ -83,15 +82,14 @@ public class OptionMenu extends Menu {
 		/** resume game */
 		buttonPanel.addNewButton("SAVE AND QUIT", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				menuInteraction(backgroundPanel, menu);
-				saveOptions();
+				saveOptions(true);
 			}
 		});
 
 		/** go back to the main menu */
 		buttonPanel.addNewButton("CANCEL AND QUIT", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				menuInteraction(backgroundPanel, menu);
+				menuInteraction(menu);
 				setOptions();
 			}
 		});
@@ -106,33 +104,42 @@ public class OptionMenu extends Menu {
 		saveQuitOptionsPanel.setOrder(true);
 	}
 	public void createSaveFailedPanel() {
+		saveFailedPanel = new Menu();
 		saveFailedPanel.displayBorder("WARNING");
 
-		JLabel info = new JLabel("There's a problem with your bindings");
+		JLabel info = new JLabel("There's a problem with your options");
 		saveFailedPanel.add(info);
 
-		saveFailedPanel.addNewButton("OK");
+		saveFailedPanel.addNewButton("OK", new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				backgroundPanel.removeMenu(saveFailedPanel);
+			}
+		});
 
 		saveFailedPanel.setDimensions();		
 		saveFailedPanel.setOrder(true);
 	}
 
+	@Override
 	/** back interaction */
 	public void menuInteraction() {
 		if (!optionContentMenu.checkChanges()) {
-			menuInteraction(backgroundPanel, saveQuitOptionsPanel);
+			backgroundPanel.addMenu(saveQuitOptionsPanel, true);
 		} else {
-			menuInteraction(backgroundPanel, menu);
+			backgroundPanel.addMenu(menu, false);
 		}
 	}
 
-	/** saves options if they are valid */
-	public void saveOptions() {
-		//saves the current (the ones being displayed) keyBindings if they are all unique
+	/** saves options if they are valid, if they are and quit == true, we go back to main menu */
+	public void saveOptions(Boolean quit) {
+		//saves the current options if they are all valid
 		if (optionContentMenu.checkValidity()) {
 			optionContentMenu.saveOptions();
+			if (quit) {
+				backgroundPanel.addMenu(menu, false);
+			}
 		} else {
-			menuInteraction(backgroundPanel, saveFailedPanel);
+			backgroundPanel.addMenu(saveFailedPanel, true);
 		}
 	}
 

@@ -19,10 +19,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-public class MainMenu extends JFrame {
+public class MainMenu {
 	private static final long serialVersionUID = -3619542431333472213L;
 
 	/** Contient le jeu */
@@ -31,8 +32,9 @@ public class MainMenu extends JFrame {
 	
 	//main menu panels
 	private Menu mainMenuPanel;
-	private Menu optionPanel;
+	private OptionMenu optionPanel;
 	private BackgroundPanel backgroundPanel;
+	private JPanel menuPanel;
 	
 	/**Contient l'affichage du jeu */
 	private BoardGraphism boardGraphism;
@@ -54,9 +56,6 @@ public class MainMenu extends JFrame {
 	//the frame displaying all the stuff
 	private JFrame frame;
 
-	//permet la navigation
-	private Menu selectedMenu;
-
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
 
@@ -64,7 +63,8 @@ public class MainMenu extends JFrame {
 		this.frame.addKeyListener(new ClientRelatedKeyListener());
 
 		//create the 5 panels to be displayed (excluding board)
-		backgroundPanel = new BackgroundPanel();
+		backgroundPanel = new BackgroundPanel(frame);
+		menuPanel = backgroundPanel.getMenuPanel();
 		board = new Board();
 		boardGraphism = new BoardGraphism(board);
 
@@ -136,22 +136,20 @@ public class MainMenu extends JFrame {
 
 	public void displayMainMenu() {
 		//displays the game panel
-		backgroundPanel.removeAll();
-		backgroundPanel.add(backgroundPanel.getLabel());
-		backgroundPanel.add(mainMenuPanel);
-		selectedMenu = mainMenuPanel;
+		menuPanel.removeAll();
+		menuPanel.add(mainMenuPanel);
 		reloadMenuDisplay();
 	}
 
 	public void createMenus() {
-		mainMenuPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		mainMenuPanel = new Menu(backgroundPanel, mainMenuPanel);
 
-		optionPanel = new OptionMenu(new KeyOptionMenu(), backgroundPanel, mainMenuPanel, frame);
-		multiplayerPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		optionPanel = new OptionMenu(new KeyOptionMenu(), backgroundPanel, mainMenuPanel);
+		multiplayerPanel = new Menu(backgroundPanel, mainMenuPanel);
 
-		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel, frame);
-		connectionErrorPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel, frame);
-		playerLeftPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel);
+		connectionErrorPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel);
+		playerLeftPanel = new Menu(backgroundPanel, mainMenuPanel);
 
 		escapePanel = new Menu();
 		createMultiplayerGamePanel = new Menu();
@@ -253,8 +251,8 @@ public class MainMenu extends JFrame {
 		multiplayerPanel.addNewButton("CREATE GAME", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//displays the creatingGame panel 
-				backgroundPanel.remove(multiplayerPanel);
-				backgroundPanel.add(createMultiplayerGamePanel);
+				menuPanel.remove(multiplayerPanel);
+				menuPanel.add(createMultiplayerGamePanel);
 				reloadMenuDisplay();
 				startOnlineGame();
 			}
@@ -299,7 +297,7 @@ public class MainMenu extends JFrame {
 
 		createMultiplayerGamePanel.add(waiting);
 
-		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel, frame);
+		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel);
 
 		//back to main menu
 		buttonPanel.addNewButton("BACK", new ActionListener() {
@@ -356,7 +354,7 @@ public class MainMenu extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				//displays the multiplayer panel
 				boardIO.handleKeyListeners(frame, false);
-				backgroundPanel.removeAll();
+				menuPanel.removeAll();
 				playerLeftPanel.menuInteraction();
 			}
 		});
@@ -372,7 +370,7 @@ public class MainMenu extends JFrame {
 		//create a joinable game
 		endGamePanel.add(new JLabel("Well that was fun"));
 
-		Menu buttonPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		Menu buttonPanel = new Menu(backgroundPanel, mainMenuPanel);
 
 		//restart
 		buttonPanel.addNewButton("RESTART", new ActionListener() {
@@ -407,8 +405,8 @@ public class MainMenu extends JFrame {
 
 	/** display connection error panel */
 	public void displayConnectionErrorPanel() {
-		backgroundPanel.removeAll();
-		backgroundPanel.add(connectionErrorPanel);
+		menuPanel.removeAll();
+		menuPanel.add(connectionErrorPanel);
 		reloadMenuDisplay();
 	}
 
@@ -456,7 +454,7 @@ public class MainMenu extends JFrame {
 
 			//escape
 			if (code == 27) {
-				selectedMenu.menuInteraction();
+				//menuPanel.getComponent(menuPanel.getComponentCount()-1).menuInteraction();
 			}
 		}
 

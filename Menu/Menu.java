@@ -2,7 +2,6 @@ package Menu;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,19 +18,18 @@ public class Menu extends JPanel {
 	protected final int heightMargin = 15;
 	protected int borderMargin = 0;
 	protected Menu self = this;
-	protected JPanel backgroundPanel;
+	protected BackgroundPanel backgroundPanel;
 	protected Menu menu;
-	protected JFrame frame;
+	protected Boolean removesAllPanel = false;
 
 	public Menu() {
-		this(null, null, null);
+		this(null, null);
 	}
 
-	public Menu(JPanel backgroundPanel, Menu menu, JFrame frame) {
+	public Menu(BackgroundPanel backgroundPanel, Menu menu) {
 		this.setBackground(Color.white);
 		this.backgroundPanel = backgroundPanel;
 		this.menu = menu;
-		this.frame = frame;
 	}
 
 	public void displayBorder(String name) {
@@ -51,7 +49,7 @@ public class Menu extends JPanel {
 		JButton button = new JButton(name);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				menuInteraction(backgroundPanel, menu);
+				menuInteraction(menu);
 			}
 		});
 		this.add(button);
@@ -70,15 +68,12 @@ public class Menu extends JPanel {
 
 	/** back interaction */
 	public void menuInteraction() {
-		menuInteraction(backgroundPanel, menu);
+		backgroundPanel.addMenu(menu, false);
 	}
 
 	/** go to a specfic menu */
-	public void menuInteraction(JPanel backgroundPanel, Menu menu) {
-		backgroundPanel.remove(self);
-		backgroundPanel.add(menu);
-		frame.setContentPane(backgroundPanel);
-		frame.setVisible(true);
+	public void menuInteraction(Menu menu) {
+		backgroundPanel.addMenu(menu, false);
 	}
 
 	/** sets all component size to the size of the biggest component*/
@@ -105,12 +100,14 @@ public class Menu extends JPanel {
 				totalHeight += component.getPreferredSize().getHeight() + heightMargin/2;
 			}
 			this.setPreferredSize(new Dimension(widthMargin + (int)width, borderMargin + heightMargin + totalHeight));
+			this.setMaximumSize(new Dimension(widthMargin + (int)width, borderMargin + heightMargin + totalHeight));
 		} else {
 			int totalWidth = 0;
 			for (Component component : this.getComponents()) {
 				totalWidth += component.getPreferredSize().getWidth() + widthMargin/2;
 			}
 			this.setPreferredSize(new Dimension(widthMargin + totalWidth, borderMargin + heightMargin + (int)height));
+			this.setMaximumSize(new Dimension(widthMargin + totalWidth, borderMargin + heightMargin + (int)height));
 		}
 	}
 }
