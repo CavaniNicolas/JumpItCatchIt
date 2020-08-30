@@ -61,6 +61,6 @@ public class KeyBindingMenu extends Menu {
 	}
 
 	public Boolean checkChanges() {
-		return keyBindings.equals(getCurrentKeyBindings());
+		return keyBindings.toString().equals(getCurrentKeyBindings().toString());
 	}
 }

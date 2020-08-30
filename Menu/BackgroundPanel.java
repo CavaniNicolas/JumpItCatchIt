@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 import javax.swing.JLabel;
 import java.awt.Image;
 import java.awt.Dimension;
@@ -24,6 +25,7 @@ public class BackgroundPanel extends JPanel {
 	public BackgroundPanel() {
 		title = new JLabel("JUMP IT CATCH IT");
 		title.setPreferredSize(new Dimension(1000, 100));
+		//this.setLayout(new OverlayLayout(this));
 
 		//create a font from a file
 		Font font;

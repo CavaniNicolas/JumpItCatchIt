@@ -34,10 +34,6 @@ public class KeyBinding implements Serializable {
 		return this.keyActionDescription;
 	}
 
-	public Boolean equals(KeyBinding kb) {
-		return (keyValue == kb.getKeyValue() && keyActionDescription.equals(kb.getKeyActionDescription()));
-	}
-
 	@Override
 	public String toString() {
 		return "KeyBinding [keyActionDescription=" + keyActionDescription + ", keyValue=" + keyValue + "]";

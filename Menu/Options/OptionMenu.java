@@ -4,7 +4,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.OverlayLayout;
 
 import Menu.BackgroundPanel;
 import Menu.FileFunctions;
@@ -25,7 +24,6 @@ public class OptionMenu extends Menu {
 
 	public OptionMenu(OptionContentMenu optionContentMenu, BackgroundPanel backgroundPanel, Menu menu, JFrame frame) {
 		super(backgroundPanel, menu, frame);
-		this.setLayout(new OverlayLayout(this));
 
 		this.optionContentMenu = optionContentMenu;
 		optionMenu = new Menu();
