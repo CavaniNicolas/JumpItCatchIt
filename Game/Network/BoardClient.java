@@ -48,7 +48,7 @@ public class BoardClient extends BoardIO {
         this.boardGraphism = boardGraphism;
         this.address = address;
         this.mainMenu = mainMenu;
-		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("optionSaves/redKeyBindings.txt", "optionSaves/redKeyDefault.txt"));
+		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("optionSaves/redKeyBindings.txt", "optionSaves/redKeyBindingsDefault.txt"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
         ping = new Timer(1000, new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
