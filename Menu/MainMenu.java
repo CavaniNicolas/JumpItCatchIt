@@ -61,8 +61,11 @@ public class MainMenu {
 
 		//add a key listener for client related keys (available everywhere)
 		this.frame.addKeyListener(new ClientRelatedKeyListener());
+		//give the frame the focus
+		frame.setFocusable(true);
+		//frame.setFocusTraversalKeysEnabled(false);
 
-		//create the 5 panels to be displayed (excluding board)
+		//create the different panels to be displayed 
 		backgroundPanel = new BackgroundPanel(frame);
 		menuPanel = backgroundPanel.getMenuPanel();
 		board = new Board();
@@ -74,7 +77,6 @@ public class MainMenu {
 
 		displayMainMenu();
 	}
-
 
 	/** starts the local board and sets the frame to display it */
 	public void startLocalGame() {
@@ -125,9 +127,7 @@ public class MainMenu {
 		//start gamedisplay timer
 		boardGraphism.startDisplaying();
 
-		//give the frame the focus
-		frame.setFocusable(true);
-		frame.setFocusTraversalKeysEnabled(false);
+		//frame.setFocusTraversalKeysEnabled(false);
 
 		//displays the game panel
 		frame.setContentPane(boardGraphism);
@@ -323,7 +323,7 @@ public class MainMenu {
 		JTextField enemyIP = new JTextField();
 		joinMultiplayerGamePanel.add(enemyIP);
 
-		Menu buttonPanel = new Menu();
+		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel);
 
 		//back to main menu
 		buttonPanel.addNewButton("JOIN", new ActionListener() {
@@ -450,12 +450,10 @@ public class MainMenu {
 
 		@Override
 		public void keyTyped(KeyEvent event) {
-			System.out.println("hello");
 			int code = event.getKeyChar();
 
 			//escape
 			if (code == 27) {
-				System.out.println("exiting");
 				Menu menu =  (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
 				menu.menuInteraction();
 			}
