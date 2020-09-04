@@ -45,6 +45,7 @@ public class MainMenu {
 	private Menu multiplayerPanel;
 	private Menu playerLeftPanel;
 	private Menu connectionErrorPanel;
+	private Menu connectingPanel;
 
 	/**escape panel*/
 	private Menu escapePanel;
@@ -149,6 +150,7 @@ public class MainMenu {
 
 		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel);
 		connectionErrorPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel);
+		connectingPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel);
 		playerLeftPanel = new Menu(backgroundPanel, mainMenuPanel);
 
 		escapePanel = new Menu();
@@ -329,6 +331,7 @@ public class MainMenu {
 		buttonPanel.addNewButton("JOIN", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				joinOnlineGame(enemyIP.getText());
+				buttonPanel.menuInteraction(connectingPanel);
 			}
 		});
 
@@ -401,6 +404,31 @@ public class MainMenu {
 		connectionErrorPanel.add(new JLabel("Couldn't connect to the server"));
 		connectionErrorPanel.addNewButton("BACK");
 		connectionErrorPanel.setOrder(true);
+	}
+
+	public void createConnectingPanel() {
+		connectingPanel.displayBorder("CONNECTION");
+		JLabel info = new JLabel("Connecting ...");
+
+		Timer timer = new Timer(500, new ActionListener() {
+			String baseString = "...   ";
+			int beginning = 0;
+			public void actionPerformed(ActionEvent arg0) {
+				info.setText("Connecting " + (baseString + baseString).substring(beginning, beginning + 3));
+				beginning = (baseString.length() + beginning - 1)% baseString.length();
+			}
+		});
+		timer.start();
+
+		connectingPanel.add(info);
+		connectingPanel.addNewButton("BACK", new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				connectingPanel.menuInteraction();
+				boardIO.exitGame();
+			}
+		});
+
+		connectingPanel.setOrder(true);
 	}
 
 	/** display connection error panel */
