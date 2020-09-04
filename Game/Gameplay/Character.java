@@ -605,26 +605,26 @@ public class Character extends Entity {
 	}
 
 
-	// /**Initialise les valeurs du HUD */
-	// public void initHUDCharacter(BoardGraphism bG) {
-	// 	// On creer le nouvel HUD
-	// 	hudCharacter = new HUDCharacter();
+	/**Initialise les valeurs du HUD */
+	public void initHUDCharacter(BoardGraphism bG) {
+		// On creer le nouvel HUD
+		hudCharacter = new HUDCharacter();
 
-	// 	// Initialisation des attributs des coeurs du HUD
-	// 	int firstHeartX;
-	// 	if (this.colorCharacter == Color.red) {
-	// 		firstHeartX = bG.getReal().getHeartsXLeft();
-	// 	} else {
-	// 		firstHeartX = bG.getReal().getHeartsXRight();
-	// 	}
-	// 	hudCharacter.initHUDHearts(firstHeartX, bG.getReal().getHeartsY(), bG.getReal().getInterHearts(), this.colorCharacter);
-	// }
+		// Initialisation des attributs des coeurs du HUD
+		int firstHeartX;
+		if (this.colorCharacter == Color.red) {
+			firstHeartX = bG.getReal().getHeartsXLeft();
+		} else {
+			firstHeartX = bG.getReal().getHeartsXRight();
+		}
+		hudCharacter.initHUDHearts(firstHeartX, bG.getReal().getHeartsY(), bG.getReal().getInterHearts(), this.colorCharacter);
+	}
 
 
-	// // Affiche le HUD du personnage
-	// public void displayCharacterHUD(Graphics g, BoardGraphism boardGraphism) {
-	// 	hudCharacter.displayHUDHearts(g, boardGraphism, lives, livesMax);
-	// }
+	// Affiche le HUD du personnage
+	public void displayCharacterHUD(Graphics g, BoardGraphism boardGraphism) {
+		hudCharacter.displayHUDHearts(g, boardGraphism, lives, livesMax);
+	}
 
 
 	/* ======= */
