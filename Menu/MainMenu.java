@@ -169,6 +169,7 @@ public class MainMenu {
 		createPlayerLeftPanel();
 		createEndGamePanel();
 		createConnectionErrorPanel();
+		createConnectingPanel();
 	}
 
 	/** creates the mainMenuJPanel with its component */
@@ -408,13 +409,13 @@ public class MainMenu {
 
 	public void createConnectingPanel() {
 		connectingPanel.displayBorder("CONNECTION");
-		JLabel info = new JLabel("Connecting ...");
+		JLabel info = new JLabel(" Connecting ... ");
 
 		Timer timer = new Timer(500, new ActionListener() {
 			String baseString = "...   ";
 			int beginning = 0;
 			public void actionPerformed(ActionEvent arg0) {
-				info.setText("Connecting " + (baseString + baseString).substring(beginning, beginning + 3));
+				info.setText(" Connecting " + (baseString + baseString).substring(beginning, beginning + 3) + " ");
 				beginning = (baseString.length() + beginning - 1)% baseString.length();
 			}
 		});
