@@ -21,7 +21,7 @@ public class BoardClient extends BoardIO {
     //board graphism
     protected BoardGraphism boardGraphism;
 
-    private Board board;
+    // private Board board;
 
     //client input related
 	private PlayerKeyListener playerKeyListener;
@@ -47,15 +47,15 @@ public class BoardClient extends BoardIO {
     private final int portNumber = 5000; 
 
     //game loop
-	private GameLoop gameLoop;
+	// private GameLoop gameLoop;
 
 	public BoardClient(BoardGraphism boardGraphism, String address, MainMenu mainMenu) {
         this.boardGraphism = boardGraphism;
         this.address = address;
         this.mainMenu = mainMenu;
         
-        board = new Board();
-        gameLoop = new GameLoop(board);
+        // board = new Board();
+        // gameLoop = new GameLoop(board);
 		KeyBindings playerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("optionSaves/redKeyBindings.txt", "optionSaves/redKeyBindingsDefault.txt"));
         playerKeyListener = new PlayerKeyListener(playerBindings, this, playerInputActions);
         ping = new Timer(1000, new ActionListener() {
@@ -91,16 +91,16 @@ public class BoardClient extends BoardIO {
             } else if (obj instanceof String) {
                 if (((String)obj).equals("GAME STARTED")) {
                     mainMenu.displayGame();
-                    gameLoop.togglePause(false);
+                    // gameLoop.togglePause(false);
                 } else if (((String)obj).equals("PLAYER LEFT")) {
                     connected = false;
                     mainMenu.displayPlayerLeftPanel();
-                    gameLoop.togglePause(true);
+                    // gameLoop.togglePause(true);
                 } else if (((String)obj).equals("PING")) {
                     System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
                 }
             } else if (obj instanceof Board) {
-                this.board = (Board)obj;
+                // this.board = (Board)obj;
                 boardGraphism.setBoard((Board)obj);
             }
         }
