@@ -1,4 +1,4 @@
-package Menu;
+package Menu.Options.KeyBindings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,18 +24,6 @@ public class KeyBindings implements Serializable {
 
 	public ArrayList<KeyBinding> getKeyBindings() {
 		return keyBindings;
-	}
-
-	public Boolean equals(KeyBindings kb) {
-		if (keyBindings.size() != kb.getKeyBindings().size()) {
-			return false;
-		}
-		for (int i = 0; i < keyBindings.size(); i++) {
-			if (keyBindings.get(i) != kb.getKeyBindings().get(i)) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	@Override

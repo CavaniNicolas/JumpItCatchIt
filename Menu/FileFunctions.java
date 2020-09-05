@@ -8,15 +8,18 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+import Menu.Options.KeyBindings.*;
+
 public class FileFunctions {
+	
 	/** sets the players bindings to their correct value */
-	public static String getPathFileToUse(String color) {
+	public static String getPathFileToUse(String path, String defaultPath) {
 		//check if non default key settings exist
-		File f = new File("KeyBindings/" + color + "KeyBindings.txt");
-		if(!f.exists() || f.isDirectory()) {
-			return "KeyBindings/" + color + "KeyBindingsDefault.txt";
+		File f = new File(path);
+		if(f.exists() && !f.isDirectory()) {
+			return path;
 		}
-		return "KeyBindings/" + color + "KeyBindings.txt";
+		return defaultPath;
 	}
 
 	/** return a KeyBinding object from a String path to a file */
@@ -64,8 +67,8 @@ public class FileFunctions {
 	/** create default key bindings files in case they're deleted */
 	public static void createDefaultBindings() {
 		deleteNonDefaultBindings();
-		String pathRedKeyBindings = "KeyBindings/redKeyBindingsDefault.txt";
-		String pathBlueKeyBindings = "KeyBindings/blueKeyBindingsDefault.txt";
+		String pathRedKeyBindings = "optionSaves/redKeyBindingsDefault.txt";
+		String pathBlueKeyBindings = "optionSaves/blueKeyBindingsDefault.txt";
 
 		File file = new File(pathRedKeyBindings);
 		if(file.exists() && !file.isDirectory()) {
@@ -101,11 +104,11 @@ public class FileFunctions {
 	}
 
 	public static void deleteNonDefaultBindings() {
-		File f = new File("KeyBindings/redKeyBindings.txt");
+		File f = new File("optionSaves/redKeyBindings.txt");
 		if(f.exists() && !f.isDirectory()) {
 			f.delete();
 		}
-		f = new File("KeyBindings/blueKeyBindings.txt");
+		f = new File("optionSaves/blueKeyBindings.txt");
 		if(f.exists() && !f.isDirectory()) {
 			f.delete();
 		}

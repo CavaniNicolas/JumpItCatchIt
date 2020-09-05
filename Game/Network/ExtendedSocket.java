@@ -6,13 +6,15 @@ import java.io.*;
 public class ExtendedSocket {
 	private int ID;
 	private Boolean ready = false;
+	private Boolean isServer;
 	private ObjectOutputStream objectOutput;
 	private ObjectInputStream objectInput;
 	private Socket clientSocket;
 
-	public ExtendedSocket(int ID, Socket socket) {
+	public ExtendedSocket(int ID, Socket socket, Boolean isServer) {
 		this.ID = ID;
 		this.clientSocket = socket;
+		this.isServer = isServer;
 		System.out.println(this.clientSocket.getInetAddress().getHostAddress());
 		initializeStreams();
 	}
@@ -20,11 +22,16 @@ public class ExtendedSocket {
 	/** creates the output and input streams */
 	public void initializeStreams() {
 		try {
-			objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-			objectInput = new ObjectInputStream(clientSocket.getInputStream());
+			if (isServer) {
+				objectOutput = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+				objectInput = new ObjectInputStream(clientSocket.getInputStream());
+			} else {
+				objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
+				objectInput = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+			}
 			ready = true;
 		} catch (IOException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -33,7 +40,7 @@ public class ExtendedSocket {
 		try {
 			return objectInput.readObject();
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -46,7 +53,7 @@ public class ExtendedSocket {
 			objectOutput.reset();
 			return true;
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			endConnection();
 			return false;
 		}

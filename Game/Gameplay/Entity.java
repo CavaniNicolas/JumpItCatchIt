@@ -25,11 +25,11 @@ public class Entity implements Serializable {
 	protected int x;
 	protected int y;
 	// Vitesses de l'entite
-	protected transient int speedX;
-	protected transient int speedY;
+	protected int speedX;
+	protected int speedY;
 	// Accelerations de l'entite
-	protected transient int accelX;
-	protected transient int accelY;
+	protected int accelX;
+	protected int accelY;
 
 
 	public Entity(int x, int y, int speedX, int speedY, int accelX, int accelY, int width, int height) {
@@ -158,7 +158,7 @@ public class Entity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Entity [x=" + x + ", y=" + y + ", " + "height=" + height + ", width=" + width + "]";
+		return "Entity [x=" + x + ", y=" + y + ", speedX=" + speedX + ", speedY=" + speedY + ", accelX=" + accelX + ", accelY=" + accelY + ", height=" + height + ", width=" + width + "]";
 	}
 
 }

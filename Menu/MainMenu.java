@@ -6,21 +6,25 @@ import Game.Network.BoardClient;
 import Game.Network.BoardIO;
 import Game.Network.BoardLocal;
 import Game.Network.BoardServer;
+import Menu.Options.KeyOptionMenu;
+import Menu.Options.OptionMenu;
 
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 import java.io.*;
 import java.net.*;
+import java.util.Enumeration;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-public class MainMenu extends JFrame {
+public class MainMenu {
 	private static final long serialVersionUID = -3619542431333472213L;
 
 	/** Contient le jeu */
@@ -29,8 +33,9 @@ public class MainMenu extends JFrame {
 	
 	//main menu panels
 	private Menu mainMenuPanel;
-	private Menu optionPanel;
+	private OptionMenu optionPanel;
 	private BackgroundPanel backgroundPanel;
+	private JPanel menuPanel;
 	
 	/**Contient l'affichage du jeu */
 	private BoardGraphism boardGraphism;
@@ -41,6 +46,7 @@ public class MainMenu extends JFrame {
 	private Menu multiplayerPanel;
 	private Menu playerLeftPanel;
 	private Menu connectionErrorPanel;
+	private Menu connectingPanel;
 
 	/**escape panel*/
 	private Menu escapePanel;
@@ -52,17 +58,18 @@ public class MainMenu extends JFrame {
 	//the frame displaying all the stuff
 	private JFrame frame;
 
-	//permet la navigation
-	private Menu selectedMenu;
-
 	public MainMenu(JFrame frame) {		
 		this.frame = frame;
 
 		//add a key listener for client related keys (available everywhere)
 		this.frame.addKeyListener(new ClientRelatedKeyListener());
+		//give the frame the focus
+		frame.setFocusable(true);
+		//frame.setFocusTraversalKeysEnabled(false);
 
-		//create the 5 panels to be displayed (excluding board)
-		backgroundPanel = new BackgroundPanel();
+		//create the different panels to be displayed 
+		backgroundPanel = new BackgroundPanel(frame);
+		menuPanel = backgroundPanel.getMenuPanel();
 		board = new Board();
 		boardGraphism = new BoardGraphism(board);
 
@@ -72,7 +79,6 @@ public class MainMenu extends JFrame {
 
 		displayMainMenu();
 	}
-
 
 	/** starts the local board and sets the frame to display it */
 	public void startLocalGame() {
@@ -123,10 +129,6 @@ public class MainMenu extends JFrame {
 		//start gamedisplay timer
 		boardGraphism.startDisplaying();
 
-		//give the frame the focus
-		frame.setFocusable(true);
-		frame.setFocusTraversalKeysEnabled(false);
-
 		//displays the game panel
 		frame.setContentPane(boardGraphism);
 		frame.setVisible(true);
@@ -134,22 +136,21 @@ public class MainMenu extends JFrame {
 
 	public void displayMainMenu() {
 		//displays the game panel
-		backgroundPanel.removeAll();
-		backgroundPanel.add(backgroundPanel.getLabel());
-		backgroundPanel.add(mainMenuPanel);
-		selectedMenu = mainMenuPanel;
+		menuPanel.removeAll();
+		menuPanel.add(mainMenuPanel);
 		reloadMenuDisplay();
 	}
 
 	public void createMenus() {
-		mainMenuPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		mainMenuPanel = new Menu(backgroundPanel, mainMenuPanel);
 
-		optionPanel = new KeyOptionMenu(backgroundPanel, mainMenuPanel, frame);
-		multiplayerPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		optionPanel = new OptionMenu(new KeyOptionMenu(), backgroundPanel, mainMenuPanel);
+		multiplayerPanel = new Menu(backgroundPanel, mainMenuPanel);
 
-		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel, frame);
-		connectionErrorPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel, frame);
-		playerLeftPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel);
+		connectionErrorPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel);
+		connectingPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel);
+		playerLeftPanel = new Menu(backgroundPanel, mainMenuPanel);
 
 		escapePanel = new Menu();
 		createMultiplayerGamePanel = new Menu();
@@ -167,6 +168,7 @@ public class MainMenu extends JFrame {
 		createPlayerLeftPanel();
 		createEndGamePanel();
 		createConnectionErrorPanel();
+		createConnectingPanel();
 	}
 
 	/** creates the mainMenuJPanel with its component */
@@ -191,6 +193,8 @@ public class MainMenu extends JFrame {
 
 		mainMenuPanel.setDimensions();
 		mainMenuPanel.setOrder(true);
+
+		mainMenuPanel.setOpaque(false);
 	}
 
 	/** initiates the components of the menu */
@@ -249,8 +253,8 @@ public class MainMenu extends JFrame {
 		multiplayerPanel.addNewButton("CREATE GAME", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//displays the creatingGame panel 
-				backgroundPanel.remove(multiplayerPanel);
-				backgroundPanel.add(createMultiplayerGamePanel);
+				menuPanel.remove(multiplayerPanel);
+				menuPanel.add(createMultiplayerGamePanel);
 				reloadMenuDisplay();
 				startOnlineGame();
 			}
@@ -295,7 +299,7 @@ public class MainMenu extends JFrame {
 
 		createMultiplayerGamePanel.add(waiting);
 
-		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel, frame);
+		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel);
 
 		//back to main menu
 		buttonPanel.addNewButton("BACK", new ActionListener() {
@@ -321,11 +325,12 @@ public class MainMenu extends JFrame {
 		JTextField enemyIP = new JTextField();
 		joinMultiplayerGamePanel.add(enemyIP);
 
-		Menu buttonPanel = new Menu();
+		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel);
 
 		//back to main menu
 		buttonPanel.addNewButton("JOIN", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				buttonPanel.menuInteraction(connectingPanel);
 				joinOnlineGame(enemyIP.getText());
 			}
 		});
@@ -352,8 +357,8 @@ public class MainMenu extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				//displays the multiplayer panel
 				boardIO.handleKeyListeners(frame, false);
-				backgroundPanel.removeAll();
-				playerLeftPanel.menuInteraction();
+				menuPanel.removeAll();
+				displayMainMenu();
 			}
 		});
 
@@ -361,14 +366,14 @@ public class MainMenu extends JFrame {
 		playerLeftPanel.setOrder(true);
 	}
 
-	/** creates the playerLeftPanel with its component*/
+	/** creates the gameEndedPanel with its component*/
 	public void createEndGamePanel() {
 		endGamePanel.displayBorder("GAME ENDED");
 
 		//create a joinable game
 		endGamePanel.add(new JLabel("Well that was fun"));
 
-		Menu buttonPanel = new Menu(backgroundPanel, mainMenuPanel, frame);
+		Menu buttonPanel = new Menu(backgroundPanel, mainMenuPanel);
 
 		//restart
 		buttonPanel.addNewButton("RESTART", new ActionListener() {
@@ -401,10 +406,35 @@ public class MainMenu extends JFrame {
 		connectionErrorPanel.setOrder(true);
 	}
 
+	public void createConnectingPanel() {
+		connectingPanel.displayBorder("CONNECTION");
+		JLabel info = new JLabel(" Connecting ... ");
+
+		Timer timer = new Timer(500, new ActionListener() {
+			String baseString = "...   ";
+			int beginning = 0;
+			public void actionPerformed(ActionEvent arg0) {
+				info.setText(" Connecting " + (baseString + baseString).substring(beginning, beginning + 3) + " ");
+				beginning = (baseString.length() + beginning - 1)% baseString.length();
+			}
+		});
+		timer.start();
+
+		connectingPanel.add(info);
+		connectingPanel.addNewButton("BACK", new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				connectingPanel.menuInteraction();
+				boardIO.exitGame();
+			}
+		});
+
+		connectingPanel.setOrder(true);
+	}
+
 	/** display connection error panel */
 	public void displayConnectionErrorPanel() {
-		backgroundPanel.removeAll();
-		backgroundPanel.add(connectionErrorPanel);
+		menuPanel.removeAll();
+		menuPanel.add(connectionErrorPanel);
 		reloadMenuDisplay();
 	}
 
@@ -423,16 +453,26 @@ public class MainMenu extends JFrame {
 
 	/** Find public IP address */
 	public String getPublicIPAddress() {
-		try { 
-			URL url_name = new URL("http://bot.whatismyipaddress.com"); 
-	
-			BufferedReader sc = new BufferedReader(new InputStreamReader(url_name.openStream())); 
-	
-			// reads system IPAddress 
-			return sc.readLine().trim(); 
-		} catch (Exception e) { 
-			return "COULD NOT FIND ADDRESS"; 
-		} 
+		Boolean addressFound = false;
+		try {
+			Enumeration<NetworkInterface> list = NetworkInterface.getNetworkInterfaces();
+			
+			while(list.hasMoreElements() && !addressFound){
+			  
+			NetworkInterface ni = list.nextElement();
+			Enumeration<InetAddress> listAddress = ni.getInetAddresses();
+			
+				while(listAddress.hasMoreElements()){
+					InetAddress address = listAddress.nextElement();
+					if (!address.isAnyLocalAddress() && !address.isLoopbackAddress() && !address.isLinkLocalAddress() && !address.isSiteLocalAddress()) {
+						return address.getHostAddress();
+					}
+				}
+		   	}
+		} catch (SocketException e) {
+		   e.printStackTrace();
+		}
+		return null;
 	}
 
 	public Board getBoard() {
@@ -452,7 +492,12 @@ public class MainMenu extends JFrame {
 
 			//escape
 			if (code == 27) {
-				selectedMenu.menuInteraction();
+				if (frame.getContentPane() == backgroundPanel) {
+					Menu menu =  (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
+					menu.menuInteraction();
+				} else {
+					toggleEscapePanel();
+				}
 			}
 		}
 

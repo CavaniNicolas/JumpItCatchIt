@@ -5,7 +5,7 @@ import Game.GameLoop;
 import Game.InputActions;
 import Game.PlayerKeyListener;
 import Menu.FileFunctions;
-import Menu.KeyBindings;
+import Menu.Options.KeyBindings.KeyBindings;
 
 import javax.swing.JFrame;
 
@@ -26,8 +26,8 @@ public class BoardLocal extends BoardIO {
 		gameLoop = new GameLoop(this.board);
 
 		// On récupère les keyBindings des joueurs
-		KeyBindings redPlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("red"));
-		KeyBindings bluePlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("blue"));
+		KeyBindings redPlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("optionSaves/redKeyBindings.txt", "optionSaves/redKeyBindingsDefault.txt"));
+		KeyBindings bluePlayerBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse("optionSaves/blueKeyBindings.txt", "optionSaves/blueKeyBindingsDefault.txt"));
 
 		//on crée les listeners correspondant
 		redPlayerKeyListener = new PlayerKeyListener(redPlayerBindings, this, board.getCharacterRed().getInputActions());

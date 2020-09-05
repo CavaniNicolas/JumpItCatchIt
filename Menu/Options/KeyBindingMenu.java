@@ -1,7 +1,11 @@
-package Menu;
+package Menu.Options;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+
+import Menu.FileFunctions;
+import Menu.Menu;
+import Menu.Options.KeyBindings.*;
 
 public class KeyBindingMenu extends Menu {
 	private static final long serialVersionUID = 2018355376623911571L;
@@ -11,7 +15,7 @@ public class KeyBindingMenu extends Menu {
 
 	/** creates a new KeySelectingPanel based on a KeyBinding */
 	public KeyBindingMenu(String path, String defaultPath, KeyOptionMenu keyOptionMenu) {
-		keyBindings = (KeyBindings)FileFunctions.getObject(path);
+		keyBindings = (KeyBindings)FileFunctions.getObject(FileFunctions.getPathFileToUse(path, defaultPath));
 
 		//a default path is added in the constructor to allow resetting a binding
 		for (int i = 0; i < keyBindings.getKeyBindings().size(); i++) {
@@ -38,8 +42,8 @@ public class KeyBindingMenu extends Menu {
 	/** return current key bindings */
 	public KeyBindings getCurrentKeyBindings() {
 		KeyBindings currentKeyBindings = new KeyBindings();
-		for (KeySelectingPanel keySelectingPanel : keySelectingPanels) {
-			currentKeyBindings.addBinding(keySelectingPanel.getCurrentKeyBinding());
+		for (int i = 0; i < keySelectingPanels.size(); i++) {
+			currentKeyBindings.addBinding(keySelectingPanels.get(i).getCurrentKeyBinding());
 		}
 		return currentKeyBindings;
 	}
@@ -57,6 +61,6 @@ public class KeyBindingMenu extends Menu {
 	}
 
 	public Boolean checkChanges() {
-		return keyBindings.equals(getCurrentKeyBindings());
+		return keyBindings.toString().equals(getCurrentKeyBindings().toString());
 	}
 }

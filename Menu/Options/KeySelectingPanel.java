@@ -1,7 +1,12 @@
-package Menu;
+package Menu.Options;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
+import Menu.FileFunctions;
+import Menu.Menu;
+import Menu.Options.KeyBindings.*;
+
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

@@ -1,4 +1,4 @@
-package Menu;
+package Game.Network;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -7,20 +7,22 @@ import java.util.Enumeration;
 
 public class GetAddresses {
 	public static void main(String[] args) {
+		Boolean addressFound = false;
 		try {
-		   Enumeration<NetworkInterface> list = NetworkInterface.getNetworkInterfaces();
-		   
-		   while(list.hasMoreElements()){
+			Enumeration<NetworkInterface> list = NetworkInterface.getNetworkInterfaces();
+			
+			while(list.hasMoreElements() && !addressFound){
 			  
-			  NetworkInterface ni = list.nextElement();
-			  Enumeration<InetAddress> listAddress = ni.getInetAddresses();
-			  
-			  while(listAddress.hasMoreElements()){
-				 InetAddress address = listAddress.nextElement();
-				 showInformations(address);
-			  }
-			  
-		   }
+			NetworkInterface ni = list.nextElement();
+			Enumeration<InetAddress> listAddress = ni.getInetAddresses();
+			
+				while(listAddress.hasMoreElements()){
+					InetAddress address = listAddress.nextElement();
+					if (!address.isAnyLocalAddress() && !address.isLoopbackAddress() && !address.isLinkLocalAddress() && !address.isSiteLocalAddress()) {
+						showInformations(address);
+					}
+				}
+		   	}
 		} catch (SocketException e) {
 		   e.printStackTrace();
 		}
