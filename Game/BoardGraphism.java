@@ -22,7 +22,7 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 	Board board;
 
 	/***HUD */
-	private HUDCharacter hudCharacter;
+	private HUDCharacter hudCharacter = new HUDCharacter();
 
 	/** Type de partie : local ou en ligne, (par defaut en local) */
 	private int typeOfGame = LOCAL_GAME;
