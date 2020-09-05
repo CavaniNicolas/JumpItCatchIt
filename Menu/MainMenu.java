@@ -330,7 +330,7 @@ public class MainMenu {
 		//back to main menu
 		buttonPanel.addNewButton("JOIN", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//buttonPanel.menuInteraction(connectingPanel);
+				buttonPanel.menuInteraction(connectingPanel);
 				joinOnlineGame(enemyIP.getText());
 			}
 		});
