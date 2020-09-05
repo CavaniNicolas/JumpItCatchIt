@@ -357,7 +357,7 @@ public class MainMenu {
 				//displays the multiplayer panel
 				boardIO.handleKeyListeners(frame, false);
 				menuPanel.removeAll();
-				playerLeftPanel.menuInteraction();
+				displayMainMenu();
 			}
 		});
 
@@ -365,7 +365,7 @@ public class MainMenu {
 		playerLeftPanel.setOrder(true);
 	}
 
-	/** creates the playerLeftPanel with its component*/
+	/** creates the gameEndedPanel with its component*/
 	public void createEndGamePanel() {
 		endGamePanel.displayBorder("GAME ENDED");
 
@@ -481,8 +481,12 @@ public class MainMenu {
 
 			//escape
 			if (code == 27) {
-				Menu menu =  (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
-				menu.menuInteraction();
+				if (frame.getContentPane() == backgroundPanel) {
+					Menu menu =  (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
+					menu.menuInteraction();
+				} else {
+					toggleEscapePanel();
+				}
 			}
 		}
 
