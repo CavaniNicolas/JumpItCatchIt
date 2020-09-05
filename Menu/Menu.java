@@ -3,6 +3,8 @@ package Menu;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.plaf.metal.MetalButtonUI;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
@@ -63,6 +65,12 @@ public class Menu extends JPanel {
 				menuInteraction();
 			}
 		});
+		/*button.setUI(new MetalButtonUI() {
+			protected Color getDisabledTextColor() {
+				return Color.BLACK;
+			}
+		});
+		button.setEnabled(false);*/
 		this.add(button);
 	}
 

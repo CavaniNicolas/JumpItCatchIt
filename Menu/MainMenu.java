@@ -13,6 +13,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 import java.io.*;
 import java.net.*;
+import java.util.Enumeration;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
@@ -452,16 +453,26 @@ public class MainMenu {
 
 	/** Find public IP address */
 	public String getPublicIPAddress() {
-		try { 
-			URL url_name = new URL("http://bot.whatismyipaddress.com"); 
-	
-			BufferedReader sc = new BufferedReader(new InputStreamReader(url_name.openStream())); 
-	
-			// reads system IPAddress 
-			return sc.readLine().trim(); 
-		} catch (Exception e) { 
-			return "COULD NOT FIND ADDRESS"; 
-		} 
+		Boolean addressFound = false;
+		try {
+			Enumeration<NetworkInterface> list = NetworkInterface.getNetworkInterfaces();
+			
+			while(list.hasMoreElements() && !addressFound){
+			  
+			NetworkInterface ni = list.nextElement();
+			Enumeration<InetAddress> listAddress = ni.getInetAddresses();
+			
+				while(listAddress.hasMoreElements()){
+					InetAddress address = listAddress.nextElement();
+					if (!address.isAnyLocalAddress() && !address.isLoopbackAddress() && !address.isLinkLocalAddress() && !address.isSiteLocalAddress()) {
+						return address.getHostAddress();
+					}
+				}
+		   	}
+		} catch (SocketException e) {
+		   e.printStackTrace();
+		}
+		return null;
 	}
 
 	public Board getBoard() {

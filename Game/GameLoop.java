@@ -15,7 +15,7 @@ public class GameLoop {
 		this.board = board;
 	}
 
-	/** changes the pause state */
+	/** changes the pause state (true = pausing) */
 	public void togglePause(Boolean bool) {
 		if (bool) {
 			gamePlayTimer.stop();
