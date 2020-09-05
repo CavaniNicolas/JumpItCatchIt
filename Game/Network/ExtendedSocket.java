@@ -22,9 +22,6 @@ public class ExtendedSocket {
 	/** creates the output and input streams */
 	public void initializeStreams() {
 		try {
-			// objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-			// objectInput = new ObjectInputStream(clientSocket.getInputStream());
-
 			if (isServer) {
 				objectOutput = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
 				objectInput = new ObjectInputStream(clientSocket.getInputStream());
@@ -41,7 +38,6 @@ public class ExtendedSocket {
 	/** reads object from the stream, returns null if an exception occurs */
 	public Object readObject() {
 		try {
-			// System.out.println(objectInput.readObject());
 			return objectInput.readObject();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,7 +48,6 @@ public class ExtendedSocket {
 	/** return true if the object has been sent */
 	public Boolean outputObject(Object obj) {
 		try {
-			// System.out.println(obj);
 			objectOutput.writeObject(obj);
 			objectOutput.flush();
 			objectOutput.reset();
