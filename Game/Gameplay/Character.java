@@ -3,6 +3,7 @@ package Game.Gameplay;
 import Game.InputActions;
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
 import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
+import Game.ConstantsContainers.GraphicConstants.GrabConstants;
 import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
 
 import java.awt.Graphics;
@@ -498,13 +499,14 @@ public class Character extends Entity {
 
 
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
-	public void checkActions(MainConstants MC, ProjectileConstants PC) {
-		checkShoot(MC, PC);
+	public void checkActions(MainConstants MCReal, ProjectileConstants PCReal, GrabConstants GCReal, CharacterConstants CCReal) {
+		checkShoot(MCReal, PCReal);
+		checkGrab(MCReal, GCReal, CCReal);
 	}
 
 
 	/** Creer une entite Projectile */
-	public void checkShoot(MainConstants MC, ProjectileConstants PC) {
+	public void checkShoot(MainConstants MCReal, ProjectileConstants PCReal) {
 
 		/**Si on appuie sur Shoot et qu'on peut shoot */
 		if (inputActions.getShootPushPressed() && actionBooleans.canShoot) {
@@ -512,17 +514,37 @@ public class Character extends Entity {
 			// Tire vers la droite
 			if (isOnLeftSide) {
 				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
-									MC, PC, rangeProjectile, damageProjectile, colorProjectile) );
+									MCReal, PCReal, rangeProjectile, damageProjectile, colorProjectile) );
 			// Tire vers la gauche
 			} else {
 				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), - speedProjectile,
-									MC, PC, rangeProjectile, damageProjectile, colorProjectile) );
+									MCReal, PCReal, rangeProjectile, damageProjectile, colorProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite
 			actionBooleans.canShoot = false;
 			startTimeProjectile = System.currentTimeMillis();
 		}	
+	}
+
+
+	/**Lance un Grab pour attraper un objet */
+	public void checkGrab(MainConstants MCReal, GrabConstants GCReal, CharacterConstants CCReal) {
+
+		// Si on appuie sur grab et qu'on peut grab
+		if (inputActions.getGrabPressed() && actionBooleans.canGrab) {
+
+			if (isOnLeftPlatform) {
+				// Lance un grab vers la droite
+				grabSpell.initNewGrab(x, y, true, rangeGrab, speedGrab, GCReal, CCReal);
+			}
+
+			if (isOnRightPlatform) {
+				// Lance un grab vers la gauche
+				grabSpell.initNewGrab(x, y, false, rangeGrab, speedGrab, GCReal, CCReal);
+			}
+
+		}
 	}
 
 

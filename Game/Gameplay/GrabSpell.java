@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Graphics;
 
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
 import Game.ConstantsContainers.GraphicConstants.GrabConstants;
 
 
@@ -18,6 +19,7 @@ public class GrabSpell {
 	private int x;
 	private int y;
 
+	/**Largeur du grab (longueur) */
 	private int width;
 
 	/**Vitesse du grab */
@@ -32,17 +34,42 @@ public class GrabSpell {
 	private Image imageGrab;
 
 
+	/** Un seul GrabSpell est cree par Character, mais ils sont re-initialises a chaque utilisation */
 	public GrabSpell() {
-
 	}
 
 
-	public void initNewGrab() {
-		// x de debut
-		// y de debut
-		// width = initialWidth
-		// range = rangeForThisGrab
-		// speed = SpeedForThisGrab
+	/**Initialise un nouveau grab lors du lancement */
+	public void initNewGrab(int xChara, int yChara, boolean grabRight, int rangeGrab, int speedGrab, GrabConstants GCReal, CharacterConstants CCReal) {
+		moveGrabWithCharacter(xChara, yChara, grabRight, CCReal);
+		width = GCReal.getGrabWidth();
+		this.rangeGrab = rangeGrab;
+		this.speedGrab = speedGrab;
+	}
+
+
+	/**Deplace le grab en suivant le personnage */
+	public void moveGrabWithCharacter(int xChara, int yChara, Boolean grabRight, CharacterConstants CCReal) {
+
+		int marge = CCReal.getCharacterWidth() / 6;
+
+		y = yChara + CCReal.getCharacterHeight() / 2;
+
+		// Si on grab vers la droite
+		if (grabRight) {
+			x = xChara + CCReal.getCharacterWidth() / 2 - marge;
+
+		// Sinon on grab vers la gauche
+		} else {
+			x = xChara - CCReal.getCharacterWidth() / 2 + marge;
+
+		}
+	}
+
+
+	/**Etire le grab jusqu'a sa range max */
+	public void stretchGrab() {
+
 	}
 
 

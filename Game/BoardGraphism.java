@@ -208,6 +208,9 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 	public HUDConstants getHUDConstants() {
 		return HUDConstants;
 	}
+	public GrabConstants getGrabConstants() {
+		return grabConstants;
+	}
 
 
 }

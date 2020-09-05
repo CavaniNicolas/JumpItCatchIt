@@ -87,8 +87,8 @@ public class Board implements Serializable {
 	public void checkActions() {
 
 		// Les personnages
-		characterRed.checkActions(boardGraphism.getMainConstants().getReal(), boardGraphism.getProjectileConstants().getReal());
-		characterBlue.checkActions(boardGraphism.getMainConstants().getReal(), boardGraphism.getProjectileConstants().getReal());
+		characterRed.checkActions(boardGraphism.getMainConstants().getReal(), boardGraphism.getProjectileConstants().getReal(), boardGraphism.getGrabConstants().getReal(), boardGraphism.getCharacterConstants().getReal());
+		characterBlue.checkActions(boardGraphism.getMainConstants().getReal(), boardGraphism.getProjectileConstants().getReal(), boardGraphism.getGrabConstants().getReal(), boardGraphism.getCharacterConstants().getReal());
 	}
 
 
