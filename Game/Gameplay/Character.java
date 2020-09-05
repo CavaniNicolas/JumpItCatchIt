@@ -92,7 +92,7 @@ public class Character extends Entity {
 
 
 	/**Classe contenant le grab du joueur */
-	private transient GrabSpell grabSpell = new GrabSpell();
+	private GrabSpell grabSpell = new GrabSpell();
 	/**Vitesse du grab */
 	private transient int speedGrab = 300;
 	/**Range du grab */
@@ -755,7 +755,7 @@ public class Character extends Entity {
 	@Override
 	public String toString() {
 		return "Character [isSpawning=" + isSpawning + ", lives=" + lives
-				+ ", livesMax=" + livesMax + ", projectiles=" + projectiles + " " + super.toString() + "]";
+				+ ", livesMax=" + livesMax + ", grabSpell" + grabSpell + ", projectiles=" + projectiles + " " + super.toString() + "]";
 	}
 
 }

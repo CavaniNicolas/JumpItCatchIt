@@ -2,6 +2,7 @@ package Game.Gameplay;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.io.Serializable;
 import java.awt.Graphics;
 
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
@@ -13,7 +14,8 @@ import Game.ConstantsContainers.GraphicConstants.GrabConstants;
  * Le grab du joueur <p>
  * La position (x,y) du GrabSpell est au milieu a gauche du rectangle
  */
-public class GrabSpell {
+public class GrabSpell implements Serializable {
+	private static final long serialVersionUID = 270878635786477201L;
 
 	// Position du grab
 	private int x;
