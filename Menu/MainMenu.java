@@ -128,8 +128,6 @@ public class MainMenu {
 		//start gamedisplay timer
 		boardGraphism.startDisplaying();
 
-		//frame.setFocusTraversalKeysEnabled(false);
-
 		//displays the game panel
 		frame.setContentPane(boardGraphism);
 		frame.setVisible(true);
@@ -331,8 +329,8 @@ public class MainMenu {
 		//back to main menu
 		buttonPanel.addNewButton("JOIN", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//buttonPanel.menuInteraction(connectingPanel);
 				joinOnlineGame(enemyIP.getText());
-				buttonPanel.menuInteraction(connectingPanel);
 			}
 		});
 

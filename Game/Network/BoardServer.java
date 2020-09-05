@@ -91,7 +91,7 @@ public class BoardServer implements Runnable {
 	public void createConnections() {
 		try {
 			//On attend une connexion d'un client
-			ExtendedSocket extendedSocket = new ExtendedSocket(currentPlayerNumber, serverSocket.accept());
+			ExtendedSocket extendedSocket = new ExtendedSocket(currentPlayerNumber, serverSocket.accept(), true);
 			extendedSockets.add(extendedSocket);
 
 			//Une fois reçue, on la traite dans un thread séparé
@@ -106,7 +106,6 @@ public class BoardServer implements Runnable {
 	/** start game */
 	public void startGame() {
 		board.initGame();
-
 		outputObjectToAll("GAME STARTED");
 		gameLoopServer.togglePause(false);	
 	}

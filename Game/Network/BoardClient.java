@@ -61,7 +61,7 @@ public class BoardClient extends BoardIO {
     public void run() {
         try {
             // Creation du socket et des flux d'entree/sortie
-            socket = new ExtendedSocket(0, new Socket(address, portNumber));
+            socket = new ExtendedSocket(0, new Socket(address, portNumber), false);
             connected = true;
 
             //ping.start();
