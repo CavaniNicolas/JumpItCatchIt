@@ -80,6 +80,10 @@ public class Board implements Serializable {
 		// Les personnages
 		characterRed.updatePosition(boardGraphism.getMainConstants().getReal(), boardGraphism.getCharacterConstants().getReal(), characterBlue);
 		characterBlue.updatePosition(boardGraphism.getMainConstants().getReal(), boardGraphism.getCharacterConstants().getReal(), characterRed);
+
+		// Leur Grab associes 
+		characterRed.moveGrab(boardGraphism.getCharacterConstants().getReal());
+		characterBlue.moveGrab(boardGraphism.getCharacterConstants().getReal());
 	}
 
 

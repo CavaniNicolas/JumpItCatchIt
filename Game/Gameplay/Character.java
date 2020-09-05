@@ -531,20 +531,35 @@ public class Character extends Entity {
 	/**Lance un Grab pour attraper un objet */
 	public void checkGrab(MainConstants MCReal, GrabConstants GCReal, CharacterConstants CCReal) {
 
+		boolean launchGrabDir = true;
+
 		// Si on appuie sur grab et qu'on peut grab
 		if (inputActions.getGrabPressed() && actionBooleans.canGrab) {
 
+			// Si on est sur la plateforme de gauche
 			if (isOnLeftPlatform) {
 				// Lance un grab vers la droite
-				grabSpell.initNewGrab(x, y, true, rangeGrab, speedGrab, GCReal, CCReal);
+				launchGrabDir = true;
+
+			// Si on est sur la plateforme de droite
+			} else if (isOnRightPlatform) {
+				// Lance un grab vers la gauche
+				launchGrabDir = false;
+
+			// Si on est au dessus du vide
+			} else {
+				// Tomber de la meme maniere qu'un switch au dessus du vide
 			}
 
-			if (isOnRightPlatform) {
-				// Lance un grab vers la gauche
-				grabSpell.initNewGrab(x, y, false, rangeGrab, speedGrab, GCReal, CCReal);
-			}
+			// ERREUR SUR LAUNCHGRABDIR : mieux vaut utiliser des int code pour les different cas, pour le moment on lance vers la droite par defaut
+			grabSpell.initNewGrab(x, y, launchGrabDir, rangeGrab, speedGrab, GCReal, CCReal);
+
+			// On ne peut plus grab tout de suite
+			actionBooleans.canGrab = false;
+			startTimeGrab = System.currentTimeMillis();
 
 		}
+
 	}
 
 
@@ -568,6 +583,12 @@ public class Character extends Entity {
 			this.moveXY();
 		}
 
+	}
+
+
+	/**Deplace le grab avec son joueur */
+	public void moveGrab(CharacterConstants CCReal) {
+		grabSpell.moveGrabWithCharacter(x, y, CCReal);
 	}
 
 
@@ -617,6 +638,12 @@ public class Character extends Entity {
 		for (int i=0; i<projectiles.size(); i++) {
 			projectiles.get(i).drawProjectile(g, MC, PC);
 		}
+	}
+
+
+	/**Dessine le grab du ce personnage */
+	public void drawGrab(Graphics g, MainConstants MC, GrabConstants GC) {
+		grabSpell.drawGrab(g, MC, GC);
 	}
 
 
