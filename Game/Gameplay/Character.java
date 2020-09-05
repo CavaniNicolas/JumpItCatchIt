@@ -3,6 +3,7 @@ package Game.Gameplay;
 import Game.InputActions;
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
 import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
+import Game.ConstantsContainers.GraphicConstants.GrabConstants;
 import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
 
 import java.awt.Graphics;
@@ -498,13 +499,14 @@ public class Character extends Entity {
 
 
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
-	public void checkActions(MainConstants MC, ProjectileConstants PC) {
-		checkShoot(MC, PC);
+	public void checkActions(MainConstants MCReal, ProjectileConstants PCReal, GrabConstants GCReal, CharacterConstants CCReal) {
+		checkShoot(MCReal, PCReal);
+		checkGrab(MCReal, GCReal, CCReal);
 	}
 
 
 	/** Creer une entite Projectile */
-	public void checkShoot(MainConstants MC, ProjectileConstants PC) {
+	public void checkShoot(MainConstants MCReal, ProjectileConstants PCReal) {
 
 		/**Si on appuie sur Shoot et qu'on peut shoot */
 		if (inputActions.getShootPushPressed() && actionBooleans.canShoot) {
@@ -512,17 +514,52 @@ public class Character extends Entity {
 			// Tire vers la droite
 			if (isOnLeftSide) {
 				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
-									MC, PC, rangeProjectile, damageProjectile, colorProjectile) );
+									MCReal, PCReal, rangeProjectile, damageProjectile, colorProjectile) );
 			// Tire vers la gauche
 			} else {
 				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), - speedProjectile,
-									MC, PC, rangeProjectile, damageProjectile, colorProjectile) );
+									MCReal, PCReal, rangeProjectile, damageProjectile, colorProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite
 			actionBooleans.canShoot = false;
 			startTimeProjectile = System.currentTimeMillis();
 		}	
+	}
+
+
+	/**Lance un Grab pour attraper un objet */
+	public void checkGrab(MainConstants MCReal, GrabConstants GCReal, CharacterConstants CCReal) {
+
+		boolean launchGrabDir = true;
+
+		// Si on appuie sur grab et qu'on peut grab
+		if (inputActions.getGrabPressed() && actionBooleans.canGrab) {
+
+			// Si on est sur la plateforme de gauche
+			if (isOnLeftPlatform) {
+				// Lance un grab vers la droite
+				launchGrabDir = true;
+
+			// Si on est sur la plateforme de droite
+			} else if (isOnRightPlatform) {
+				// Lance un grab vers la gauche
+				launchGrabDir = false;
+
+			// Si on est au dessus du vide
+			} else {
+				// Tomber de la meme maniere qu'un switch au dessus du vide
+			}
+
+			// ERREUR SUR LAUNCHGRABDIR : mieux vaut utiliser des int code pour les different cas, pour le moment on lance vers la droite par defaut
+			grabSpell.initNewGrab(x, y, launchGrabDir, rangeGrab, speedGrab, GCReal, CCReal);
+
+			// On ne peut plus grab tout de suite
+			actionBooleans.canGrab = false;
+			startTimeGrab = System.currentTimeMillis();
+
+		}
+
 	}
 
 
@@ -546,6 +583,12 @@ public class Character extends Entity {
 			this.moveXY();
 		}
 
+	}
+
+
+	/**Deplace le grab avec son joueur */
+	public void moveGrab(CharacterConstants CCReal) {
+		grabSpell.moveGrabWithCharacter(x, y, CCReal);
 	}
 
 
@@ -598,33 +641,17 @@ public class Character extends Entity {
 	}
 
 
+	/**Dessine le grab du ce personnage */
+	public void drawGrab(Graphics g, MainConstants MC, GrabConstants GC) {
+		grabSpell.drawGrab(g, MC, GC);
+	}
+
+
 	/**Initialise les champs graphiques */
 	public void initGraphicAttributes(CharacterConstants CCReal) {
 		this.width = CCReal.getCharacterWidth();
 		this.height = CCReal.getCharacterHeight();
 	}
-
-
-	// /**Initialise les valeurs du HUD */
-	// public void initHUDCharacter(BoardGraphism bG) {
-	// 	// On creer le nouvel HUD
-	// 	hudCharacter = new HUDCharacter();
-
-	// 	// Initialisation des attributs des coeurs du HUD
-	// 	int firstHeartX;
-	// 	if (this.colorCharacter == Color.red) {
-	// 		firstHeartX = bG.getReal().getHeartsXLeft();
-	// 	} else {
-	// 		firstHeartX = bG.getReal().getHeartsXRight();
-	// 	}
-	// 	hudCharacter.initHUDHearts(firstHeartX, bG.getReal().getHeartsY(), bG.getReal().getInterHearts(), this.colorCharacter);
-	// }
-
-
-	// // Affiche le HUD du personnage
-	// public void displayCharacterHUD(Graphics g, BoardGraphism boardGraphism) {
-	// 	hudCharacter.displayHUDHearts(g, boardGraphism, lives, livesMax);
-	// }
 
 
 	/* ======= */
@@ -636,6 +663,9 @@ public class Character extends Entity {
 	}
 	public int getLives() {
 		return lives;
+	}
+	public int getLivesMax() {
+		return livesMax;
 	}
 	public void setLives(int lives) {
 		this.lives = lives;

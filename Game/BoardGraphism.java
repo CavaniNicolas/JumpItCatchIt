@@ -8,16 +8,24 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import Game.ConstantsContainers.GraphicConstants.*;
+import Game.Gameplay.HUDCharacter;
+import Menu.TypeOfGameConstants;
 
 
 /** Class BoardGraphism<p>
  * Gere l'affichage
  */
-public class BoardGraphism extends JPanel {
+public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 	private static final long serialVersionUID = 888598770874902032L;
 
 	/** Le plateau de jeu */
 	Board board;
+
+	/***HUD */
+	private HUDCharacter hudCharacter = new HUDCharacter();
+
+	/** Type de partie : local ou en ligne, (par defaut en local) */
+	private int typeOfGame = LOCAL_GAME;
 
 	/**true une fois que les valeurs graphiques fixes ont ete initialisees */
 	private boolean isGraphicUpdateDone = false;
@@ -101,9 +109,12 @@ public class BoardGraphism extends JPanel {
 		board.getCharacterRed().drawProjectiles(g, mainConstants, projectileConstants);
 		board.getCharacterBlue().drawProjectiles(g, mainConstants, projectileConstants);
 
+		// Affiche les grab
+		board.getCharacterRed().drawGrab(g, mainConstants, grabConstants);
+		board.getCharacterBlue().drawGrab(g, mainConstants, grabConstants);
+
 		// // Affiche la vie des joueurs
-		// board.getCharacterRed().displayCharacterHUD(g, this);
-		// board.getCharacterBlue().displayCharacterHUD(g, this);
+		hudCharacter.displayHUD(g, mainConstants, HUDConstants, board.getCharacterRed(), board.getCharacterBlue());
 	}
 
 
@@ -177,6 +188,9 @@ public class BoardGraphism extends JPanel {
 		this.board = board;
 	}
 
+	public void setTypeOfGame(int typeOfGame) {
+		this.typeOfGame = typeOfGame;
+	}
 
 	/* ======= */
 	/* Getters */
@@ -197,6 +211,9 @@ public class BoardGraphism extends JPanel {
 	}
 	public HUDConstants getHUDConstants() {
 		return HUDConstants;
+	}
+	public GrabConstants getGrabConstants() {
+		return grabConstants;
 	}
 
 

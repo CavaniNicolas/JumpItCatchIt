@@ -86,6 +86,9 @@ public class MainMenu {
 		board.initGame();
 		boardIO = new BoardLocal(board);
 
+		// Indique a BoardGraphism que c'est une LocalGame, utile pour afficher les HUD
+		boardGraphism.setTypeOfGame(BoardGraphism.LOCAL_GAME);
+
 		//add the key listeners
 		boardIO.handleKeyListeners(frame, true);
 
@@ -99,6 +102,9 @@ public class MainMenu {
 	public void startOnlineGame() {
 		Thread threadServer = new Thread(new BoardServer());
 		threadServer.start();
+
+		// Indique a BoardGraphism que c'est une LocalGame, utile pour afficher les HUD
+		boardGraphism.setTypeOfGame(BoardGraphism.ONLINE_GAME);
 
 		//sleep to avoid joining a game before the server was started
 		try {
