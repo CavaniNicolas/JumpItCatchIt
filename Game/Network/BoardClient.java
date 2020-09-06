@@ -83,7 +83,12 @@ public class BoardClient extends BoardIO {
     /** handles every object received */
     public void inputObject() {
         while (connected) {
+            long startTime = System.currentTimeMillis();
             Object obj = socket.readObject();
+            long endTime = System.currentTimeMillis();
+            if (endTime - startTime > 50) {
+                System.out.println("PACKET LOSS");
+            }
             if (obj == null) {
                 //server closed unexpectedly
                 closeClient();
