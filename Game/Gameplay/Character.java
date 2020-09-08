@@ -1,6 +1,7 @@
 package Game.Gameplay;
 
 import Game.InputActions;
+import Game.Gameplay.Items.ItemBall;
 import Game.ConstantsContainers.GraphicConstants.MainConstants;
 import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
 import Game.ConstantsContainers.GraphicConstants.GrabConstants;
@@ -667,7 +668,23 @@ public class Character extends Entity {
 
 
 	/** Verifie les collisions du grab avec les items */
-	public void checkGrabCollision() {
+	public void checkGrabCollision(ArrayList<ItemBall> itemBalls) {
+		ItemBall itemBall = null;
+
+		for (int i=0; i<itemBalls.size(); i++) {
+			itemBall = itemBalls.get(i);
+
+			if (itemBall != null) {
+
+				// renvoie true si le grab touche un item
+				if (grabSpell.checkItemCollision(itemBall.x, itemBall.y, itemBall.width)) {
+					itemBall.effects(this);
+					itemBalls.remove(i);
+				}
+			}
+
+		}
+
 	}
 
 

@@ -80,6 +80,7 @@ public class GrabSpell implements Serializable {
 	/**Etire le grab */
 	public void stretchGrab() {
 
+		/**Coeff pour adapter les calculs a la direction du grab */
 		int coeff = 1;
 		// Si le grab a atteint quelque chose ou la max Range, on repli le grab
 		if (hasReached) {
@@ -104,6 +105,28 @@ public class GrabSpell implements Serializable {
 			isFinished = true;
 		}
 		return isFinished;
+	}
+
+
+	/** Verifie les collisions avec les items */
+	public boolean checkItemCollision(int itemX, int itemY, int itemWidth) {
+		boolean isGrabed = false;
+
+		/**Coeff pour adapter les calculs a la direction du grab */
+		int coeff = 1;
+		if (hasReached) {
+			coeff = -1;
+		}
+
+		// La gestion des collisions entre le grab et les items utilise une hitbox ronde pour les items et un point pour le bout du grab
+		if ( Math.pow((double)(x + coeff * width - itemX), 2) + Math.pow((double)(y - itemY), 2) < Math.pow((double)(itemWidth), 2) ) {
+			isGrabed = true;
+
+			// Un item est attrape, le grab doit se replier
+			hasReached = true;
+		}
+
+		return isGrabed;
 	}
 
 

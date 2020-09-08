@@ -1,5 +1,6 @@
 package Game.Gameplay.Items.Item;
 
+import Game.Gameplay.Character;
 import Game.Gameplay.Items.ItemBall;
 
 import java.awt.Color;

@@ -216,7 +216,7 @@ public class ItemBalls implements Serializable {
 		for (int i=0; i<itemBalls.size(); i++) {
 			ib = itemBalls.get(i);
 			if (ib != null) {
-				itemBalls.get(i).drawItem(g, MC, IC);
+				ib.drawItem(g, MC, IC);
 			}
 		}
 	}
@@ -226,5 +226,13 @@ public class ItemBalls implements Serializable {
 		return "ItemBalls [itemBalls=" + itemBalls + "]";
 	}
 
+
+	/* ======= */
+	/* Getters */
+	/* ======= */
+
+	public ArrayList<ItemBall> getItemBalls() {
+		return this.itemBalls;
+	}
 
 }
