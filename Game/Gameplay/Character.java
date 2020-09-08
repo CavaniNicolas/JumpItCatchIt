@@ -554,6 +554,8 @@ public class Character extends Entity {
 			// ERREUR SUR LAUNCHGRABDIR : mieux vaut utiliser des int code pour les different cas, pour le moment on lance vers la droite par defaut
 			grabSpell.initNewGrab(x, y, launchGrabDir, rangeGrab, speedGrab, GCReal, CCReal);
 
+			actionBooleans.isGrabing = true;
+
 			// On ne peut plus grab tout de suite
 			actionBooleans.canGrab = false;
 			startTimeGrab = System.currentTimeMillis();
@@ -619,6 +621,17 @@ public class Character extends Entity {
 				projectiles.remove(i);
 			}
 		}
+	}
+
+
+	/** Etend le grab si le personnage est en train de grab */
+	public void stretchGrab() {
+
+		// Si on est en train de grab
+		if (actionBooleans.isGrabing) {
+			grabSpell.stretchGrab();
+		}
+
 	}
 
 
@@ -715,6 +728,7 @@ public class Character extends Entity {
 		// Booleens d'actions en cours
 		private boolean isJumping = false;
 		private boolean isSwitching = false;
+		private boolean isGrabing = false;
 
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)

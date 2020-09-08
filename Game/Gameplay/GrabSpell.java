@@ -27,6 +27,9 @@ public class GrabSpell implements Serializable {
 	/**Grab vers la droite ou vers la gauche */
 	private boolean launchGrabDir;
 
+	/**True si le grab a atteint une cible ou si il est arrive a max range, pour commencer le retour */
+	private boolean hasReached;
+
 	/**Vitesse du grab */
 	private int speedGrab;
 	/**Range du grab */
@@ -48,6 +51,7 @@ public class GrabSpell implements Serializable {
 	public void initNewGrab(int xChara, int yChara, boolean launchGrabDir, int rangeGrab, int speedGrab, GrabConstants GCReal, CharacterConstants CCReal) {
 		width = GCReal.getGrabWidth();
 		this.launchGrabDir = launchGrabDir;
+		this.hasReached = false;
 		this.rangeGrab = rangeGrab;
 		this.speedGrab = speedGrab;
 		moveGrabWithCharacter(xChara, yChara, CCReal);
@@ -73,8 +77,21 @@ public class GrabSpell implements Serializable {
 	}
 
 
-	/**Etire le grab jusqu'a sa range max */
+	/**Etire le grab */
 	public void stretchGrab() {
+
+		int coeff = 1;
+		// Si le grab a atteint quelque chose ou la max Range, on repli le grab
+		if (hasReached) {
+			coeff = -1;
+		}
+
+		width += coeff * speedGrab;
+
+		// si le grab est lance vers la gauche il faut aussi le deplacer selon x
+		if (launchGrabDir == false) {
+			x -= coeff * speedGrab;
+		}
 
 	}
 
@@ -94,6 +111,15 @@ public class GrabSpell implements Serializable {
 		}
 
 		g.fillRect(x, y, width, height);
+	}
+
+
+	/* ======= */
+	/* Setters */
+	/* ======= */
+
+	public void setHasReached(boolean hasReached) {
+		this.hasReached = hasReached;
 	}
 
 }

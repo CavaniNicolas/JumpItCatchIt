@@ -44,7 +44,11 @@ public class Board implements Serializable {
 		// Projectiles
 		moveProjectiles();
 		checkProjectilesCollision();
-		
+
+		// Grab
+		stretchGrab();
+		checkGrabCollision();
+
 		// Items
 		createItems();
 		moveItems();
@@ -107,6 +111,19 @@ public class Board implements Serializable {
 	public void checkProjectilesCollision() {
 		characterRed.checkProjectilesCollision(characterBlue);
 		characterBlue.checkProjectilesCollision(characterRed);
+	}
+
+
+	/** Etend le grab */
+	public void stretchGrab() {
+		characterRed.stretchGrab();
+		characterBlue.stretchGrab();
+	}
+
+
+	/** Verifie les collisions du grab avec les items */
+	public void checkGrabCollision() {
+
 	}
 
 
