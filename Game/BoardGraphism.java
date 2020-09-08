@@ -105,13 +105,13 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 		board.getCharacterRed().drawCharacter(g, mainConstants, characterConstants);
 		board.getCharacterBlue().drawCharacter(g, mainConstants, characterConstants);
 
-		// Affiche les projectiles
-		board.getCharacterRed().drawProjectiles(g, mainConstants, projectileConstants);
-		board.getCharacterBlue().drawProjectiles(g, mainConstants, projectileConstants);
-
 		// Affiche les grab
 		board.getCharacterRed().drawGrab(g, mainConstants, grabConstants);
 		board.getCharacterBlue().drawGrab(g, mainConstants, grabConstants);
+
+		// Affiche les projectiles
+		board.getCharacterRed().drawProjectiles(g, mainConstants, projectileConstants);
+		board.getCharacterBlue().drawProjectiles(g, mainConstants, projectileConstants);
 
 		// // Affiche la vie des joueurs
 		hudCharacter.displayHUD(g, mainConstants, HUDConstants, board.getCharacterRed(), board.getCharacterBlue());

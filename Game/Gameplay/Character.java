@@ -69,7 +69,7 @@ public class Character extends Entity {
 	/** Vitesse Horizontale Constante */
 	protected transient int speedVertical = 450;
 	/** Vitesse a appliquer a speedX pour le switch */
-	protected transient int switchSpeed = 275;
+	protected transient int switchSpeed = 295;
 
 
 	/**Projectiles du joueur */
