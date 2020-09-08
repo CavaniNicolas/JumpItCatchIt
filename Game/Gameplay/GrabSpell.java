@@ -93,6 +93,10 @@ public class GrabSpell implements Serializable {
 			x -= coeff * speedGrab;
 		}
 
+		if (width >= rangeGrab) {
+			hasReached = true;
+		}
+
 	}
 
 

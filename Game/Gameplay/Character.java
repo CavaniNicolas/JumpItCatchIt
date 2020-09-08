@@ -635,6 +635,11 @@ public class Character extends Entity {
 	}
 
 
+	/** Verifie les collisions du grab avec les items */
+	public void checkGrabCollision() {
+	}
+
+
 	/**Dessine le personnage */
 	public void drawCharacter(Graphics g, MainConstants MC, CharacterConstants CC) {
 		g.setColor(colorCharacter);

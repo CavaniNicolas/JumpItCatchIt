@@ -123,7 +123,8 @@ public class Board implements Serializable {
 
 	/** Verifie les collisions du grab avec les items */
 	public void checkGrabCollision() {
-
+		characterRed.checkGrabCollision();
+		characterBlue.checkGrabCollision();
 	}
 
 
