@@ -94,14 +94,14 @@ public class Character extends Entity {
 	/**Classe contenant le grab du joueur */
 	private GrabSpell grabSpell = new GrabSpell();
 	/**Vitesse du grab */
-	private transient int speedGrab = 300;
+	private transient int speedGrab = 400;
 	/**Range du grab */
-	private transient int rangeGrab = 5_000;
+	private transient int rangeGrab = 4_000;
 	/**Image du grab */
 	private transient Image imageGrab = null;
 
 	/**Cool Down pour le grab (en milli secondes) */
-	private transient long coolDownGrab = 2_000;
+	private transient long coolDownGrab = 1_000;
 	/** Moment auquel on effectue un grab */
 	private transient long startTimeGrab = 0;
 
@@ -162,6 +162,7 @@ public class Character extends Entity {
 			actionBooleans.canRight = false;
 
 			actionBooleans.canShoot = false;
+			actionBooleans.canGrab = false;
 		}
 
 
@@ -205,17 +206,26 @@ public class Character extends Entity {
 		if (actionBooleans.isSwitching) {
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
-		}
+			
+			// On ne peut pas grab lors d'un switch
+			actionBooleans.canGrab = false;
 
-		// On ne peut pas tirer pendant qu'on switch
-		if (actionBooleans.isSwitching) {
+			// On ne peut pas tirer pendant qu'on switch
 			actionBooleans.canShoot = false;
 		}
-		
+
 		// On ne peut pas shoot si les deux joueurs sont sur la meme plateforme (pour les deux joueurs)
 		if ((isOnLeftPlatform && otherCharacter.isOnLeftPlatform) ||
 			(isOnRightPlatform && otherCharacter.isOnRightPlatform)) {
+
 				actionBooleans.canShoot = false;
+		}
+
+		// Si les deux persos sont sur la meme plateforme, celui qui est le plus loin des items ne peut pas grab
+		if ((isOnLeftPlatform && otherCharacter.isOnLeftPlatform && isOnLeftSide) ||
+			(isOnRightPlatform && otherCharacter.isOnRightPlatform && isOnLeftSide == false)) {
+
+			actionBooleans.canGrab = false;
 		}
 
 	}
@@ -228,6 +238,12 @@ public class Character extends Entity {
 		if (System.currentTimeMillis() - startTimeProjectile >= coolDownProjectile) {
 			actionBooleans.canShoot = true;
 		}
+
+		// Pour le grab
+		if (System.currentTimeMillis() - startTimeGrab >= coolDownGrab) {
+			actionBooleans.canGrab = true;
+		}
+
 	}
 
 

@@ -86,13 +86,10 @@ public class GrabSpell implements Serializable {
 			coeff = -1;
 		}
 
+		// Etire le grab
 		width += coeff * speedGrab;
 
-		// si le grab est lance vers la gauche il faut aussi le deplacer selon x
-		if (launchGrabDir == false) {
-			x -= coeff * speedGrab;
-		}
-
+		// Si le grab a atteint sa range Max
 		if (width >= rangeGrab) {
 			hasReached = true;
 		}
