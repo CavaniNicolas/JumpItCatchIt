@@ -202,23 +202,33 @@ public class Character extends Entity {
 			actionBooleans.canActivateCanSwitch = false;
 		}
 
-		// On ne peut pas se deplacer lateralement lors d'un switch
+		// Pendant un switch
 		if (actionBooleans.isSwitching) {
+			// On ne peut pas se deplacer lateralement
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
 			
-			// On ne peut pas grab lors d'un switch
+			// On ne peut pas grab
 			actionBooleans.canGrab = false;
 
-			// On ne peut pas tirer pendant qu'on switch
+			// On ne peut pas tirer
 			actionBooleans.canShoot = false;
+		}
+
+		// Pendant un grab
+		if (actionBooleans.isGrabing) {
+			// On ne peut pas tirer
+			actionBooleans.canShoot = false;
+
+			// On ne peut pas switch
+			actionBooleans.canSwitch = false;
 		}
 
 		// On ne peut pas shoot si les deux joueurs sont sur la meme plateforme (pour les deux joueurs)
 		if ((isOnLeftPlatform && otherCharacter.isOnLeftPlatform) ||
 			(isOnRightPlatform && otherCharacter.isOnRightPlatform)) {
 
-				actionBooleans.canShoot = false;
+			actionBooleans.canShoot = false;
 		}
 
 		// Si les deux persos sont sur la meme plateforme, celui qui est le plus loin des items ne peut pas grab
