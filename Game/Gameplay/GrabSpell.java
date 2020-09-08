@@ -97,6 +97,16 @@ public class GrabSpell implements Serializable {
 	}
 
 
+	/** Renvoie true si le grab est termine */
+	public boolean isGrabFinished() {
+		boolean isFinished = false;
+		if (width <= 0) {
+			isFinished = true;
+		}
+		return isFinished;
+	}
+
+
 	/**Dessine le grab */
 	public void drawGrab(Graphics g, MainConstants MC, GrabConstants GC) {
 		g.setColor(colorGrab);

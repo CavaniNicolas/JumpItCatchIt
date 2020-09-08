@@ -648,6 +648,11 @@ public class Character extends Entity {
 			grabSpell.stretchGrab();
 		}
 
+		// Verifie si on a finit de grab
+		if (grabSpell.isGrabFinished()) {
+			actionBooleans.isGrabing = false;
+		}
+
 	}
 
 
