@@ -291,6 +291,7 @@ public class MainMenu {
 		//join an existing game
 		JLabel waiting = new JLabel("Waiting for your great enemy ...");
 	
+		//timer to display moving dots
 		Timer timer = new Timer(500, new ActionListener() {
 			String baseString = "...   ";
 			int beginning = 0;
@@ -409,6 +410,7 @@ public class MainMenu {
 		connectingPanel.displayBorder("CONNECTION");
 		JLabel info = new JLabel(" Connecting ... ");
 
+		//timer to display moving dots
 		Timer timer = new Timer(500, new ActionListener() {
 			String baseString = "...   ";
 			int beginning = 0;
