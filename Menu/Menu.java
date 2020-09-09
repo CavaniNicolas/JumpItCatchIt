@@ -21,8 +21,10 @@ public class Menu extends JPanel {
 	protected int borderMargin = 0;
 	protected Menu self = this;
 	protected BackgroundPanel backgroundPanel;
-	protected Menu menu;
 	protected Boolean removesAllPanel = false;
+	protected Menu menu;
+
+	protected BackMenuInteraction backMenuInteraction;
 
 	public Menu() {
 		this(null, null);
@@ -32,6 +34,10 @@ public class Menu extends JPanel {
 		this.setBackground(Color.white);
 		this.backgroundPanel = backgroundPanel;
 		this.menu = menu;
+		backMenuInteraction = new BackMenuInteraction(){
+			@Override
+			public void backInteraction() {}
+		};
 	}
 
 	public void displayBorder(String name) {
@@ -57,25 +63,32 @@ public class Menu extends JPanel {
 		this.add(button);
 	}
 
-	/** adds the back button, needs the menu to be constructed the long way */
-	public void addNewButton(String name) {
-		JButton button = new JButton(name);
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				menuInteraction();
-			}
-		});
-		/*button.setUI(new MetalButtonUI() {
+	/*button.setUI(new MetalButtonUI() {
 			protected Color getDisabledTextColor() {
 				return Color.BLACK;
 			}
 		});
 		button.setEnabled(false);*/
+
+	/** adds the back button, needs the menu to be constructed the long way */
+	public void addNewButton(String name) {
+		JButton button = new JButton(name);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				backInteraction();
+			}
+		});
 		this.add(button);
 	}
 
+	/** changes the default backing interaction */
+	public void setBackInteraction(BackMenuInteraction backMenuInteraction) {
+		this.backMenuInteraction = backMenuInteraction;
+	}
+
 	/** back interaction */
-	public void menuInteraction() {
+	public void backInteraction() {
+		backMenuInteraction.backInteraction();
 		backgroundPanel.addMenu(menu, false);
 	}
 

@@ -50,7 +50,7 @@ public class OptionMenu extends Menu {
 		/** back to main menu */
 		buttonPanel.addNewButton("BACK", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {   
-				menuInteraction();
+				backInteraction();
 			}
 		});
 
@@ -120,7 +120,7 @@ public class OptionMenu extends Menu {
 
 	@Override
 	/** back interaction */
-	public void menuInteraction() {
+	public void backInteraction() {
 		if (!optionContentMenu.checkChanges()) {
 			backgroundPanel.addMenu(saveQuitOptionsPanel, true);
 		} else {

@@ -103,9 +103,6 @@ public class MainMenu {
 		Thread threadServer = new Thread(new BoardServer());
 		threadServer.start();
 
-		// Indique a BoardGraphism que c'est une LocalGame, utile pour afficher les HUD
-		boardGraphism.setTypeOfGame(BoardGraphism.ONLINE_GAME);
-
 		//sleep to avoid joining a game before the server was started
 		try {
 			Thread.sleep(500);
@@ -121,6 +118,9 @@ public class MainMenu {
 	public void joinOnlineGame(String address) {
 		//init game, shouldn't be necessary (if not included the platforms are not displayed)
 		board.initGame();
+
+		// Indique a BoardGraphism que c'est une OnlineGame, utile pour afficher les HUD
+		boardGraphism.setTypeOfGame(BoardGraphism.ONLINE_GAME);
 
 		//start a client on a thread
 		boardIO = new BoardClient(boardGraphism, address, this, frame);
@@ -310,10 +310,10 @@ public class MainMenu {
 		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel);
 
 		//back to main menu
-		buttonPanel.addNewButton("BACK", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//displays the mainMenu panel 
-				buttonPanel.menuInteraction();
+		buttonPanel.addNewButton("BACK");
+
+		buttonPanel.setBackInteraction(new BackMenuInteraction(){
+			public void backInteraction() {
 				timer.stop();
 			}
 		});
@@ -392,9 +392,10 @@ public class MainMenu {
 		});
 
 		//back to main menu
-		buttonPanel.addNewButton("BACK TO MAIN MENU", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				buttonPanel.menuInteraction();
+		buttonPanel.addNewButton("BACK TO MAIN MENU");
+
+		buttonPanel.setBackInteraction(new BackMenuInteraction(){
+			public void backInteraction() {
 				boardIO.exitGame();
 			}
 		});
@@ -429,9 +430,10 @@ public class MainMenu {
 		timer.start();
 
 		connectingPanel.add(info);
-		connectingPanel.addNewButton("BACK", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				connectingPanel.menuInteraction();
+		connectingPanel.addNewButton("BACK");
+
+		connectingPanel.setBackInteraction(new BackMenuInteraction(){
+			public void backInteraction() {
 				boardIO.exitGame();
 			}
 		});
@@ -518,7 +520,7 @@ public class MainMenu {
 			if (code == 27) {
 				if (frame.getContentPane() == backgroundPanel) {
 					Menu menu =  (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
-					menu.menuInteraction();
+					menu.backInteraction();
 				} else {
 					toggleEscapePanel();
 				}
