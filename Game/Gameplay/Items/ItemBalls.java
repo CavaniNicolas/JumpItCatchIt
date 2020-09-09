@@ -18,7 +18,7 @@ public class ItemBalls implements Serializable {
 	private transient ArrayList<ItemBallInit> allExistingBalls = new ArrayList<ItemBallInit>();
 
 	/** Tableau contenant les items actuellement sur le plateau */
-	private ArrayList<ItemBall> itemBalls = new ArrayList<ItemBall>();
+	private ArrayList<ItemBall> itemBallList = new ArrayList<ItemBall>();
 
 	/** Somme des probabilites de tous les items */
 	private transient int sumAllProbas = 0;
@@ -35,7 +35,7 @@ public class ItemBalls implements Serializable {
 	/** Creer les items qui tombent au milieu du plateau */
 	public void createItems(MainConstants MCReal, ItemConstants ICReal) {
 
-		int nbItems = itemBalls.size();
+		int nbItems = itemBallList.size();
 
 		ItemBall newItem;
 		
@@ -45,7 +45,7 @@ public class ItemBalls implements Serializable {
 			// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
 			newItem = createNewItemBall(ICReal);
 			// L'ajoute a la liste des Items en jeu
-			itemBalls.add(newItem);
+			itemBallList.add(newItem);
 
 		// Ensuite lors du jeu :
 		} else {
@@ -56,7 +56,7 @@ public class ItemBalls implements Serializable {
 			// On se place sur l'item precedent non null
 			int i = 1;
 			do {
-				lastSpawnedItem = itemBalls.get(nbItems - i);
+				lastSpawnedItem = itemBallList.get(nbItems - i);
 				i++;
 			} while (lastSpawnedItem == null && i <= nbItems);
 
@@ -66,7 +66,7 @@ public class ItemBalls implements Serializable {
 				// Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree
 				newItem = createNewItemBall(ICReal);
 				// L'ajoute a la liste des Items en jeu
-				itemBalls.add(newItem);
+				itemBallList.add(newItem);
 			}
 
 		}
@@ -135,8 +135,8 @@ public class ItemBalls implements Serializable {
 
 		ItemBall ib = null;
 
-		for (int i=0; i<itemBalls.size(); i++) {
-			ib = itemBalls.get(i);
+		for (int i=0; i<itemBallList.size(); i++) {
+			ib = itemBallList.get(i);
 
 			if (ib != null) {
 				// Deplace l'Item
@@ -145,10 +145,8 @@ public class ItemBalls implements Serializable {
 				// Si l'item est tombe en bas de l'ecran, on le supprime
 				if (ib.getY() == ib.getMinY()) {
 
-					findDeletedItemAndRemoveOneNbItem(ib);
-
 					// Supprime l'Item
-					itemBalls.remove(ib);
+					removeBall(ib);
 				}
 			}
 		}
@@ -210,11 +208,18 @@ public class ItemBalls implements Serializable {
 	}
 
 
+	/** Supprime un item de la liste des items en jeu */
+	public void removeBall(ItemBall deletedItem) {
+		findDeletedItemAndRemoveOneNbItem(deletedItem);
+		itemBallList.remove(deletedItem);
+	}
+
+
 	/** Affiche les items */
 	public void drawItems(Graphics g, MainConstants MC, ItemConstants IC) {
 		ItemBall ib = null;
-		for (int i=0; i<itemBalls.size(); i++) {
-			ib = itemBalls.get(i);
+		for (int i=0; i<itemBallList.size(); i++) {
+			ib = itemBallList.get(i);
 			if (ib != null) {
 				ib.drawItem(g, MC, IC);
 			}
@@ -223,7 +228,7 @@ public class ItemBalls implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ItemBalls [itemBalls=" + itemBalls + "]";
+		return "ItemBalls [itemBallList=" + itemBallList + "]";
 	}
 
 
@@ -231,8 +236,8 @@ public class ItemBalls implements Serializable {
 	/* Getters */
 	/* ======= */
 
-	public ArrayList<ItemBall> getItemBalls() {
-		return this.itemBalls;
+	public ArrayList<ItemBall> getItemBallList() {
+		return this.itemBallList;
 	}
 
 }
