@@ -4,10 +4,10 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class CharacterConstants <p>
  * Contient les attributs graphiques constants des personnages
  */
-public class CharacterConstants {
+public class GraphicCharacterConstants {
 
 	/**Coordonnees reelles */
-	private CharacterConstants real;
+	private GraphicCharacterConstants real;
 
 
 	/**Largeur des personnages */
@@ -27,13 +27,13 @@ public class CharacterConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
-	public CharacterConstants() {
+	public GraphicCharacterConstants() {
 		this.real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public CharacterConstants(CharacterConstants real) {
+	public GraphicCharacterConstants(GraphicCharacterConstants real) {
 		this.real = real;
 	}
 
@@ -64,7 +64,7 @@ public class CharacterConstants {
 	/* Getters */
 	/* ======= */
 
-	public CharacterConstants getReal() {
+	public GraphicCharacterConstants getReal() {
 		return real;
 	}
 

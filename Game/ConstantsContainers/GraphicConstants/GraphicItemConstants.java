@@ -4,10 +4,10 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class ItemConstants <p>
  * Contient les attributs graphiques constants des items
  */
-public class ItemConstants {
+public class GraphicItemConstants {
 
 	/**Coordonnees reelles */
-	private ItemConstants real;
+	private GraphicItemConstants real;
 
 
 	/**Largeur des Items */
@@ -22,7 +22,7 @@ public class ItemConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
-	public ItemConstants(int maxXReal, int maxYReal) {
+	public GraphicItemConstants(int maxXReal, int maxYReal) {
 		this.real = null;
 
 		itemFirstX = maxXReal / 2;
@@ -31,7 +31,7 @@ public class ItemConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public ItemConstants(ItemConstants real) {
+	public GraphicItemConstants(GraphicItemConstants real) {
 		this.real = real;
 
 		itemFirstX = real.itemFirstX;
@@ -67,7 +67,7 @@ public class ItemConstants {
 	/* Getters */
 	/* ======= */
 
-	public ItemConstants getReal() {
+	public GraphicItemConstants getReal() {
 		return real;
 	}
 

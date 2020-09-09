@@ -2,8 +2,8 @@ package Game.Gameplay.Items;
 
 import Game.Gameplay.Character;
 import Game.Gameplay.Entity;
-import Game.ConstantsContainers.GraphicConstants.MainConstants;
-import Game.ConstantsContainers.GraphicConstants.ItemConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicItemConstants;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -34,7 +34,7 @@ public class ItemBall extends Entity {
 
 
 	/** Affiche l'item */
-	public void drawItem(Graphics g, MainConstants MC, ItemConstants IC) {
+	public void drawItem(Graphics g, GraphicMainConstants MC, GraphicItemConstants IC) {
 		g.setColor(colorItem);
 		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
 		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height / 2)) * MC.getOneUnityHeight());

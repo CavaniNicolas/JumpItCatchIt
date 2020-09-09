@@ -4,10 +4,10 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class GrabConstants <p>
  * Contient les attributs graphiques constants des grabs
  */
-public class GrabConstants {
+public class GraphicGrabConstants {
 
 	/**Coordonnees reelles */
-	private GrabConstants real;
+	private GraphicGrabConstants real;
 
 
 	/**Largeur des grabs */
@@ -17,13 +17,13 @@ public class GrabConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
-	public GrabConstants() {
+	public GraphicGrabConstants() {
 		this. real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public GrabConstants(GrabConstants real) {
+	public GraphicGrabConstants(GraphicGrabConstants real) {
 		this.real = real;
 	}
 
@@ -49,7 +49,7 @@ public class GrabConstants {
 	/* Getters */
 	/* ======= */
 
-	public GrabConstants getReal() {
+	public GraphicGrabConstants getReal() {
 		return real;
 	}
 

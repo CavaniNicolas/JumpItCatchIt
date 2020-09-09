@@ -3,8 +3,8 @@ package Game.Gameplay;
 import java.awt.Graphics;
 import java.awt.Color;
 
-import Game.ConstantsContainers.GraphicConstants.HUDConstants;
-import Game.ConstantsContainers.GraphicConstants.MainConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicHUDConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
 
 
 public class HUDCharacter {
@@ -13,7 +13,7 @@ public class HUDCharacter {
 
 
 	/** Affiche le HUD */
-	public void displayHUD(Graphics g, MainConstants MC, HUDConstants HC, Character characterRed, Character characterBlue) {
+	public void displayHUD(Graphics g, GraphicMainConstants MC, GraphicHUDConstants HC, Character characterRed, Character characterBlue) {
 		
 		displayHUDHearts(g, MC, HC, true, characterRed.getLives(), characterRed.getLivesMax());
 		displayHUDHearts(g, MC, HC, false,  characterBlue.getLives(), characterBlue.getLivesMax());
@@ -21,7 +21,7 @@ public class HUDCharacter {
 
 
 	/**Affiche les coeurs du HUD d'un joueur */
-	private void displayHUDHearts(Graphics g, MainConstants MC, HUDConstants HC, boolean isLeft, int lives, int livesMax) {
+	private void displayHUDHearts(Graphics g, GraphicMainConstants MC, GraphicHUDConstants HC, boolean isLeft, int lives, int livesMax) {
 		Color colorHearts;
 		int x;
 		int y;

@@ -4,10 +4,10 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class HUDConstants <p>
  * Contient les attributs graphiques constants du HUD
  */
-public class HUDConstants {
+public class GraphicHUDConstants {
 
 	/**Coordonnees reelles */
-	private HUDConstants real;
+	private GraphicHUDConstants real;
 
 
 	/* ====== */
@@ -28,13 +28,13 @@ public class HUDConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
-	public HUDConstants() {
+	public GraphicHUDConstants() {
 		this.real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public HUDConstants(HUDConstants real) {
+	public GraphicHUDConstants(GraphicHUDConstants real) {
 		this.real = real;
 	}
 
@@ -66,7 +66,7 @@ public class HUDConstants {
 	/* Getters */
 	/* ======= */
 
-	public HUDConstants getReal() {
+	public GraphicHUDConstants getReal() {
 		return real;
 	}
 

@@ -32,18 +32,18 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 
 	// Containers a Constantes Graphiques
 	/**MainConstants Graphiques */
-	private MainConstants mainConstants;
+	private GraphicMainConstants mainConstants;
 
 	/**CharacterConstants Graphiques*/
-	private CharacterConstants characterConstants;
+	private GraphicCharacterConstants characterConstants;
 	/**ProjectileConstants Graphiques*/
-	private ProjectileConstants projectileConstants;
+	private GraphicProjectileConstants projectileConstants;
 	/**ItemConstants Graphiques*/
-	private ItemConstants itemConstants;
+	private GraphicItemConstants itemConstants;
 	/**HUDConstants Graphiques*/
-	private HUDConstants HUDConstants;
+	private GraphicHUDConstants HUDConstants;
 	/**GrabConstants Graphiques*/
-	private GrabConstants grabConstants;
+	private GraphicGrabConstants grabConstants;
 
 
 	/**Timer d'affichage du jeu */
@@ -62,13 +62,13 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 	/**Creer les Containers a Constantes Graphiques */
 	public void createGraphicConstantsContainers() {
 
-		mainConstants = new MainConstants(new MainConstants());
+		mainConstants = new GraphicMainConstants(new GraphicMainConstants());
 
-		characterConstants = new CharacterConstants(new CharacterConstants());
-		projectileConstants = new ProjectileConstants(new ProjectileConstants());
-		itemConstants = new ItemConstants(new ItemConstants(mainConstants.getReal().getMaxX(), mainConstants.getReal().getMaxY()));
-		HUDConstants = new HUDConstants(new HUDConstants());
-		grabConstants = new GrabConstants(new GrabConstants());
+		characterConstants = new GraphicCharacterConstants(new GraphicCharacterConstants());
+		projectileConstants = new GraphicProjectileConstants(new GraphicProjectileConstants());
+		itemConstants = new GraphicItemConstants(new GraphicItemConstants(mainConstants.getReal().getMaxX(), mainConstants.getReal().getMaxY()));
+		HUDConstants = new GraphicHUDConstants(new GraphicHUDConstants());
+		grabConstants = new GraphicGrabConstants(new GraphicGrabConstants());
 
 	}
 
@@ -197,22 +197,22 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 	/* ======= */
 
 	// Constant Containers
-	public MainConstants getMainConstants() {
+	public GraphicMainConstants getMainConstants() {
 		return mainConstants;
 	}
-	public CharacterConstants getCharacterConstants() {
+	public GraphicCharacterConstants getCharacterConstants() {
 		return characterConstants;
 	}
-	public ProjectileConstants getProjectileConstants() {
+	public GraphicProjectileConstants getProjectileConstants() {
 		return projectileConstants;
 	}
-	public ItemConstants getItemConstants() {
+	public GraphicItemConstants getItemConstants() {
 		return itemConstants;
 	}
-	public HUDConstants getHUDConstants() {
+	public GraphicHUDConstants getHUDConstants() {
 		return HUDConstants;
 	}
-	public GrabConstants getGrabConstants() {
+	public GraphicGrabConstants getGrabConstants() {
 		return grabConstants;
 	}
 

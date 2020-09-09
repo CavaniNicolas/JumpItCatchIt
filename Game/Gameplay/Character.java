@@ -3,10 +3,10 @@ package Game.Gameplay;
 import Game.InputActions;
 import Game.Gameplay.Items.ItemBall;
 import Game.Gameplay.Items.ItemBalls;
-import Game.ConstantsContainers.GraphicConstants.MainConstants;
-import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
-import Game.ConstantsContainers.GraphicConstants.GrabConstants;
-import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicCharacterConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicGrabConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicProjectileConstants;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -110,7 +110,7 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, CharacterConstants CCReal) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, GraphicCharacterConstants CCReal) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
@@ -122,7 +122,7 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character sans Image */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, CharacterConstants CCReal) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, GraphicCharacterConstants CCReal) {
 		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, CCReal);
 	}
 
@@ -260,7 +260,7 @@ public class Character extends Entity {
 
 
 	/** Actualise les booleens de position */
-	public void updatePositionBooleans(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
+	public void updatePositionBooleans(GraphicMainConstants MCReal, GraphicCharacterConstants CCReal, Character otherCharacter) {
 
 		// Si on est a gauche ou a droite de son adversaire
 		if (x == otherCharacter.x) {
@@ -340,7 +340,7 @@ public class Character extends Entity {
 
 
 	/** Actualise les coordonnees de collisions maximales et minimales */
-	public void updateCollisionBorders(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
+	public void updateCollisionBorders(GraphicMainConstants MCReal, GraphicCharacterConstants CCReal, Character otherCharacter) {
 
 		updatePositionBooleans(MCReal, CCReal, otherCharacter);
 
@@ -404,7 +404,7 @@ public class Character extends Entity {
 
 
 	/**Actualise la position du personnage (selon X et Y) puis le deplace (le deplacement gere les collisions grace aux collision borders */
-	public void updatePosition(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
+	public void updatePosition(GraphicMainConstants MCReal, GraphicCharacterConstants CCReal, Character otherCharacter) {
 		
 		// Si on tombe et qu'on a touché le fond, on replace le personnage sur la plateforme disponible
 		if (isFalling && y == minY) {
@@ -421,7 +421,7 @@ public class Character extends Entity {
 
 
 	/**Repositionne le joueur sur la plateforme disponible si il est tombe dans le vide */
-	public void replacePlayer(MainConstants MCReal, CharacterConstants CCReal, Character otherCharacter) {
+	public void replacePlayer(GraphicMainConstants MCReal, GraphicCharacterConstants CCReal, Character otherCharacter) {
 
 		// On respawn
 		isSpawning = true;
@@ -527,14 +527,14 @@ public class Character extends Entity {
 
 
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
-	public void checkActions(MainConstants MCReal, ProjectileConstants PCReal, GrabConstants GCReal, CharacterConstants CCReal) {
+	public void checkActions(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
 		checkShoot(MCReal, PCReal);
 		checkGrab(MCReal, GCReal, CCReal);
 	}
 
 
 	/** Creer une entite Projectile */
-	public void checkShoot(MainConstants MCReal, ProjectileConstants PCReal) {
+	public void checkShoot(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal) {
 
 		/**Si on appuie sur Shoot et qu'on peut shoot */
 		if (inputActions.getShootPushPressed() && actionBooleans.canShoot) {
@@ -557,7 +557,7 @@ public class Character extends Entity {
 
 
 	/**Lance un Grab pour attraper un objet */
-	public void checkGrab(MainConstants MCReal, GrabConstants GCReal, CharacterConstants CCReal) {
+	public void checkGrab(GraphicMainConstants MCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
 
 		int launchGrabDir = GrabSpell.NO_GRAB;
 
@@ -623,7 +623,7 @@ public class Character extends Entity {
 
 
 	/**Deplace le grab avec son joueur */
-	public void moveGrab(CharacterConstants CCReal) {
+	public void moveGrab(GraphicCharacterConstants CCReal) {
 		grabSpell.moveGrabWithCharacter(x, y, CCReal);
 	}
 
@@ -700,7 +700,7 @@ public class Character extends Entity {
 
 
 	/**Dessine le personnage */
-	public void drawCharacter(Graphics g, MainConstants MC, CharacterConstants CC) {
+	public void drawCharacter(Graphics g, GraphicMainConstants MC, GraphicCharacterConstants CC) {
 		g.setColor(colorCharacter);
 		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
 		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height)) * MC.getOneUnityHeight());
@@ -711,7 +711,7 @@ public class Character extends Entity {
 
 
 	/**Dessine les projectiles de ce personnage */
-	public void drawProjectiles(Graphics g, MainConstants MC, ProjectileConstants PC) {
+	public void drawProjectiles(Graphics g, GraphicMainConstants MC, GraphicProjectileConstants PC) {
 		for (int i=0; i<projectiles.size(); i++) {
 			projectiles.get(i).drawProjectile(g, MC, PC);
 		}
@@ -719,13 +719,13 @@ public class Character extends Entity {
 
 
 	/**Dessine le grab du ce personnage */
-	public void drawGrab(Graphics g, MainConstants MC, GrabConstants GC) {
+	public void drawGrab(Graphics g, GraphicMainConstants MC, GraphicGrabConstants GC) {
 		grabSpell.drawGrab(g, MC, GC);
 	}
 
 
 	/**Initialise les champs graphiques */
-	public void initGraphicAttributes(CharacterConstants CCReal) {
+	public void initGraphicAttributes(GraphicCharacterConstants CCReal) {
 		this.width = CCReal.getCharacterWidth();
 		this.height = CCReal.getCharacterHeight();
 	}

@@ -4,10 +4,10 @@ package Game.ConstantsContainers.GraphicConstants;
 /** Class ProjectileConstants <p>
  * Contient les attributs graphiques constants des projectiles
  */
-public class ProjectileConstants {
+public class GraphicProjectileConstants {
 
 	/**Coordonnees reelles */
-	private ProjectileConstants real;
+	private GraphicProjectileConstants real;
 
 
 	/**Largeur des projectiles */
@@ -17,13 +17,13 @@ public class ProjectileConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
-	public ProjectileConstants() {
+	public GraphicProjectileConstants() {
 		this. real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public ProjectileConstants(ProjectileConstants real) {
+	public GraphicProjectileConstants(GraphicProjectileConstants real) {
 		this.real = real;
 	}
 
@@ -49,7 +49,7 @@ public class ProjectileConstants {
 	/* Getters */
 	/* ======= */
 
-	public ProjectileConstants getReal() {
+	public GraphicProjectileConstants getReal() {
 		return real;
 	}
 

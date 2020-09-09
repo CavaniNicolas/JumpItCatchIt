@@ -3,8 +3,8 @@ package Game.Gameplay;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import Game.ConstantsContainers.GraphicConstants.MainConstants;
-import Game.ConstantsContainers.GraphicConstants.ProjectileConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicProjectileConstants;
 
 import java.awt.Color;
 
@@ -30,7 +30,7 @@ public class Projectile extends Entity {
 
 
 	/**Constructeur du projectile */
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, MainConstants MCReal, ProjectileConstants PCReal, int rangeX, int damage, Color colorProjectile) {
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int rangeX, int damage, Color colorProjectile) {
 		super(x, y, speedX, speedY, accelX, accelY);
 		this.initX = x;
 		this.rangeX = rangeX;
@@ -42,7 +42,7 @@ public class Projectile extends Entity {
 
 
 	/**Constructeur pour un projectile horizontal */
-	public Projectile(int x, int y, int speedX, MainConstants MCReal, ProjectileConstants PCReal, int range, int damage, Color colorProjectile) {
+	public Projectile(int x, int y, int speedX, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int range, int damage, Color colorProjectile) {
 		this(x, y, speedX, 0, 0, 0, MCReal, PCReal, range, damage, colorProjectile);
 	}
 
@@ -60,7 +60,7 @@ public class Projectile extends Entity {
 
 
 	/**Dessine le projectile */
-	public void drawProjectile(Graphics g, MainConstants MC, ProjectileConstants PC) {
+	public void drawProjectile(Graphics g, GraphicMainConstants MC, GraphicProjectileConstants PC) {
 		g.setColor(colorProjectile);
 		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
 		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height / 2)) * MC.getOneUnityHeight());
@@ -71,7 +71,7 @@ public class Projectile extends Entity {
 
 
 	/**Initialise les champs graphiques */
-	public void initGraphicAttributes(MainConstants MCReal, ProjectileConstants PCReal) {
+	public void initGraphicAttributes(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal) {
 		this.width = PCReal.getProjectileWidth();
 		this.height = PCReal.getProjectileHeight();
 

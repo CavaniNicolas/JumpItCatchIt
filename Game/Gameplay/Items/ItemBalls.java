@@ -1,7 +1,7 @@
 package Game.Gameplay.Items;
 
-import Game.ConstantsContainers.GraphicConstants.MainConstants;
-import Game.ConstantsContainers.GraphicConstants.ItemConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicItemConstants;
 import Game.Gameplay.Items.Item.*;
 
 import java.awt.Graphics;
@@ -33,7 +33,7 @@ public class ItemBalls implements Serializable {
 
 
 	/** Creer les items qui tombent au milieu du plateau */
-	public void createItems(MainConstants MCReal, ItemConstants ICReal) {
+	public void createItems(GraphicMainConstants MCReal, GraphicItemConstants ICReal) {
 
 		int nbItems = itemBallList.size();
 
@@ -75,7 +75,7 @@ public class ItemBalls implements Serializable {
 
 
 	/** Calcule les probas, choisi l'Item correspondant, le cree et fait +1 au nombre en jeu du type d'Item qui est cree */
-	public ItemBall createNewItemBall(ItemConstants ICReal) {
+	public ItemBall createNewItemBall(GraphicItemConstants ICReal) {
 		// Position et dimensions d'une nouvel Item
 		int x = ICReal.getItemFirstX();
 		int y = ICReal.getItemFirstY();
@@ -216,7 +216,7 @@ public class ItemBalls implements Serializable {
 
 
 	/** Affiche les items */
-	public void drawItems(Graphics g, MainConstants MC, ItemConstants IC) {
+	public void drawItems(Graphics g, GraphicMainConstants MC, GraphicItemConstants IC) {
 		ItemBall ib = null;
 		for (int i=0; i<itemBallList.size(); i++) {
 			ib = itemBallList.get(i);

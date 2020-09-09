@@ -5,9 +5,9 @@ import java.awt.Image;
 import java.io.Serializable;
 import java.awt.Graphics;
 
-import Game.ConstantsContainers.GraphicConstants.MainConstants;
-import Game.ConstantsContainers.GraphicConstants.CharacterConstants;
-import Game.ConstantsContainers.GraphicConstants.GrabConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicCharacterConstants;
+import Game.ConstantsContainers.GraphicConstants.GraphicGrabConstants;
 
 
 /**Class GrabSpell <p>
@@ -48,7 +48,7 @@ public class GrabSpell implements Serializable, LaunchGrabDir {
 
 
 	/**Initialise un nouveau grab lors du lancement */
-	public void initNewGrab(int xChara, int yChara, int launchGrabDir, int rangeGrab, int speedGrab, GrabConstants GCReal, CharacterConstants CCReal) {
+	public void initNewGrab(int xChara, int yChara, int launchGrabDir, int rangeGrab, int speedGrab, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
 		width = GCReal.getGrabWidth();
 		this.launchGrabDir = launchGrabDir;
 		this.hasReached = false;
@@ -59,7 +59,7 @@ public class GrabSpell implements Serializable, LaunchGrabDir {
 
 
 	/**Deplace le grab en suivant le personnage */
-	public void moveGrabWithCharacter(int xChara, int yChara, CharacterConstants CCReal) {
+	public void moveGrabWithCharacter(int xChara, int yChara, GraphicCharacterConstants CCReal) {
 
 		int marge = CCReal.getCharacterWidth() / 6;
 
@@ -137,7 +137,7 @@ public class GrabSpell implements Serializable, LaunchGrabDir {
 
 
 	/**Dessine le grab */
-	public void drawGrab(Graphics g, MainConstants MC, GrabConstants GC) {
+	public void drawGrab(Graphics g, GraphicMainConstants MC, GraphicGrabConstants GC) {
 		if (launchGrabDir != NO_GRAB) {
 			g.setColor(colorGrab);
 			int x = 0;

@@ -7,10 +7,10 @@ package Game.ConstantsContainers.GraphicConstants;
  * Il est necessaire de creer un objet MainConstants pour stocker les attributs coordonnees reels,
  * cet objet sera un attribut d'un deuxieme objet MainConstants dont les attributs seront des coordonnees graphiques.
  */
-public class MainConstants {
+public class GraphicMainConstants {
 
 	/**Coordonnees reelles */
-	private MainConstants real;
+	private GraphicMainConstants real;
 
 
 	/**Largeur max du board */
@@ -30,13 +30,13 @@ public class MainConstants {
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
-	public MainConstants() {
+	public GraphicMainConstants() {
 		this.real = null;
 	}
 
 
 	/** Constructeur pour le stockage des constantes coordonnees Graphiques */
-	public MainConstants(MainConstants real) {
+	public GraphicMainConstants(GraphicMainConstants real) {
 		this.real = real;
 	}
 
@@ -68,7 +68,7 @@ public class MainConstants {
 	/* Getters */
 	/* ======= */
 
-	public MainConstants getReal() {
+	public GraphicMainConstants getReal() {
 		return real;
 	}
 
