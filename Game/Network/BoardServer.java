@@ -123,6 +123,7 @@ public class BoardServer implements Runnable {
 				Object obj = clientSocket.readObject();
 				if (obj == null) {
 					extendedSockets.remove(clientSocket);
+					outputObjectToAll("PLAYER LEFT");
 					stopServer();
 				} else if (obj instanceof InputActions) {
 					if (clientSocket.getID() == 0) {
@@ -145,7 +146,6 @@ public class BoardServer implements Runnable {
 	public void stopServer() {
 		isRunning = false;
 		gameLoop.togglePause(true);
-		outputObjectToAll("PLAYER LEFT");
 		endAllConnections();
 		try {
 			serverSocket.close();

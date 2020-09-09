@@ -29,6 +29,7 @@ public class MainMenu {
 	/** Contient le jeu */
 	private Board board;
 	private BoardIO boardIO;
+	private BoardServer boardServer;
 	
 	//main menu panels
 	private Menu mainMenuPanel;
@@ -100,7 +101,8 @@ public class MainMenu {
 
 	/** starts the online board and sets the frame to display it */
 	public void startOnlineGame() {
-		Thread threadServer = new Thread(new BoardServer());
+		boardServer = new BoardServer();
+		Thread threadServer = new Thread(boardServer);
 		threadServer.start();
 
 		//sleep to avoid joining a game before the server was started
@@ -315,6 +317,7 @@ public class MainMenu {
 		buttonPanel.setBackInteraction(new BackMenuInteraction(){
 			public void backInteraction() {
 				timer.stop();
+				boardServer.stopServer();
 			}
 		});
 
