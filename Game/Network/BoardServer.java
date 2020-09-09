@@ -2,7 +2,7 @@ package Game.Network;
 
 import Game.Board;
 import Game.BoardGraphism;
-import Game.GameLoopServer;
+import Game.GameLoop;
 import Game.InputActions;
 
 import java.net.*;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class BoardServer implements Runnable {
 	//gameLoop
-	private GameLoopServer gameLoopServer;
+	private GameLoop gameLoop;
 
 	//board
 	private Board board;
@@ -32,7 +32,7 @@ public class BoardServer implements Runnable {
 	public void run() {		
 		board = new Board();
 		board.setBoardGraphism(new BoardGraphism(board));
-		gameLoopServer = new GameLoopServer(this.board, this);
+		gameLoop = new GameLoop(this.board, this);
 
 		//start online server"
         try { 
@@ -107,7 +107,7 @@ public class BoardServer implements Runnable {
 	public void startGame() {
 		board.initGame();
 		outputObjectToAll("GAME STARTED");
-		gameLoopServer.togglePause(false);	
+		gameLoop.togglePause(false);	
 	}
  
 	/** handles client connections */
@@ -144,7 +144,7 @@ public class BoardServer implements Runnable {
 	/** stops server */
 	public void stopServer() {
 		isRunning = false;
-		gameLoopServer.togglePause(true);
+		gameLoop.togglePause(true);
 		outputObjectToAll("PLAYER LEFT");
 		endAllConnections();
 		try {
