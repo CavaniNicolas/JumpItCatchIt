@@ -114,7 +114,7 @@ public class GrabSpell implements Serializable {
 
 		/**Coeff pour adapter les calculs a la direction du grab */
 		int coeff = 1;
-		if (hasReached) {
+		if (launchGrabDir == false) {
 			coeff = -1;
 		}
 

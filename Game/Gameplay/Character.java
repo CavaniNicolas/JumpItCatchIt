@@ -670,21 +670,24 @@ public class Character extends Entity {
 
 	/** Verifie les collisions du grab avec les items */
 	public void checkGrabCollision(ItemBalls itemBalls) {
-		ArrayList<ItemBall> itemBallList = itemBalls.getItemBallList();
-		ItemBall itemBall = null;
 
-		for (int i=0; i<itemBallList.size(); i++) {
-			itemBall = itemBallList.get(i);
+		if (actionBooleans.isGrabing) {
+			ArrayList<ItemBall> itemBallList = itemBalls.getItemBallList();
+			ItemBall itemBall = null;
 
-			if (itemBall != null) {
+			for (int i=0; i<itemBallList.size(); i++) {
+				itemBall = itemBallList.get(i);
 
-				// renvoie true si le grab touche un item
-				if (grabSpell.checkItemCollision(itemBall.x, itemBall.y, itemBall.width)) {
-					itemBall.effects(this);
-					itemBalls.removeBall(itemBall);
+				if (itemBall != null) {
+
+					// renvoie true si le grab touche un item
+					if (grabSpell.checkItemCollision(itemBall.x, itemBall.y, itemBall.width)) {
+						itemBall.effects(this);
+						itemBalls.removeBall(itemBall);
+					}
 				}
-			}
 
+			}
 		}
 
 	}
