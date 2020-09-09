@@ -214,8 +214,6 @@ public class MainMenu {
 	/** creates the panel that opens when pressing escape */
 	public void createEscapePanel() {
 		escapePanel.displayBorder("PAUSE");
-
-		/** go back to the main menu */
 		escapePanel.addNewButton("BACK TO MAIN MENU", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//sets the content pane to the main menu and delete board (game has ended)
@@ -228,7 +226,6 @@ public class MainMenu {
 			}
 		});
 
-		/** resume game */
 		escapePanel.addNewButton("RESUME");
 
 		escapePanel.setBackInteraction(new BackMenuInteraction(){
@@ -257,8 +254,6 @@ public class MainMenu {
 	/** creates the multiplayerJPanel with its component*/
 	public void createMultiplayerPanel() {
 		multiplayerPanel.displayBorder("MULTIPLAYER");
-
-		//create a joinable game
 		multiplayerPanel.addNewButton("CREATE GAME", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
 				//displays the creatingGame panel 
@@ -438,9 +433,7 @@ public class MainMenu {
 
 	public void createServerStoppedPanel() {
 		serverStoppedPanel.displayBorder("WARNING");
-		JLabel info = new JLabel(" Server stopped, sorry ");
-
-		serverStoppedPanel.add(info);
+		serverStoppedPanel.add(new JLabel(" Server stopped, sorry "));
 		serverStoppedPanel.addNewButton("BACK");
 
 		serverStoppedPanel.setOrder(true);
