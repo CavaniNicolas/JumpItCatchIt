@@ -77,7 +77,7 @@ public class BoardClient extends BoardIO {
             inputObject();
         } catch (Exception e) {
             e.printStackTrace();
-            mainMenu.displayServerStoppedPanel();
+            mainMenu.displayConnectionErrorPanel();
         }
     }
     
@@ -93,7 +93,7 @@ public class BoardClient extends BoardIO {
             if (obj == null) {
                 //server closed unexpectedly
                 closeClient();
-                mainMenu.displayConnectionErrorPanel();
+                mainMenu.displayServerStoppedPanel();
             } else if (obj instanceof String) {
                 if (((String)obj).equals("GAME STARTED")) {
                     mainMenu.displayGame();
