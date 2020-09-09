@@ -559,7 +559,7 @@ public class Character extends Entity {
 	/**Lance un Grab pour attraper un objet */
 	public void checkGrab(MainConstants MCReal, GrabConstants GCReal, CharacterConstants CCReal) {
 
-		boolean launchGrabDir = true;
+		int launchGrabDir = GrabSpell.NO_GRAB;
 
 		// Si on appuie sur grab et qu'on peut grab
 		if (inputActions.getGrabPressed() && actionBooleans.canGrab) {
@@ -567,26 +567,29 @@ public class Character extends Entity {
 			// Si on est sur la plateforme de gauche
 			if (isOnLeftPlatform) {
 				// Lance un grab vers la droite
-				launchGrabDir = true;
+				launchGrabDir = GrabSpell.GRAB_RIGHT;
 
 			// Si on est sur la plateforme de droite
 			} else if (isOnRightPlatform) {
 				// Lance un grab vers la gauche
-				launchGrabDir = false;
+				launchGrabDir = GrabSpell.GRAB_LEFT;
 
 			// Si on est au dessus du vide
 			} else {
 				// Tomber de la meme maniere qu'un switch au dessus du vide
 			}
 
-			// ERREUR SUR LAUNCHGRABDIR : mieux vaut utiliser des int code pour les different cas, pour le moment on lance vers la droite par defaut
-			grabSpell.initNewGrab(x, y, launchGrabDir, rangeGrab, speedGrab, GCReal, CCReal);
+			if (launchGrabDir != GrabSpell.NO_GRAB) {
+				// Lance le nouveau grab
+				grabSpell.initNewGrab(x, y, launchGrabDir, rangeGrab, speedGrab, GCReal, CCReal);
 
-			actionBooleans.isGrabing = true;
-
-			// On ne peut plus grab tout de suite
-			actionBooleans.canGrab = false;
-			startTimeGrab = System.currentTimeMillis();
+				// Le perso est en train de grab
+				actionBooleans.isGrabing = true;
+				
+				// On ne peut plus grab tout de suite
+				actionBooleans.canGrab = false;
+				startTimeGrab = System.currentTimeMillis();
+			}
 
 		}
 

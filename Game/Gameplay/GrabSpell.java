@@ -14,7 +14,7 @@ import Game.ConstantsContainers.GraphicConstants.GrabConstants;
  * Le grab du joueur <p>
  * La position (x,y) du GrabSpell est au milieu a gauche du rectangle
  */
-public class GrabSpell implements Serializable {
+public class GrabSpell implements Serializable, LaunchGrabDir {
 	private static final long serialVersionUID = 270878635786477201L;
 
 	// Position du grab
@@ -24,8 +24,8 @@ public class GrabSpell implements Serializable {
 	/**Largeur du grab (longueur) */
 	private int width;
 
-	/**Grab vers la droite ou vers la gauche */
-	private boolean launchGrabDir;
+	/**Direction du grab */
+	private int launchGrabDir = NO_GRAB;
 
 	/**True si le grab a atteint une cible ou si il est arrive a max range, pour commencer le retour */
 	private boolean hasReached;
@@ -48,7 +48,7 @@ public class GrabSpell implements Serializable {
 
 
 	/**Initialise un nouveau grab lors du lancement */
-	public void initNewGrab(int xChara, int yChara, boolean launchGrabDir, int rangeGrab, int speedGrab, GrabConstants GCReal, CharacterConstants CCReal) {
+	public void initNewGrab(int xChara, int yChara, int launchGrabDir, int rangeGrab, int speedGrab, GrabConstants GCReal, CharacterConstants CCReal) {
 		width = GCReal.getGrabWidth();
 		this.launchGrabDir = launchGrabDir;
 		this.hasReached = false;
@@ -66,11 +66,11 @@ public class GrabSpell implements Serializable {
 		y = yChara + CCReal.getCharacterHeight() / 2;
 
 		// Si on grab vers la droite
-		if (launchGrabDir) {
+		if (launchGrabDir == GRAB_RIGHT) {
 			x = xChara + CCReal.getCharacterWidth() / 2 - marge;
 
 		// Sinon on grab vers la gauche
-		} else {
+		} else if (launchGrabDir == GRAB_LEFT) {
 			x = xChara - CCReal.getCharacterWidth() / 2 + marge;
 
 		}
@@ -112,18 +112,24 @@ public class GrabSpell implements Serializable {
 	public boolean checkItemCollision(int itemX, int itemY, int itemWidth) {
 		boolean isGrabed = false;
 
-		/**Coeff pour adapter les calculs a la direction du grab */
-		int coeff = 1;
-		if (launchGrabDir == false) {
-			coeff = -1;
-		}
+		if (launchGrabDir != NO_GRAB) {
 
-		// La gestion des collisions entre le grab et les items utilise une hitbox ronde pour les items et un point pour le bout du grab
-		if ( Math.pow((double)(x + coeff * width - itemX), 2) + Math.pow((double)(y - itemY), 2) < Math.pow((double)(itemWidth), 2) ) {
-			isGrabed = true;
+			/**Coeff pour adapter les calculs a la direction du grab */
+			int coeff = 0;
+			if (launchGrabDir == GRAB_RIGHT) {
+				coeff = 1;
+			} else if (launchGrabDir == GRAB_LEFT) {
+				coeff = -1;
+			}
 
-			// Un item est attrape, le grab doit se replier
-			hasReached = true;
+			// La gestion des collisions entre le grab et les items utilise une hitbox ronde pour les items et un point pour le bout du grab
+			if ( Math.pow((double)(x + coeff * width - itemX), 2) + Math.pow((double)(y - itemY), 2) < Math.pow((double)(itemWidth), 2) ) {
+				isGrabed = true;
+
+				// Un item est attrape, le grab doit se replier
+				hasReached = true;
+			}
+
 		}
 
 		return isGrabed;
@@ -132,19 +138,23 @@ public class GrabSpell implements Serializable {
 
 	/**Dessine le grab */
 	public void drawGrab(Graphics g, MainConstants MC, GrabConstants GC) {
-		g.setColor(colorGrab);
-		int x;
-		int y = (int)((double) (MC.getReal().getMaxY() - (this.y + GC.getReal().getGrabHeight() / 2)) * MC.getOneUnityHeight());
-		int width = (int)((double) (this.width * MC.getOneUnityWidth()));
-		int height = GC.getGrabHeight();
-		
-		if (launchGrabDir) {
-			x = (int)((double) (this.x) * MC.getOneUnityWidth());
-		} else {
-			x = (int)((double) (this.x - this.width) * MC.getOneUnityWidth());
-		}
+		if (launchGrabDir != NO_GRAB) {
+			g.setColor(colorGrab);
+			int x = 0;
+			int y = (int)((double) (MC.getReal().getMaxY() - (this.y + GC.getReal().getGrabHeight() / 2)) * MC.getOneUnityHeight());
+			int width = (int)((double) (this.width * MC.getOneUnityWidth()));
+			int height = GC.getGrabHeight();
+			
+			// Si on grab vers la gauche
+			if (launchGrabDir == GRAB_RIGHT) {
+				x = (int)((double) (this.x) * MC.getOneUnityWidth());
+			// Si on grab vers la droite
+			} else if (launchGrabDir == GRAB_LEFT) {
+				x = (int)((double) (this.x - this.width) * MC.getOneUnityWidth());
+			}
 
-		g.fillRect(x, y, width, height);
+			g.fillRect(x, y, width, height);
+		}
 	}
 
 
