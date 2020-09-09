@@ -190,27 +190,24 @@ public class MainMenu {
 			}
 		});
 
-		//multiplayer menu
 		mainMenuPanel.addNewButton("MULTIPLAYER", multiplayerPanel);
 		mainMenuPanel.addNewButton("OPTIONS", optionPanel);
+		mainMenuPanel.addNewButton("QUIT");
 
-		/**closes the app */
-		mainMenuPanel.addNewButton("QUIT", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
+		mainMenuPanel.setBackInteraction(new BackMenuInteraction(){
+			public void backInteraction() {
 				System.exit(0);       
 			}
 		});
 
 		mainMenuPanel.setDimensions();
 		mainMenuPanel.setOrder(true);
-
 		mainMenuPanel.setOpaque(false);
 	}
 
 	/** initiates the components of the menu */
 	public void createKeyBindingMenu() {
 		optionPanel.displayBorder("OPTIONS");
-
 		optionPanel.setOrder(true);
 	}
 
@@ -232,8 +229,10 @@ public class MainMenu {
 		});
 
 		/** resume game */
-		escapePanel.addNewButton("RESUME", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
+		escapePanel.addNewButton("RESUME");
+
+		escapePanel.setBackInteraction(new BackMenuInteraction(){
+			public void backInteraction() {
 				toggleEscapePanel();
 			}
 		});
@@ -280,12 +279,12 @@ public class MainMenu {
 	/** creates the createMultiplayerGamePanel with its component*/
 	public void createCreateMultiplayerGamePanel() {
 		createMultiplayerGamePanel.displayBorder("CREATING A GAME");
-
-		//create a joinable game
 		createMultiplayerGamePanel.add(new JLabel("Your game is available on : "));
 
 		Menu addressPanel = new Menu();
 		addressPanel.add(new JLabel(getPublicIPAddress()));
+
+		// makes possible the copy to clipboard of the address
 		addressPanel.addNewButton("COPY", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(getPublicIPAddress()), null);
