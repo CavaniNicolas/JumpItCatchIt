@@ -40,6 +40,7 @@ public class Menu extends JPanel {
 		};
 	}
 
+	/** displays a panel border with a name */
 	public void displayBorder(String name) {
 		this.setBorder(BorderFactory.createTitledBorder(name));
 		borderMargin = 15;
@@ -70,7 +71,7 @@ public class Menu extends JPanel {
 		});
 		button.setEnabled(false);*/
 
-	/** adds the back button, needs the menu to be constructed the long way */
+	/** adds the back button using the back interaction*/
 	public void addNewButton(String name) {
 		JButton button = new JButton(name);
 		button.addActionListener(new ActionListener() {
@@ -105,6 +106,7 @@ public class Menu extends JPanel {
 		}
 	}
 
+	/** gets the maximum width/height of each component */
 	public void getMaxDimensions() {
 		for (Component component : this.getComponents()) {
 			width = Math.max(width, component.getPreferredSize().getWidth());

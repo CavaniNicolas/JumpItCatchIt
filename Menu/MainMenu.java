@@ -237,9 +237,9 @@ public class MainMenu {
 		escapePanel.setDimensions();
 		escapePanel.setOrder(true);
 	}
-
+	
+	/** handles displaying escape panel and pausing the game */
 	public void toggleEscapePanel() {
-		//escape button
 		if (!isEscapePanelDisplayed) {
 			boardGraphism.add(escapePanel);
 			boardIO.togglePause(true);
