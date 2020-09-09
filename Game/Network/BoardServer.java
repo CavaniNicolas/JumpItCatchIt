@@ -61,7 +61,7 @@ public class BoardServer implements Runnable {
 				}
 				//when all players have connected
 				if (currentPlayerNumber == playerNumber && testAllStreams()) {
-					startGame();
+					restartGame();
 					//to avoid starting games again and prepare for restarting when over
 					currentPlayerNumber = 0;
 				}
@@ -104,7 +104,7 @@ public class BoardServer implements Runnable {
 	}
 
 	/** start game */
-	public void startGame() {
+	public void restartGame() {
 		board.initGame();
 		outputObjectToAll("GAME STARTED");
 		gameLoop.togglePause(false);	
