@@ -84,13 +84,13 @@ public class MainMenu {
 	public void startLocalGame() {
 		//init game
 		board.initGame();
-		boardIO = new BoardLocal(board);
+		boardIO = new BoardLocal(frame, board);
 
 		// Indique a BoardGraphism que c'est une LocalGame, utile pour afficher les HUD
 		boardGraphism.setTypeOfGame(BoardGraphism.LOCAL_GAME);
 
 		//add the key listeners
-		boardIO.handleKeyListeners(frame, true);
+		boardIO.handleKeyListeners(true);
 
 		//start game
 		boardIO.togglePause(false);
@@ -123,12 +123,12 @@ public class MainMenu {
 		board.initGame();
 
 		//start a client on a thread
-		boardIO = new BoardClient(boardGraphism, address, this);
+		boardIO = new BoardClient(boardGraphism, address, this, frame);
 		Thread threadClient = new Thread(boardIO);
 		threadClient.start();
 
 		//add the key listeners
-		boardIO.handleKeyListeners(frame, true);
+		boardIO.handleKeyListeners(true);
 	}
 
 	public void displayGame() {
@@ -223,7 +223,7 @@ public class MainMenu {
 				toggleEscapePanel();
 
 				boardIO.exitGame();
-				boardIO.handleKeyListeners(frame, false);
+				boardIO.handleKeyListeners(false);
 
 				displayMainMenu();
 			}
@@ -364,7 +364,7 @@ public class MainMenu {
 		playerLeftPanel.addNewButton("BACK TO MAIN MENU", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//displays the multiplayer panel
-				boardIO.handleKeyListeners(frame, false);
+				boardIO.handleKeyListeners(false);
 				menuPanel.removeAll();
 				displayMainMenu();
 			}
@@ -445,7 +445,7 @@ public class MainMenu {
 
 		serverStoppedPanel.add(info);
 		serverStoppedPanel.addNewButton("BACK");
-		
+
 		serverStoppedPanel.setOrder(true);
 	}
 
@@ -465,7 +465,7 @@ public class MainMenu {
 	/** display player left panel */
 	public void displayPlayerLeftPanel() {
 		boardGraphism.add(playerLeftPanel);
-		boardIO.handleKeyListeners(frame, false);
+		boardIO.handleKeyListeners(false);
 		frame.setVisible(true);
 	}
 

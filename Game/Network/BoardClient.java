@@ -2,7 +2,7 @@ package Game.Network;
 
 import Game.Board;
 import Game.BoardGraphism;
-import Game.GameLoop;
+// import Game.GameLoop;
 import Game.PlayerKeyListener;
 import Game.InputActions;
 import Menu.FileFunctions;
@@ -49,7 +49,8 @@ public class BoardClient extends BoardIO {
     //game loop
 	// private GameLoop gameLoop;
 
-	public BoardClient(BoardGraphism boardGraphism, String address, MainMenu mainMenu) {
+	public BoardClient(BoardGraphism boardGraphism, String address, MainMenu mainMenu, JFrame frame) {
+        super(frame);
         this.boardGraphism = boardGraphism;
         this.address = address;
         this.mainMenu = mainMenu;
@@ -98,9 +99,8 @@ public class BoardClient extends BoardIO {
                     mainMenu.displayGame();
                     // gameLoop.togglePause(false);
                 } else if (((String)obj).equals("PLAYER LEFT")) {
-                    connected = false;
+                    closeClient();
                     mainMenu.displayPlayerLeftPanel();
-                    // gameLoop.togglePause(true);
                 } else if (((String)obj).equals("PING")) {
                     System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
                 }
@@ -119,7 +119,7 @@ public class BoardClient extends BoardIO {
     public void escapePanelInteraction() {}
 
     /** adds (true) or remove (false) the keylisteners */
-	public void handleKeyListeners(JFrame frame, Boolean bool) {
+	public void handleKeyListeners(Boolean bool) {
         if (bool) {
             frame.addKeyListener(playerKeyListener);
         } else {
@@ -139,6 +139,8 @@ public class BoardClient extends BoardIO {
     public void closeClient() {
         connected = false;
         ping.stop();
+        handleKeyListeners(false);
+        // gameLoop.togglePause(true);  
     }
 
     /** knows what to do when someone returns to the main menu */

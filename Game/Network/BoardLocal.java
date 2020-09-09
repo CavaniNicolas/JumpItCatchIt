@@ -21,7 +21,8 @@ public class BoardLocal extends BoardIO {
 	//the board to be modified
 	private Board board;
 
-	public BoardLocal(Board board) {
+	public BoardLocal(JFrame frame, Board board) {
+		super(frame);
 		this.board = board;
 		gameLoop = new GameLoop(this.board);
 
@@ -39,7 +40,7 @@ public class BoardLocal extends BoardIO {
 	}
 
 	/** adds (true) or remove (false) the keylisteners */
-	public void handleKeyListeners(JFrame frame, Boolean bool) {
+	public void handleKeyListeners(Boolean bool) {
 		if (bool) {
 			frame.addKeyListener(redPlayerKeyListener);
 			frame.addKeyListener(bluePlayerKeyListener);
