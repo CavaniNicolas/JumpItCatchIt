@@ -576,7 +576,10 @@ public class Character extends Entity {
 
 			// Si on est au dessus du vide
 			} else {
-				// Tomber de la meme maniere qu'un switch au dessus du vide
+				// // Propulsion vertical et on tombe
+				// this.accelY = GRAVITY;
+				// this.speedY = this.speedVertical / 2;
+				// Attention a faire en sorte de ne plus pouvoir agir a partir de la, au risque de s'envoler vers d'autres cieux
 			}
 
 			if (launchGrabDir != GrabSpell.NO_GRAB) {
