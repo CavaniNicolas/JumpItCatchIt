@@ -76,7 +76,7 @@ public class BoardClient extends BoardIO {
             inputObject();
         } catch (Exception e) {
             e.printStackTrace();
-            mainMenu.displayConnectionErrorPanel();
+            mainMenu.displayServerStoppedPanel();
         }
     }
     

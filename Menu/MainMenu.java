@@ -11,7 +11,6 @@ import Menu.Options.OptionMenu;
 
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
-import java.io.*;
 import java.net.*;
 import java.util.Enumeration;
 import java.awt.event.KeyListener;
@@ -47,6 +46,7 @@ public class MainMenu {
 	private Menu playerLeftPanel;
 	private Menu connectionErrorPanel;
 	private Menu connectingPanel;
+	private Menu serverStoppedPanel;
 
 	/**escape panel*/
 	private Menu escapePanel;
@@ -156,7 +156,8 @@ public class MainMenu {
 		joinMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel);
 		connectionErrorPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel);
 		connectingPanel = new Menu(backgroundPanel, joinMultiplayerGamePanel);
-		playerLeftPanel = new Menu(backgroundPanel, mainMenuPanel);
+		playerLeftPanel = new Menu(backgroundPanel, multiplayerPanel);
+		serverStoppedPanel = new Menu(backgroundPanel, multiplayerPanel);
 
 		escapePanel = new Menu();
 		createMultiplayerGamePanel = new Menu();
@@ -175,6 +176,7 @@ public class MainMenu {
 		createEndGamePanel();
 		createConnectionErrorPanel();
 		createConnectingPanel();
+		createServerStoppedPanel();
 	}
 
 	/** creates the mainMenuJPanel with its component */
@@ -435,6 +437,22 @@ public class MainMenu {
 		});
 
 		connectingPanel.setOrder(true);
+	}
+
+	public void createServerStoppedPanel() {
+		serverStoppedPanel.displayBorder("WARNING");
+		JLabel info = new JLabel(" Server stopped, sorry ");
+
+		serverStoppedPanel.add(info);
+		serverStoppedPanel.addNewButton("BACK");
+		
+		serverStoppedPanel.setOrder(true);
+	}
+
+	public void displayServerStoppedPanel() {
+		menuPanel.removeAll();
+		menuPanel.add(serverStoppedPanel);
+		reloadMenuDisplay();
 	}
 
 	/** display connection error panel */
