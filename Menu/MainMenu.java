@@ -361,9 +361,10 @@ public class MainMenu {
 		playerLeftPanel.add(new JLabel("The other player has cowardly left "));
 
 		//back to main menu
-		playerLeftPanel.addNewButton("BACK TO MAIN MENU", new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//displays the multiplayer panel
+		playerLeftPanel.addNewButton("BACK TO MAIN MENU");
+
+		playerLeftPanel.setBackInteraction(new BackMenuInteraction(){
+			public void backInteraction() {
 				boardIO.handleKeyListeners(false);
 				menuPanel.removeAll();
 				displayMainMenu();
@@ -519,7 +520,7 @@ public class MainMenu {
 			//escape
 			if (code == 27) {
 				if (frame.getContentPane() == backgroundPanel) {
-					Menu menu =  (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
+					Menu menu = (Menu)menuPanel.getComponent(menuPanel.getComponentCount()-1);
 					menu.backInteraction();
 				} else {
 					toggleEscapePanel();
