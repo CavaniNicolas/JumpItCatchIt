@@ -15,7 +15,13 @@ public class HealBall extends ItemBall {
 	}
 
 
-	@Override
-	public void effects(Character character) {}
+	/**@Override
+	 * Redonne de la vie */
+	public void effects(Character character) {
+		// Si le perso n'a pas deja toute sa vie
+		if (character.getLives() < character.getLivesMax()) {
+			character.setLives(character.getLives() + 1);
+		}
+	}
 
 }
