@@ -327,8 +327,6 @@ public class MainMenu {
 	/** creates the joinMultiplayerGamePanel with its component*/
 	public void createJoinMultiplayerGamePanel() {
 		joinMultiplayerGamePanel.displayBorder("JOIN A GAME");
-
-		//create a joinable game
 		joinMultiplayerGamePanel.add(new JLabel("Enter your great enemy's server IP : "));
 
 		//join an existing game
@@ -358,11 +356,7 @@ public class MainMenu {
 	/** creates the playerLeftPanel with its component*/
 	public void createPlayerLeftPanel() {
 		playerLeftPanel.displayBorder("GAME ENDED");
-
-		//create a joinable game
 		playerLeftPanel.add(new JLabel("The other player has cowardly left "));
-
-		//back to main menu
 		playerLeftPanel.addNewButton("BACK TO MAIN MENU");
 
 		playerLeftPanel.setBackInteraction(new BackMenuInteraction(){
@@ -380,8 +374,6 @@ public class MainMenu {
 	/** creates the gameEndedPanel with its component*/
 	public void createEndGamePanel() {
 		endGamePanel.displayBorder("GAME ENDED");
-
-		//create a joinable game
 		endGamePanel.add(new JLabel("Well that was fun"));
 
 		Menu buttonPanel = new Menu(backgroundPanel, mainMenuPanel);
