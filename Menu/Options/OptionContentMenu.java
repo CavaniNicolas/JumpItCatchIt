@@ -2,7 +2,7 @@ package Menu.Options;
 
 import Menu.Menu;
 
-public class OptionContentMenu extends Menu {
+public abstract class OptionContentMenu extends Menu {
 	public void setAllOptions() {}
 	public void saveOptions() {}
 	public Boolean checkValidity() {

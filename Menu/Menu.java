@@ -3,8 +3,7 @@ package Menu;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-//import javax.swing.plaf.metal.MetalButtonUI;
-
+import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
@@ -38,6 +37,8 @@ public class Menu extends JPanel {
 			@Override
 			public void backInteraction() {}
 		};
+		//disables click through to lower panels
+		this.addMouseListener(new MouseInputAdapter() { });
 	}
 
 	/** displays a panel border with a name */
@@ -63,13 +64,6 @@ public class Menu extends JPanel {
 		});
 		this.add(button);
 	}
-
-	/*button.setUI(new MetalButtonUI() {
-			protected Color getDisabledTextColor() {
-				return Color.BLACK;
-			}
-		});
-		button.setEnabled(false);*/
 
 	/** adds the back button using the back interaction*/
 	public void addNewButton(String name) {
@@ -113,6 +107,15 @@ public class Menu extends JPanel {
 			height = Math.max(height, component.getPreferredSize().getHeight());
 		}
 	}
+
+	/*
+	public void moveToBackground(Boolean toBackground) {
+		if (toBackground) {
+			this.addMouseListener(new MouseInputAdapter() {});
+		} else {
+			this.removeKeyListener(this);
+		}
+	} */
 
 	/** orders the JPanel vertically (true) or horizontally */
 	public void setOrder(Boolean vertical) {
