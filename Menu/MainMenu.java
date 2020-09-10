@@ -161,8 +161,8 @@ public class MainMenu {
 		playerLeftPanel = new Menu(backgroundPanel, multiplayerPanel);
 		serverStoppedPanel = new Menu(backgroundPanel, multiplayerPanel);
 
-		escapePanel = new Menu();
-		createMultiplayerGamePanel = new Menu();
+		escapePanel = new Menu(backgroundPanel, mainMenuPanel);
+		createMultiplayerGamePanel = new Menu(backgroundPanel, multiplayerPanel);
 		endGamePanel = new Menu();
 
 		createMainMenuPanel();

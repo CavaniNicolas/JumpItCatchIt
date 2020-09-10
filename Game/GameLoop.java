@@ -13,6 +13,7 @@ public class GameLoop {
 	private Timer gamePlayTimer;
 	private BoardServer boardServer;
 	private GamePlayTimerListener gamePlayTimerListener = new GamePlayTimerListener();
+	private Boolean running = false;
 
 	public GameLoop(Board board) {
 		this.board = board;
@@ -27,11 +28,17 @@ public class GameLoop {
 	/** changes the pause state (true = pausing) */
 	public void togglePause(Boolean bool) {
 		if (bool) {
+			running = false;
 			gamePlayTimer.stop();
 		} else {
+			running = true;
 			gamePlayTimer = new Timer(updateEveryDt, gamePlayTimerListener);
 			gamePlayTimer.start();
 		}
+	}
+
+	public Boolean isRunning() {
+		return running;
 	}
 
 	/** updates all entities */

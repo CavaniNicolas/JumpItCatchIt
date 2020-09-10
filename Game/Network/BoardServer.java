@@ -145,7 +145,9 @@ public class BoardServer implements Runnable {
 	/** stops server */
 	public void stopServer() {
 		isRunning = false;
-		gameLoop.togglePause(true);
+		if (gameLoop.isRunning()) {
+			gameLoop.togglePause(true);
+		}
 		endAllConnections();
 		try {
 			serverSocket.close();
