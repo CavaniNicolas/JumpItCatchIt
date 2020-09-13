@@ -204,6 +204,10 @@ public class Character extends Entity {
 			// On ne peut pas switch
 			actionBooleans.canSwitch = false;
 		}
+		// Si on n'est pas en train de Grab, on l'indique au GrabSpell
+		else {
+			grabSpell.setLaunchGrabDir(GrabSpell.NO_GRAB);
+		}
 
 		// On ne peut pas shoot si les deux joueurs sont sur la meme plateforme (pour les deux joueurs)
 		if ((isOnLeftPlatform && otherCharacter.isOnLeftPlatform) ||

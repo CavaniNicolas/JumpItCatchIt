@@ -161,5 +161,8 @@ public class GrabSpell implements Serializable, LaunchGrabDir {
 	public void setHasReached(boolean hasReached) {
 		this.hasReached = hasReached;
 	}
+	public void setLaunchGrabDir(int launchGrabDir) {
+		this.launchGrabDir = launchGrabDir;
+	}
 
 }
