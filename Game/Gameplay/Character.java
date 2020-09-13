@@ -509,6 +509,29 @@ public class Character extends Entity {
 	}
 
 
+	/**Deplace le personnage */
+	public void moveCharacter(Character otherCharacter) {
+
+		// Si il y a collisions trop importante entre les perso, il faut les ecarter lentement chacun l'un de l'autre
+		if (areOnSameXCollisions) {
+			//Gestion des X
+			if (isOnLeftSide) {
+				x -= GameCC.getDecollisionSpeed();
+			} else {
+				x += GameCC.getDecollisionSpeed();
+			}
+
+			//Gestion des Y
+			this.moveY();
+
+		// Si les deux perso ne sont pas en collisions, on se deplace normalement
+		} else {
+			this.moveXY();
+		}
+
+	}
+
+
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
 	public void checkActions(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
 		checkShoot(MCReal, PCReal);
@@ -582,26 +605,20 @@ public class Character extends Entity {
 	}
 
 
-	/**Deplace le personnage */
-	public void moveCharacter(Character otherCharacter) {
 
-		// Si il y a collisions trop importante entre les perso, il faut les ecarter lentement chacun l'un de l'autre
-		if (areOnSameXCollisions) {
-			//Gestion des X
-			if (isOnLeftSide) {
-				x -= GameCC.getDecollisionSpeed();
-			} else {
-				x += GameCC.getDecollisionSpeed();
+	/** Verifie la collision des projectiles et inflige des degats et les fait disparaitre */
+	public void checkProjectilesCollision(Character otherCharacter) {
+		Projectile proj;
+
+		for (int i=0; i<projectiles.size(); i++) {
+			proj = projectiles.get(i);
+
+			// Si les projectiles de ce personnage touchent l'adversaire
+			if (proj.checkCharacterCollision(otherCharacter)) {
+				// Il faut supprimer ce projectile
+				projectiles.remove(i);
 			}
-
-			//Gestion des Y
-			this.moveY();
-
-		// Si les deux perso ne sont pas en collisions, on se deplace normalement
-		} else {
-			this.moveXY();
 		}
-
 	}
 
 
@@ -619,22 +636,6 @@ public class Character extends Entity {
 
 			proj.moveX();
 			if (proj.x == proj.minX || proj.x == proj.maxX) {
-				projectiles.remove(i);
-			}
-		}
-	}
-
-
-	/** Verifie la collision des projectiles et inflige des degats et les fait disparaitre */
-	public void checkProjectilesCollision(Character otherCharacter) {
-		Projectile proj;
-
-		for (int i=0; i<projectiles.size(); i++) {
-			proj = projectiles.get(i);
-
-			// Si les projectiles de ce personnage touchent l'adversaire
-			if (proj.checkCharacterCollision(otherCharacter)) {
-				// Il faut supprimer ce projectile
 				projectiles.remove(i);
 			}
 		}
@@ -682,30 +683,9 @@ public class Character extends Entity {
 	}
 
 
-	/**Dessine le personnage */
-	public void drawCharacter(Graphics g, GraphicMainConstants MC, GraphicCharacterConstants CC) {
-		g.setColor(colorCharacter);
-		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
-		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height)) * MC.getOneUnityHeight());
-		int width = CC.getCharacterWidth();
-		int height = CC.getCharacterHeight();
-		g.fillRect(x, y, width, height);
-	}
-
-
-	/**Dessine les projectiles de ce personnage */
-	public void drawProjectiles(Graphics g, GraphicMainConstants MC, GraphicProjectileConstants PC) {
-		for (int i=0; i<projectiles.size(); i++) {
-			projectiles.get(i).drawProjectile(g, MC, PC);
-		}
-	}
-
-
-	/**Dessine le grab du ce personnage */
-	public void drawGrab(Graphics g, GraphicMainConstants MC, GraphicGrabConstants GC) {
-		grabSpell.drawGrab(g, MC, GC);
-	}
-
+	/* ==== */
+	/* Init */
+	/* ==== */
 
 	/**Initialise les champs graphiques */
 	public void initGraphicAttributes(GraphicCharacterConstants CCReal) {
@@ -731,6 +711,35 @@ public class Character extends Entity {
 		this.speedGrab = GameCC.getSpeedGrab();
 		this.rangeGrab = GameCC.getRangeGrab();
 		this.coolDownGrab = GameCC.getCoolDownGrab();
+	}
+
+
+	/* ==== */
+	/* Draw */
+	/* ==== */
+
+	/**Dessine le personnage */
+	public void drawCharacter(Graphics g, GraphicMainConstants MC, GraphicCharacterConstants CC) {
+		g.setColor(colorCharacter);
+		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
+		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height)) * MC.getOneUnityHeight());
+		int width = CC.getCharacterWidth();
+		int height = CC.getCharacterHeight();
+		g.fillRect(x, y, width, height);
+	}
+
+
+	/**Dessine les projectiles de ce personnage */
+	public void drawProjectiles(Graphics g, GraphicMainConstants MC, GraphicProjectileConstants PC) {
+		for (int i=0; i<projectiles.size(); i++) {
+			projectiles.get(i).drawProjectile(g, MC, PC);
+		}
+	}
+
+
+	/**Dessine le grab du ce personnage */
+	public void drawGrab(Graphics g, GraphicMainConstants MC, GraphicGrabConstants GC) {
+		grabSpell.drawGrab(g, MC, GC);
 	}
 
 
