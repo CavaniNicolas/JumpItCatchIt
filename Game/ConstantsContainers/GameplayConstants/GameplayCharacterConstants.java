@@ -54,9 +54,11 @@ public class GameplayCharacterConstants {
 	/* ==== */
 
 	/** Force pour pousser l'adversaire */
-	private transient int pushStrength = 150;
+	private transient int pushStrength = 135;
 	/** Cool Down pour pousser (en milli secondes) */
 	private transient long coolDownPush = 1_000;
+	/** Distance maximale entre les deux joueurs pour qu'ils puissent se pousser */
+	private transient int rangePush = 1_600; //Character.width
 
 
 	/* ==== */
@@ -66,7 +68,7 @@ public class GameplayCharacterConstants {
 	/** Vitesse du grab */
 	private transient int speedGrab = 400;
 	/** Range du grab */
-	private transient int rangeGrab = 3_000;
+	private transient int rangeGrab = 2_800;
 	/** Cool Down pour le grab (en milli secondes) */
 	private transient long coolDownGrab = 1_000;
 
@@ -124,6 +126,9 @@ public class GameplayCharacterConstants {
 	}
 	public long getCoolDownPush() {
 		return coolDownPush;
+	}
+	public int getRangePush() {
+		return rangePush;
 	}
 
 	/* ==== */

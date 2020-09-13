@@ -66,9 +66,10 @@ public class Character extends Entity {
 	/** Booleen, true si on est en train detre pousse vers la gauche, false vers la droite
 	 * Attention, a remplacer par un int code ou une enum, (peut etre le meme de direction que ceux des projectiles) */
 	private transient boolean isBeingPushedLeft = true; // A REVOIR
+	/** Booleen, true si on est invulnerable au Push */
+	private transient boolean immuneToPush = false;
 
-
-	 /** Projectiles du joueur */
+	/** Projectiles du joueur */
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	/** Vitesse des projectiles */
 	private transient int speedProjectile;
@@ -237,10 +238,7 @@ public class Character extends Entity {
 			if ((isOnLeftPlatform && isOnLeftSide) || 
 				(isOnRightPlatform && isOnLeftSide == false)) {
 
-				// On peut le pousser (si le coolDown l'autorise)
-				if (actionBooleans.canCanPush) {
-					actionBooleans.canPush = true;
-				}
+				checkCanPush(otherCharacter);
 
 				// On ne peut pas grab d'items
 				actionBooleans.canGrab = false;
@@ -259,6 +257,10 @@ public class Character extends Entity {
 			// On ne peut pas se deplacer
 			actionBooleans.canLeft = false;
 			actionBooleans.canRight = false;
+			// On ne peut pas sauter ni grab
+			actionBooleans.canJump = false;
+			actionBooleans.canGrab = false;
+			actionBooleans.canShield = false;
 		}
 
 
@@ -281,6 +283,22 @@ public class Character extends Entity {
 		// Pour le grab
 		if (System.currentTimeMillis() - startTimeGrab >= coolDownGrab) {
 			actionBooleans.canGrab = true;
+		}
+
+	}
+
+
+	/** Verifie la distance entre les deux persos pour autoriser le Push 
+	 * Les persos sont deja supposes sur la meme plateforme, et this Character est derriere otherCharacter */
+	public void checkCanPush(Character otherCharacter) {
+
+		// On peut le pousser (si le coolDown et la distance entre les persos l'autorisent et si l'adversaire n'est pas immunise)
+		if (actionBooleans.canCanPush &&
+			(Math.abs(x - otherCharacter.x) <= GameCC.getRangePush()) && areOnSameY &&
+			otherCharacter.immuneToPush == false) {
+			actionBooleans.canPush = true;
+		} else {
+			actionBooleans.canPush = false;
 		}
 
 	}
