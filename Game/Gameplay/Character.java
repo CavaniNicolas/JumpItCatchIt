@@ -74,7 +74,6 @@ public class Character extends Entity {
 	/** Degats des projectiles */
 	private transient int damageProjectile;
 	/** Couleur des projectiles */
-	private Color colorProjectile = Color.orange; // Sera a initialiser
 
 	/** Cool Down pour lancer un projectile (en milli secondes) */
 	private transient long coolDownProjectile;
@@ -522,11 +521,11 @@ public class Character extends Entity {
 			// Tire vers la droite
 			if (isOnLeftSide) {
 				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
-									MCReal, PCReal, rangeProjectile, damageProjectile, colorProjectile) );
+									MCReal, PCReal, rangeProjectile, damageProjectile) );
 			// Tire vers la gauche
 			} else {
 				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), - speedProjectile,
-									MCReal, PCReal, rangeProjectile, damageProjectile, colorProjectile) );
+									MCReal, PCReal, rangeProjectile, damageProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite

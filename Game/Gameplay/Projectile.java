@@ -1,12 +1,11 @@
 package Game.Gameplay;
 
+import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 
 import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
 import Game.ConstantsContainers.GraphicConstants.GraphicProjectileConstants;
 
-import java.awt.Color;
 
 /**Class Projectile <p>
  * La position (x,y) du Projectile est au centre du cercle */
@@ -25,25 +24,23 @@ public class Projectile extends Entity {
 	private transient boolean isActive;
 
 	/**Couleur et image du projectile */
-	private Color colorProjectile;
-	private transient Image imageProjectile = null;
+	private Color colorProjectile = Color.orange;
 
 
 	/**Constructeur du projectile */
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int rangeX, int damage, Color colorProjectile) {
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int rangeX, int damage) {
 		super(x, y, speedX, speedY, accelX, accelY);
 		this.initX = x;
 		this.rangeX = rangeX;
 		this.damage = damage;
 		this.isActive = true;
-		this.colorProjectile = colorProjectile;
 		initGraphicAttributes(MCReal, PCReal);
 	}
 
 
 	/**Constructeur pour un projectile horizontal */
-	public Projectile(int x, int y, int speedX, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int range, int damage, Color colorProjectile) {
-		this(x, y, speedX, 0, 0, 0, MCReal, PCReal, range, damage, colorProjectile);
+	public Projectile(int x, int y, int speedX, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int range, int damage) {
+		this(x, y, speedX, 0, 0, 0, MCReal, PCReal, range, damage);
 	}
 
 

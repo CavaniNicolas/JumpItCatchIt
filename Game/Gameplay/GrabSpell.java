@@ -1,7 +1,6 @@
 package Game.Gameplay;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.io.Serializable;
 import java.awt.Graphics;
 
@@ -37,14 +36,11 @@ public class GrabSpell implements Serializable, LaunchGrabDir {
 
 
 	/**Couleur du grab */
-	private Color colorGrab = new Color(114, 73, 50);
-	/**Image du grab */
-	private Image imageGrab;
+	private Color colorGrab = new Color(114, 73, 50);;
 
 
 	/** Un seul GrabSpell est cree par Character, mais ils sont re-initialises a chaque utilisation */
-	public GrabSpell() {
-	}
+	public GrabSpell() {}
 
 
 	/**Initialise un nouveau grab lors du lancement */
