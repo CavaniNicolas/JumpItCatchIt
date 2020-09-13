@@ -81,6 +81,14 @@ public class Character extends Entity {
 	private transient long startTimeProjectile = 0;
 
 
+	/** Force pour pousser l'adversaire */
+	private transient int pushStrength;
+	/** Cool Down pour pousser (en milli secondes) */
+	private transient long coolDownPush;
+	/** Moment auquel on a pousser l'adversaire */
+	private transient long startTimePush = 0;
+
+
 	/** Classe contenant le grab du joueur */
 	private GrabSpell grabSpell = new GrabSpell();
 	/** Vitesse du grab */
@@ -122,10 +130,6 @@ public class Character extends Entity {
 			actionBooleans.canRight = true;
 			
 			isSpawning = false;
-
-			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
-			speedX = 0;
-			accelX = 0;
 		}
 
 		// Si on appuie en meme temps sur gauche et sur droite, on ne bouge pas
@@ -156,8 +160,17 @@ public class Character extends Entity {
 			actionBooleans.canRight = false;
 		}
 
-		// On peut resauter quand on est au sol, et on ne peut pas sauter ou switch
+
+		// A l'atterrissage d'un switch
+		if (actionBooleans.isSwitching && y == minY && isFalling == false) {
+			// Permet de supprimer la vitesse et l'acceleration en X recues apres un switch
+			speedX = 0;
+			accelX = 0;
+		}
+
+		// A un atterrissage quelconque
 		if (y == minY && isFalling == false) {
+			// On peut resauter, on ne peut pas switch
 			actionBooleans.canJump = true;
 			actionBooleans.isJumping = false;
 			actionBooleans.canSwitch = false;
@@ -167,6 +180,7 @@ public class Character extends Entity {
 			actionBooleans.canActivateCanSwitch = true;
 			actionBooleans.isSwitching = false;
 		}
+
 
 		// Pendant que les persos sont en collision forte, ils ne peuvent pas se deplacer et sauter et switch
 		if (areOnSameXCollisions) {
@@ -535,6 +549,7 @@ public class Character extends Entity {
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
 	public void checkActions(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
 		checkShoot(MCReal, PCReal);
+		// checkPush();
 		checkGrab(MCReal, GCReal, CCReal);
 	}
 
@@ -559,6 +574,17 @@ public class Character extends Entity {
 			actionBooleans.canShoot = false;
 			startTimeProjectile = System.currentTimeMillis();
 		}	
+	}
+
+
+	/**Pousse l'adversaire hors de sa plateforme */
+	public void checkPush(Character otherCharacter) {
+
+		// Si on est autorise a pousser et quon appuie sur pousser
+		if (actionBooleans.canPush && inputActions.getShootPushPressed()) {
+
+			// otherCharacter.beingPushed(pushStrength, );
+		}
 	}
 
 
