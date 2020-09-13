@@ -223,11 +223,22 @@ public class Character extends Entity {
 			grabSpell.setLaunchGrabDir(GrabSpell.NO_GRAB);
 		}
 
-		// On ne peut pas shoot si les deux joueurs sont sur la meme plateforme (pour les deux joueurs)
+		// Si les deux joueurs sont sur la meme plateforme
 		if ((isOnLeftPlatform && otherCharacter.isOnLeftPlatform) ||
 			(isOnRightPlatform && otherCharacter.isOnRightPlatform)) {
 
+			// Aucun ne peut Shoot
 			actionBooleans.canShoot = false;
+
+			// On peut pousser que si on est derriere son adversaire
+			if ((isOnLeftPlatform && isOnLeftSide) || 
+				(isOnRightPlatform && isOnLeftSide == false)) {
+				actionBooleans.canPush = true;
+				System.out.println("on peut pousser");
+			} else {
+				actionBooleans.canPush = false;
+			}
+
 		}
 
 		// Si les deux persos sont sur la meme plateforme, celui qui est le plus loin des items ne peut pas grab
@@ -467,9 +478,11 @@ public class Character extends Entity {
 
 		} else if (inputActions.getRightPressed() && actionBooleans.canRight) {
 			this.speedX = this.speedLateral;
+		}
 
-		} else {
-			this.speedX = 0;
+		// Si on appuie pas sur les touches de deplacements mais quon a le droit de se deplacer on ne bouge plus
+		if (inputActions.getLeftPressed() == false && inputActions.getRightPressed() == false && actionBooleans.canLeft && actionBooleans.canRight) {
+			speedX = 0;
 		}
 
 
@@ -510,10 +523,10 @@ public class Character extends Entity {
 			// Propulsion
 			this.speedY = this.speedVertical / 2;
 			if (isOnLeftPlatform) {
-				this.accelX = GameCC.getSwitchSpeed();
+				this.speedX = GameCC.getSwitchSpeed();
 			}
 			if (isOnRightPlatform) {
-				this.accelX = -GameCC.getSwitchSpeed();
+				this.speedX = -GameCC.getSwitchSpeed();
 			}
 
 			// On est en train de switch, on ne peux plus effectuer un switch
@@ -547,9 +560,9 @@ public class Character extends Entity {
 
 
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
-	public void checkActions(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
+	public void checkActions(Character otherCharacter, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
 		checkShoot(MCReal, PCReal);
-		// checkPush();
+		checkPush(otherCharacter);
 		checkGrab(MCReal, GCReal, CCReal);
 	}
 
@@ -582,9 +595,28 @@ public class Character extends Entity {
 
 		// Si on est autorise a pousser et quon appuie sur pousser
 		if (actionBooleans.canPush && inputActions.getShootPushPressed()) {
+			System.out.println("On pousse");
 
-			// otherCharacter.beingPushed(pushStrength, );
+			// Pousse vers la droite
+			if (isOnLeftSide) {
+				otherCharacter.beingPushed(pushStrength);
+			// Pousse vers la gauche
+			} else {
+				otherCharacter.beingPushed(-pushStrength);
+			}
+
+			// On ne peut plus pousser tout de suite
+			actionBooleans.canPush = false;
+			startTimePush = System.currentTimeMillis();
 		}
+
+	}
+
+
+	/**Pousse le personnage cible */
+	public void beingPushed(int opponentPushStrength) {
+		System.out.println("On est poussé");
+		this.speedX = opponentPushStrength;
 	}
 
 
@@ -732,6 +764,10 @@ public class Character extends Entity {
 		this.rangeProjectile = GameCC.getRangeProjectile();
 		this.damageProjectile = GameCC.getDamageProjectile();
 		this.coolDownProjectile = GameCC.getCoolDownProjectile();
+
+		// GameplayConstants pour le Push
+		this.pushStrength = GameCC.getPushStrength();
+		this.coolDownPush = GameCC.getCoolDownPush();
 
 		// GameplayConstants pour le grab
 		this.speedGrab = GameCC.getSpeedGrab();

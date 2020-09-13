@@ -50,6 +50,16 @@ public class GameplayCharacterConstants {
 
 
 	/* ==== */
+	/* Push */
+	/* ==== */
+
+	/** Force pour pousser l'adversaire */
+	private transient int pushStrength = 100;
+	/** Cool Down pour pousser (en milli secondes) */
+	private transient long coolDownPush = 1_000;
+
+
+	/* ==== */
 	/* Grab */
 	/* ==== */
 
@@ -64,6 +74,10 @@ public class GameplayCharacterConstants {
 	/* ======= */
 	/* Getters */
 	/* ======= */
+
+	/* ========= */
+	/* Character */
+	/* ========= */
 
 	public int getLivesMax() {
 		return livesMax;
@@ -84,6 +98,9 @@ public class GameplayCharacterConstants {
 		return speedVertical;
 	}
 
+	/* ========== */
+	/* Projectile */
+	/* ========== */
 
 	public int getSpeedProjectile() {
 		return speedProjectile;
@@ -98,6 +115,20 @@ public class GameplayCharacterConstants {
 		return coolDownProjectile;
 	}
 
+	/* ==== */
+	/* Push */
+	/* ==== */
+
+	public int getPushStrength() {
+		return pushStrength;
+	}
+	public long getCoolDownPush() {
+		return coolDownPush;
+	}
+
+	/* ==== */
+	/* Grab */
+	/* ==== */
 
 	public int getSpeedGrab() {
 		return speedGrab;
