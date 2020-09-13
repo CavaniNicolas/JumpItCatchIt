@@ -63,9 +63,12 @@ public class Character extends Entity {
 	private transient boolean isFalling;
 	/** Booleen, true si on est en train de respawn */
 	private transient boolean isSpawning;
+	/** Booleen, true si on est en train detre pousse vers la gauche, false vers la droite
+	 * Attention, a remplacer par un int code ou une enum, (peut etre le meme de direction que ceux des projectiles) */
+	private transient boolean isBeingPushedLeft = true; // A REVOIR
 
 
-	/** Projectiles du joueur */
+	 /** Projectiles du joueur */
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	/** Vitesse des projectiles */
 	private transient int speedProjectile;
@@ -230,23 +233,34 @@ public class Character extends Entity {
 			// Aucun ne peut Shoot
 			actionBooleans.canShoot = false;
 
-			// On peut pousser que si on est derriere son adversaire
+			// Si on est derriere son adversaire
 			if ((isOnLeftPlatform && isOnLeftSide) || 
 				(isOnRightPlatform && isOnLeftSide == false)) {
-				actionBooleans.canPush = true;
-				System.out.println("on peut pousser");
+
+				// On peut le pousser (si le coolDown l'autorise)
+				if (actionBooleans.canCanPush) {
+					actionBooleans.canPush = true;
+				}
+
+				// On ne peut pas grab d'items
+				actionBooleans.canGrab = false;
+
 			} else {
 				actionBooleans.canPush = false;
 			}
 
+		} else {
+			actionBooleans.canPush = false;
 		}
 
-		// Si les deux persos sont sur la meme plateforme, celui qui est le plus loin des items ne peut pas grab
-		if ((isOnLeftPlatform && otherCharacter.isOnLeftPlatform && isOnLeftSide) ||
-			(isOnRightPlatform && otherCharacter.isOnRightPlatform && isOnLeftSide == false)) {
 
-			actionBooleans.canGrab = false;
+		// Si on est pousse
+		if (actionBooleans.isBeingPushed) {
+			// On ne peut pas se deplacer
+			actionBooleans.canLeft = false;
+			actionBooleans.canRight = false;
 		}
+
 
 	}
 
@@ -257,6 +271,11 @@ public class Character extends Entity {
 		// Pour les projectiles
 		if (System.currentTimeMillis() - startTimeProjectile >= coolDownProjectile) {
 			actionBooleans.canShoot = true;
+		}
+
+		// Pour le push
+		if (System.currentTimeMillis() - startTimePush >= coolDownPush) {
+			actionBooleans.canCanPush = true;
 		}
 
 		// Pour le grab
@@ -424,6 +443,8 @@ public class Character extends Entity {
 		checkJump();
 		checkSwitch();
 
+		checkBeingPushed();
+
 		moveCharacter(otherCharacter);
 	}
 
@@ -536,6 +557,25 @@ public class Character extends Entity {
 	}
 
 
+	/**Verifie si on est toujours en train d'etre pousse */
+	public void checkBeingPushed() {
+
+		int nextSpeedX = speedX += accelX;
+		// Si on est en train de se faire pousser
+		if (actionBooleans.isBeingPushed) {
+
+			// Et qu'on a finit de se faire pousser
+			if ((isBeingPushedLeft && nextSpeedX >= 0 ) ||
+				(isBeingPushedLeft == false && nextSpeedX <= 0)) {
+				// on est plus en train de se faire pousser, (on pourra se deplacer a nouveau)
+				actionBooleans.isBeingPushed = false;
+				accelX = 0;
+				speedX = 0;
+			}
+		}
+	}
+
+
 	/**Deplace le personnage */
 	public void moveCharacter(Character otherCharacter) {
 
@@ -595,18 +635,22 @@ public class Character extends Entity {
 
 		// Si on est autorise a pousser et quon appuie sur pousser
 		if (actionBooleans.canPush && inputActions.getShootPushPressed()) {
-			System.out.println("On pousse");
 
 			// Pousse vers la droite
 			if (isOnLeftSide) {
 				otherCharacter.beingPushed(pushStrength);
+				otherCharacter.isBeingPushedLeft = false;
 			// Pousse vers la gauche
 			} else {
 				otherCharacter.beingPushed(-pushStrength);
+				otherCharacter.isBeingPushedLeft = true;
 			}
+
+			otherCharacter.getActionBooleans().isBeingPushed = true;
 
 			// On ne peut plus pousser tout de suite
 			actionBooleans.canPush = false;
+			actionBooleans.canCanPush = false;
 			startTimePush = System.currentTimeMillis();
 		}
 
@@ -615,8 +659,8 @@ public class Character extends Entity {
 
 	/**Pousse le personnage cible */
 	public void beingPushed(int opponentPushStrength) {
-		System.out.println("On est poussé");
 		this.speedX = opponentPushStrength;
+		this.accelX = -opponentPushStrength / 60;
 	}
 
 
@@ -868,6 +912,8 @@ public class Character extends Entity {
 		private boolean isSwitching = false;
 		private boolean isGrabing = false;
 
+		private boolean canCanPush = true;
+		private boolean isBeingPushed = false;
 
 		// Getters et Setters des Booleens de pression sur les touches / (de demande d'actions)
 		public boolean isSwitchPressed() {

@@ -54,7 +54,7 @@ public class GameplayCharacterConstants {
 	/* ==== */
 
 	/** Force pour pousser l'adversaire */
-	private transient int pushStrength = 100;
+	private transient int pushStrength = 150;
 	/** Cool Down pour pousser (en milli secondes) */
 	private transient long coolDownPush = 1_000;
 
