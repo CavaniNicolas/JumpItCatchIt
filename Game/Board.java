@@ -1,5 +1,6 @@
 package Game;
 
+import Game.ConstantsContainers.GameplayConstants.GameplayCharacterConstants;
 import Game.Gameplay.Character;
 import Game.Gameplay.Items.ItemBalls;
 
@@ -154,11 +155,14 @@ public class Board implements Serializable {
 		InputActions redCharacterInputActions = new InputActions();
 		InputActions blueCharacterInputActions = new InputActions();
 
+		// Les Constantes de Gameplay liees aux personnages et a leur actions
+		GameplayCharacterConstants GameCC = new GameplayCharacterConstants();
+
 		// Creation des deux persos
 		characterRed = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordLeft(), boardGraphism.getMainConstants().getPlatformHeight(),
-				true, Color.red, redCharacterInputActions, boardGraphism.getCharacterConstants().getReal());
+				true, Color.red, redCharacterInputActions, GameCC, boardGraphism.getCharacterConstants().getReal());
 		characterBlue = new Character(boardGraphism.getCharacterConstants().getPrimaryXcoordRight(), boardGraphism.getMainConstants().getPlatformHeight(),
-				false, Color.blue, blueCharacterInputActions, boardGraphism.getCharacterConstants().getReal());
+				false, Color.blue, blueCharacterInputActions, GameCC, boardGraphism.getCharacterConstants().getReal());
 
 		// met les characters dans les objets inputActions correspondants
 		redCharacterInputActions.setCharacter(characterRed);

@@ -39,7 +39,7 @@ public class Character extends Entity {
 	private Color colorCharacter;
 
 
-	/**Nombre de vies actuel */
+	/** Nombre de vies actuel */
 	private int lives;
 	/** Vitesse Laterale actuelle du joueur */
 	protected transient int speedLateral;
@@ -54,9 +54,9 @@ public class Character extends Entity {
 	private transient boolean isOnLeftPlatform;
 	/** Booleen de position, sur la plateforme de droite */
 	private transient boolean isOnRightPlatform;
-	/**Si les personnages sont a la meme hauteur ou non */
+	/** Si les personnages sont a la meme hauteur ou non */
 	private transient boolean areOnSameY;
-	/**Si les personnages sont l'un dans l'autre en X */
+	/** Si les personnages sont l'un dans l'autre en X */
 	private transient boolean areOnSameXCollisions;
 
 	/** Booleen, true si on est en train de tomber dans le vide */
@@ -65,43 +65,44 @@ public class Character extends Entity {
 	private transient boolean isSpawning;
 
 
-	/**Projectiles du joueur */
+	/** Projectiles du joueur */
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-	/**Vitesse des projectiles */
-	private transient int speedProjectile = 100;
-	/**Range des projectiles */
-	private transient int rangeProjectile = 12_000; // Peut etre mieux de la calculer en pourcentage par rapport a la taille maxX du board
-	/**Degats des projectiles */
-	private transient int damageProjectile = 1;
-	/**Couleur des projectiles */
+	/** Vitesse des projectiles */
+	private transient int speedProjectile;
+	/** Range des projectiles */
+	private transient int rangeProjectile;
+	/** Degats des projectiles */
+	private transient int damageProjectile;
+	/** Couleur des projectiles */
 	private Color colorProjectile = Color.orange; // Sera a initialiser
 
-	/**Cool Down pour lancer un projectile (en milli secondes) */
-	private transient long coolDownProjectile = 1_500;
+	/** Cool Down pour lancer un projectile (en milli secondes) */
+	private transient long coolDownProjectile;
 	/** Moment auquel on lance un projectile */
 	private transient long startTimeProjectile = 0;
 
 
-	/**Classe contenant le grab du joueur */
+	/** Classe contenant le grab du joueur */
 	private GrabSpell grabSpell = new GrabSpell();
-	/**Vitesse du grab */
-	private transient int speedGrab = 400;
-	/**Range du grab */
-	private transient int rangeGrab = 4_000;
+	/** Vitesse du grab */
+	private transient int speedGrab;
+	/** Range du grab */
+	private transient int rangeGrab;
 
-	/**Cool Down pour le grab (en milli secondes) */
-	private transient long coolDownGrab = 1_000;
+	/** Cool Down pour le grab (en milli secondes) */
+	private transient long coolDownGrab;
 	/** Moment auquel on effectue un grab */
 	private transient long startTimeGrab = 0;
 
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, GraphicCharacterConstants CCReal) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, GameplayCharacterConstants GameCC, GraphicCharacterConstants CCReal) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
 		this.inputActions = inputActions;
+		this.GameCC = GameCC;
 		initGraphicAttributes(CCReal);
 		initGameplayAttributes();
 	}
@@ -712,9 +713,21 @@ public class Character extends Entity {
 
 	/**Initialise les attributs lies au gameplay */
 	public void initGameplayAttributes() {
+		// GameplayConstants pour les peros
 		this.lives = GameCC.getLivesMax();
 		this.speedLateral = GameCC.getSpeedLateral();
 		this.speedVertical = GameCC.getSpeedVertical();
+
+		// GameplayConstants pour les projectiles
+		this.speedProjectile = GameCC.getSpeedProjectile();
+		this.rangeProjectile = GameCC.getRangeProjectile();
+		this.damageProjectile = GameCC.getDamageProjectile();
+		this.coolDownProjectile = GameCC.getCoolDownProjectile();
+
+		// GameplayConstants pour le grab
+		this.speedGrab = GameCC.getSpeedGrab();
+		this.rangeGrab = GameCC.getRangeGrab();
+		this.coolDownGrab = GameCC.getCoolDownGrab();
 	}
 
 
