@@ -4,14 +4,14 @@ import Game.InputActions;
 import Game.Gameplay.Items.ItemBall;
 import Game.Gameplay.Items.ItemBalls;
 import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
+import Game.ConstantsContainers.GameplayConstants.GameplayCharacterConstants;
 import Game.ConstantsContainers.GraphicConstants.GraphicCharacterConstants;
 import Game.ConstantsContainers.GraphicConstants.GraphicGrabConstants;
 import Game.ConstantsContainers.GraphicConstants.GraphicProjectileConstants;
 
-import java.awt.Graphics;
 import java.awt.Color;
-import java.awt.Image;
 import java.util.ArrayList;
+import java.awt.Graphics;
 
 /** Class Character <p>
  * contient le personnage, toutes ses actions, positions, etats... <p>
@@ -25,10 +25,8 @@ public class Character extends Entity {
 	 */
 	private transient boolean isLeftCharacter; // Pourrait etre remplace par un ID
 
-	/**Nombre de vies max (en moities de coeur) */
-	private int livesMax = 6;
-	/**Nombre de vies actuel */
-	private int lives = livesMax;
+	/** Constantes de Gameplay de Character */
+	private GameplayCharacterConstants GameCC = new GameplayCharacterConstants();
 
 	/** Booleens d'actions */
 	private transient ActionBooleans actionBooleans = new ActionBooleans();
@@ -36,8 +34,19 @@ public class Character extends Entity {
 	/** Booleens d'Input */
 	private transient InputActions inputActions;
 
-	/** HUD du personnage */
-	private transient HUDCharacter hudCharacter;
+
+	// Couleur et image du personnage // A SUPPRIMER DE CETTE CLASSE
+	private Color colorCharacter;
+
+
+	/**Nombre de vies actuel */
+	private int lives;
+	/** Vitesse Laterale actuelle du joueur */
+	protected transient int speedLateral;
+	/** Vitesse Verticale actuelle du joueur */
+	protected transient int speedVertical;
+
+
 
 	/** Booleen de position, a gauche ou a droite de son adversaire */
 	private transient boolean isOnLeftSide;
@@ -49,29 +58,11 @@ public class Character extends Entity {
 	private transient boolean areOnSameY;
 	/**Si les personnages sont l'un dans l'autre en X */
 	private transient boolean areOnSameXCollisions;
-	/**Vitesse de decollision */
-	private transient int decollisionSpeed = 30;
-
-
-	/**Largeur de la hitbox selon X */
-	private transient int hitboxWidth = 800; //this.width / 2;
 
 	/** Booleen, true si on est en train de tomber dans le vide */
 	private transient boolean isFalling;
 	/** Booleen, true si on est en train de respawn */
 	private transient boolean isSpawning;
-
-	// Couleur et image du personnage
-	private Color colorCharacter;
-	private transient Image imageCharacter = null;
-
-
-	/** Vitesse Laterale Constante */
-	protected transient int speedLateral = 40;
-	/** Vitesse Horizontale Constante */
-	protected transient int speedVertical = 450;
-	/** Vitesse a appliquer a speedX pour le switch */
-	protected transient int switchSpeed = 295;
 
 
 	/**Projectiles du joueur */
@@ -84,8 +75,6 @@ public class Character extends Entity {
 	private transient int damageProjectile = 1;
 	/**Couleur des projectiles */
 	private Color colorProjectile = Color.orange; // Sera a initialiser
-	/**Image des projectiles */
-	private transient Image imageProjectile = null;
 
 	/**Cool Down pour lancer un projectile (en milli secondes) */
 	private transient long coolDownProjectile = 1_500;
@@ -99,8 +88,6 @@ public class Character extends Entity {
 	private transient int speedGrab = 400;
 	/**Range du grab */
 	private transient int rangeGrab = 4_000;
-	/**Image du grab */
-	private transient Image imageGrab = null;
 
 	/**Cool Down pour le grab (en milli secondes) */
 	private transient long coolDownGrab = 1_000;
@@ -110,22 +97,14 @@ public class Character extends Entity {
 
 
 	/**Constructeur Character */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, Image imageCharacter, InputActions inputActions, GraphicCharacterConstants CCReal) {
+	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, GraphicCharacterConstants CCReal) {
 		super(x, y, 0, 0, 0, 0);
 		this.isLeftCharacter = isLeftCharacter;
 		this.colorCharacter = colorCharacter;
-		this.imageCharacter = imageCharacter;
 		this.inputActions = inputActions;
 		initGraphicAttributes(CCReal);
-		//initHUDCharacter(boardGraphism);
+		initGameplayAttributes();
 	}
-
-
-	/**Constructeur Character sans Image */
-	public Character(int x, int y, boolean isLeftCharacter, Color colorCharacter, InputActions inputActions, GraphicCharacterConstants CCReal) {
-		this(x, y, isLeftCharacter, colorCharacter, null, inputActions, CCReal);
-	}
-
 
 
 	/** Actualise les booleens d'actions */
@@ -312,11 +291,11 @@ public class Character extends Entity {
 		if (actionBooleans.isSwitching == otherCharacter.actionBooleans.isSwitching) {
 			// Si les persos sont a la meme hauteur et qu'il y a une collision forte entre eux selon X
 			// Si le perso est a gauche et est en collision avec l'autre (si on utilise >=, les persos peuvent se repousser en se deplacant)
-			if (areOnSameY && isOnLeftSide && x > otherCharacter.x - hitboxWidth) {
+			if (areOnSameY && isOnLeftSide && x > otherCharacter.x - GameCC.getHitboxWidth()) {
 				areOnSameXCollisions = true;
 
 			// Si le perso est a droite et est en collision avec l'autre (si on utilise <=, les persos peuvent se repousser en se deplacant)
-			} else if (areOnSameY && isOnLeftSide == false && x < otherCharacter.x + hitboxWidth) {
+			} else if (areOnSameY && isOnLeftSide == false && x < otherCharacter.x + GameCC.getHitboxWidth()) {
 				areOnSameXCollisions = true;
 
 			// Sinon les persos ne sont pas en collision
@@ -513,10 +492,10 @@ public class Character extends Entity {
 			// Propulsion
 			this.speedY = this.speedVertical / 2;
 			if (isOnLeftPlatform) {
-				this.accelX = this.switchSpeed;
+				this.accelX = GameCC.getSwitchSpeed();
 			}
 			if (isOnRightPlatform) {
-				this.accelX = -this.switchSpeed;
+				this.accelX = -GameCC.getSwitchSpeed();
 			}
 
 			// On est en train de switch, on ne peux plus effectuer un switch
@@ -606,9 +585,9 @@ public class Character extends Entity {
 		if (areOnSameXCollisions) {
 			//Gestion des X
 			if (isOnLeftSide) {
-				x -= decollisionSpeed;
+				x -= GameCC.getDecollisionSpeed();
 			} else {
-				x += decollisionSpeed;
+				x += GameCC.getDecollisionSpeed();
 			}
 
 			//Gestion des Y
@@ -731,6 +710,14 @@ public class Character extends Entity {
 	}
 
 
+	/**Initialise les attributs lies au gameplay */
+	public void initGameplayAttributes() {
+		this.lives = GameCC.getLivesMax();
+		this.speedLateral = GameCC.getSpeedLateral();
+		this.speedVertical = GameCC.getSpeedVertical();
+	}
+
+
 	/* ======= */
 	/* Getters */
 	/* ======= */
@@ -742,7 +729,7 @@ public class Character extends Entity {
 		return lives;
 	}
 	public int getLivesMax() {
-		return livesMax;
+		return GameCC.getLivesMax();
 	}
 	public void setLives(int lives) {
 		this.lives = lives;
@@ -833,7 +820,7 @@ public class Character extends Entity {
 	@Override
 	public String toString() {
 		return "Character [isSpawning=" + isSpawning + ", lives=" + lives
-				+ ", livesMax=" + livesMax + ", grabSpell" + grabSpell + ", projectiles=" + projectiles + " " + super.toString() + "]";
+				+ ", grabSpell" + grabSpell + ", projectiles=" + projectiles + " " + super.toString() + "]";
 	}
 
 }
