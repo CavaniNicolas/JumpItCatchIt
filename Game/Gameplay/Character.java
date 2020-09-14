@@ -105,6 +105,8 @@ public class Character extends Entity {
 	/** Moment auquel on effectue un grab */
 	private transient long startTimeGrab = 0;
 
+	/** Items attrapes par le personnage */
+	private ArrayList<ItemBall> caughtItemBalls = new ArrayList<ItemBall>();
 
 
 	/**Constructeur Character */
@@ -793,6 +795,7 @@ public class Character extends Entity {
 					// renvoie true si le grab touche un item
 					if (grabSpell.checkItemCollision(itemBall.x, itemBall.y, itemBall.width)) {
 						itemBall.effects(this);
+						caughtItemBalls.add(itemBall);
 						itemBalls.removeBall(itemBall);
 					}
 				}
@@ -882,6 +885,9 @@ public class Character extends Entity {
 	}
 	public void setLives(int lives) {
 		this.lives = lives;
+	}
+	public ArrayList<ItemBall> getCaughtItemBalls() {
+		return caughtItemBalls;
 	}
 
 	public InputActions getInputActions() {

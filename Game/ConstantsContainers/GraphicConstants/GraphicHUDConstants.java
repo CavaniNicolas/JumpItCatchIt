@@ -26,6 +26,22 @@ public class GraphicHUDConstants {
 	/**Distance entre les coeurs d'un meme personnage */
 	private int interHearts = 200;
 
+	/* =========== */
+	/* CaughtItems */
+	/* =========== */
+	/**Position en X du premier caughtItems de gauche */
+	private int caughtItemXLeft = 300;
+	/**Position en X du premier caughtItems de droite */
+	private int caughtItemXRight = 15_400; // (temporaire cf issue #29)
+	/**Position en Y des caughtItems */
+	private int caughtItemY = 1_200;
+	/**Largeur des caughtItems */
+	private int caughtItemWidth = 300;
+	/**Hauteur des caughtItems */
+	private int caughtItemHeight = 300;
+	/**Distance entre les caughtItems d'un meme personnage */
+	private int interCaughtItems = 100;
+
 
 	/** Constructeur pour le stockage des constantes coordonnees Reelles */
 	public GraphicHUDConstants() {
@@ -59,6 +75,16 @@ public class GraphicHUDConstants {
 		heartHeight = (int)(real.heartHeight * oneUnityHeight);
 		interHearts = (int)(real.interHearts * oneUnityWidth);
 
+		// position des caughtItems
+		caughtItemXLeft = (int)(real.caughtItemXLeft * oneUnityWidth);
+		caughtItemXRight = (int)(real.caughtItemXRight * oneUnityWidth);
+		caughtItemY = (int)(real.caughtItemY * oneUnityHeight);
+
+		// dimension des caughtItems
+		caughtItemWidth = (int)(real.caughtItemWidth * oneUnityWidth);
+		caughtItemHeight = (int)(real.caughtItemHeight * oneUnityHeight);
+		interCaughtItems = (int)(real.interCaughtItems * oneUnityWidth);
+
 	}
 
 
@@ -69,6 +95,10 @@ public class GraphicHUDConstants {
 	public GraphicHUDConstants getReal() {
 		return real;
 	}
+
+	/* ====== */
+	/* Hearts */
+	/* ====== */
 
 	public int getHeartsXLeft() {
 		return heartsXLeft;
@@ -89,5 +119,27 @@ public class GraphicHUDConstants {
 		return interHearts;
 	}
 
+	/* =========== */
+	/* CaughtItems */
+	/* =========== */
+
+	public int getCaughtItemXLeft() {
+		return caughtItemXLeft;
+	}
+	public int getCaughtItemXRight() {
+		return caughtItemXRight;
+	}
+	public int getCaughtItemY() {
+		return caughtItemY;
+	}
+	public int getCaughtItemWidth() {
+		return caughtItemWidth;
+	}
+	public int getCaughtItemHeight() {
+		return caughtItemHeight;
+	}
+	public int getInterCaughtItems() {
+		return interCaughtItems;
+	}
 
 }
