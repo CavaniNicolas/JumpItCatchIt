@@ -11,7 +11,7 @@ public class ShieldBreakBall extends ItemBall {
 	/** Constructeur pour creer un item lors du jeu */
 	public ShieldBreakBall(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		this.hasLongEffect = true;
+		this.coolDownEffect = 5_000;
 		this.colorItem = Color.pink;
 	}
 

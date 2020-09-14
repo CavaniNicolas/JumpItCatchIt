@@ -11,7 +11,7 @@ public class HealBall extends ItemBall {
 	/** Constructeur pour creer un item lors du jeu */
 	public HealBall(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		this.hasLongEffect = false;
+		this.coolDownEffect = 0;
 		this.colorItem = Color.red;
 	}
 

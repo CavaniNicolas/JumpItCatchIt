@@ -797,8 +797,9 @@ public class Character extends Entity {
 						itemBall.effects(this);
 
 						// Si l'effet n'est pas instantane, si il est long, on l'ajoute a lla liste des items attrapes
-						if (itemBall.getHasLongEffect()) {
+						if (itemBall.getCoolDownEffect() != 0) {
 							caughtItemBalls.add(itemBall);
+							itemBall.setStartTimeEffect(System.currentTimeMillis());
 						}
 						itemBalls.removeBall(itemBall);
 					}

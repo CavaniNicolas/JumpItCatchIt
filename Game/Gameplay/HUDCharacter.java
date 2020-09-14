@@ -44,7 +44,7 @@ public class HUDCharacter {
 			x = HC.getCaughtItemXRight();
 		}
 
-		y = MC.getMaxY() - HC.getCaughtItemY(); System.out.println(MC.getMaxY() + " " + HC.getCaughtItemY() + " " + y);
+		y = MC.getMaxY() - HC.getCaughtItemY();
 		width = HC.getCaughtItemWidth();
 		height = HC.getCaughtItemHeight();
 

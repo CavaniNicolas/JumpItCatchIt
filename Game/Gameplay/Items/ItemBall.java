@@ -20,8 +20,10 @@ public class ItemBall extends Entity {
 	/** Image de l'Item */
 	private transient Image imageItem = null;
 
-	/**true si l'effet est un effet long (qui ne modifie pas des stats immediates) */
-	protected transient boolean hasLongEffect;
+	/**Duree de l'effet (en milli secondes) (0 l"effet est immediat) */
+	protected transient long coolDownEffect;
+	/**Moment auquel l'effet debute */
+	protected transient long startTimeEffect = 0;
 
 	/** Constructeur pour creer un item lors du jeu */
 	public ItemBall(int x, int y, int width, int height) {
@@ -56,7 +58,15 @@ public class ItemBall extends Entity {
 	public Image getImageItem() {
 		return imageItem;
 	}
-	public boolean getHasLongEffect() {
-		return hasLongEffect;
+	public long getCoolDownEffect() {
+		return coolDownEffect;
 	}
+	public long getStartTimeEffect() {
+		return startTimeEffect;
+	}
+	public void setStartTimeEffect(long startTimeEffect) {
+		this.startTimeEffect = startTimeEffect;
+	}
+
+
 }
