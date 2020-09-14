@@ -11,6 +11,7 @@ public class SpeedProjectileBall extends ItemBall {
 	/** Constructeur pour creer un item lors du jeu */
 	public SpeedProjectileBall(int x, int y, int width, int height) {
 		super(x, y, width, height);
+		this.hasLongEffect = true;
 		this.colorItem = Color.magenta;
 	}
 

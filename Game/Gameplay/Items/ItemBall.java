@@ -20,6 +20,8 @@ public class ItemBall extends Entity {
 	/** Image de l'Item */
 	private transient Image imageItem = null;
 
+	/**true si l'effet est un effet long (qui ne modifie pas des stats immediates) */
+	protected transient boolean hasLongEffect;
 
 	/** Constructeur pour creer un item lors du jeu */
 	public ItemBall(int x, int y, int width, int height) {
@@ -54,5 +56,7 @@ public class ItemBall extends Entity {
 	public Image getImageItem() {
 		return imageItem;
 	}
-
+	public boolean getHasLongEffect() {
+		return hasLongEffect;
+	}
 }

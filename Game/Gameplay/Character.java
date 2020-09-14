@@ -795,7 +795,11 @@ public class Character extends Entity {
 					// renvoie true si le grab touche un item
 					if (grabSpell.checkItemCollision(itemBall.x, itemBall.y, itemBall.width)) {
 						itemBall.effects(this);
-						caughtItemBalls.add(itemBall);
+
+						// Si l'effet n'est pas instantane, si il est long, on l'ajoute a lla liste des items attrapes
+						if (itemBall.getHasLongEffect()) {
+							caughtItemBalls.add(itemBall);
+						}
 						itemBalls.removeBall(itemBall);
 					}
 				}
