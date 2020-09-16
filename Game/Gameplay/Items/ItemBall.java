@@ -36,6 +36,19 @@ public class ItemBall extends Entity {
 	/** Effets qu'applique cet Item, cette methode sera Override pour chaque Item */
 	public void effects(Character character) {}
 
+	/** Reinitialise les stats modifiees par les effets, cette methode sera Override pour chaque Item */
+	public void resetEffects(Character character) {}
+
+
+	/** Verifie si le cooldown de l'effet est termine, true si le coolDown est finit */
+	public boolean isCoolDownfinished() {
+		boolean finished = false;
+		if (System.currentTimeMillis() - startTimeEffect >= coolDownEffect) {
+			finished = true;
+		}
+		return finished;
+	}
+
 
 	/** Affiche l'item */
 	public void drawItem(Graphics g, GraphicMainConstants MC, GraphicItemConstants IC) {

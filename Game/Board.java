@@ -50,6 +50,9 @@ public class Board implements Serializable {
 		stretchGrab();
 		checkGrabCollision();
 
+		// Effets
+		checkPlayersEffects();
+
 		// Items
 		createItems();
 		moveItems();
@@ -126,6 +129,13 @@ public class Board implements Serializable {
 	public void checkGrabCollision() {
 		characterRed.checkGrabCollision(itemBalls);
 		characterBlue.checkGrabCollision(itemBalls);
+	}
+
+
+	/** Verifie les effets que les items ont appliques aux joueurs */
+	public void checkPlayersEffects() {
+		characterRed.checkItemsEffects();
+		characterBlue.checkItemsEffects();
 	}
 
 

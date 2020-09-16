@@ -796,10 +796,11 @@ public class Character extends Entity {
 					if (grabSpell.checkItemCollision(itemBall.x, itemBall.y, itemBall.width)) {
 						itemBall.effects(this);
 
-						// Si l'effet n'est pas instantane, si il est long, on l'ajoute a lla liste des items attrapes
+						// Si l'effet n'est pas instantane, si il est long, on l'ajoute a la liste des items attrapes
 						if (itemBall.getCoolDownEffect() != 0) {
-							caughtItemBalls.add(itemBall);
-							itemBall.setStartTimeEffect(System.currentTimeMillis());
+
+							// Ajoute l'effet a la liste
+							addEffectToList(itemBall);
 						}
 						itemBalls.removeBall(itemBall);
 					}
@@ -808,6 +809,48 @@ public class Character extends Entity {
 			}
 		}
 
+	}
+
+
+	/**Ajoute l'effet attrape a la liste ou ralonge l'effet si celui ci est deja present */
+	public void addEffectToList(ItemBall itemBall) {
+		int i=0;
+		boolean isFound = false;
+		ItemBall cib; // caughtItemBall
+
+		while (i < caughtItemBalls.size() && isFound == false) {
+			cib = caughtItemBalls.get(i);
+
+			// le perso a deja cet effet
+			if (cib.getClass() == itemBall.getClass()) {
+				isFound = true;
+				itemBall = cib;
+			}
+
+			i++;
+		}
+
+		// On ajoute l'effet a la liste si on ne lavait pas deja
+		if (isFound == false) {
+			caughtItemBalls.add(itemBall);
+		}
+		// On reinitialise le coolDown de cet effet
+		itemBall.setStartTimeEffect(System.currentTimeMillis());
+
+	}
+
+
+	/** Verifie les effets que le personnage possede pour les arreter */
+	public void checkItemsEffects() {
+		ItemBall cib; //caughtItemBall
+		for (int i=0; i<caughtItemBalls.size(); i++) {
+			cib = caughtItemBalls.get(i);
+			//Si le cooldown de l'effet est termine, on supprime l'effet
+			if (cib.isCoolDownfinished()) {
+				cib.resetEffects(this);
+				caughtItemBalls.remove(i);
+			}
+		}
 	}
 
 
