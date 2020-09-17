@@ -36,8 +36,6 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 
 	/**CharacterConstants Graphiques*/
 	private GraphicCharacterConstants characterConstants;
-	/**ProjectileConstants Graphiques*/
-	private GraphicProjectileConstants projectileConstants;
 	/**ItemConstants Graphiques*/
 	private GraphicItemConstants itemConstants;
 	/**HUDConstants Graphiques*/
@@ -65,7 +63,6 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 		mainConstants = new GraphicMainConstants(new GraphicMainConstants());
 
 		characterConstants = new GraphicCharacterConstants(new GraphicCharacterConstants());
-		projectileConstants = new GraphicProjectileConstants(new GraphicProjectileConstants());
 		itemConstants = new GraphicItemConstants(new GraphicItemConstants(mainConstants.getReal().getMaxX(), mainConstants.getReal().getMaxY()));
 		HUDConstants = new GraphicHUDConstants(new GraphicHUDConstants());
 		grabConstants = new GraphicGrabConstants(new GraphicGrabConstants());
@@ -110,8 +107,8 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 		board.getCharacterBlue().drawGrab(g, mainConstants, grabConstants);
 
 		// Affiche les projectiles
-		board.getCharacterRed().drawProjectiles(g, mainConstants, projectileConstants);
-		board.getCharacterBlue().drawProjectiles(g, mainConstants, projectileConstants);
+		board.getCharacterRed().drawProjectiles(g, mainConstants);
+		board.getCharacterBlue().drawProjectiles(g, mainConstants);
 
 		// // Affiche la vie des joueurs
 		hudCharacter.displayHUD(g, mainConstants, HUDConstants, board.getCharacterRed(), board.getCharacterBlue());
@@ -128,7 +125,6 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 			double oneUnityHeight = mainConstants.getOneUnityHeight();
 
 			characterConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
-			projectileConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 			itemConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 			HUDConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
 			grabConstants.updateConstantGraphicAttributes(oneUnityWidth, oneUnityHeight);
@@ -202,9 +198,6 @@ public class BoardGraphism extends JPanel implements TypeOfGameConstants {
 	}
 	public GraphicCharacterConstants getCharacterConstants() {
 		return characterConstants;
-	}
-	public GraphicProjectileConstants getProjectileConstants() {
-		return projectileConstants;
 	}
 	public GraphicItemConstants getItemConstants() {
 		return itemConstants;

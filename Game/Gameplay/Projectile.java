@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
-import Game.ConstantsContainers.GraphicConstants.GraphicProjectileConstants;
 
 
 /**Class Projectile <p>
@@ -20,27 +19,24 @@ public class Projectile extends Entity {
 	/**Degats */
 	private transient int damage;
 
-	/**Le projectile est actif, si il touche sa cible il appliquera des degats et deviendra inactif */
-	private transient boolean isActive;
 
 	/**Couleur et image du projectile */
 	private Color colorProjectile = Color.orange;
 
 
 	/**Constructeur du projectile */
-	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int rangeX, int damage) {
-		super(x, y, speedX, speedY, accelX, accelY);
+	public Projectile(int x, int y, int speedX, int speedY, int accelX, int accelY, GraphicMainConstants MCReal, int radius, int rangeX, int damage) {
+		super(x, y, speedX, speedY, accelX, accelY, radius, radius);
 		this.initX = x;
 		this.rangeX = rangeX;
 		this.damage = damage;
-		this.isActive = true;
-		initGraphicAttributes(MCReal, PCReal);
+		initCollisionBorders(MCReal);
 	}
 
 
 	/**Constructeur pour un projectile horizontal */
-	public Projectile(int x, int y, int speedX, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, int range, int damage) {
-		this(x, y, speedX, 0, 0, 0, MCReal, PCReal, range, damage);
+	public Projectile(int x, int y, int speedX, GraphicMainConstants MCReal, int radius, int range, int damage) {
+		this(x, y, speedX, 0, 0, 0, MCReal, radius, range, damage);
 	}
 
 
@@ -57,20 +53,18 @@ public class Projectile extends Entity {
 
 
 	/**Dessine le projectile */
-	public void drawProjectile(Graphics g, GraphicMainConstants MC, GraphicProjectileConstants PC) {
+	public void drawProjectile(Graphics g, GraphicMainConstants MC) {
 		g.setColor(colorProjectile);
 		int x = (int)((double)(this.x - this.width / 2) * MC.getOneUnityWidth());
 		int y = (int)((double)(MC.getReal().getMaxY() - (this.y + this.height / 2)) * MC.getOneUnityHeight());
-		int width = PC.getProjectileWidth();
-		int height = PC.getProjectileHeight();
+		int width = (int)((double)this.width * MC.getOneUnityWidth());
+		int height = (int)((double)this.height * MC.getOneUnityHeight());
 		g.fillOval(x, y, width, height);
 	}
 
 
-	/**Initialise les champs graphiques */
-	public void initGraphicAttributes(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal) {
-		this.width = PCReal.getProjectileWidth();
-		this.height = PCReal.getProjectileHeight();
+	/**Initialise les bordures max du projectile */
+	public void initCollisionBorders(GraphicMainConstants MCReal) {
 
 		// Si le projectile va vers la droite
 		if (speedX > 0) {

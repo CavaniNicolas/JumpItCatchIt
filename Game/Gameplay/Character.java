@@ -7,7 +7,6 @@ import Game.ConstantsContainers.GraphicConstants.GraphicMainConstants;
 import Game.ConstantsContainers.GameplayConstants.GameplayCharacterConstants;
 import Game.ConstantsContainers.GraphicConstants.GraphicCharacterConstants;
 import Game.ConstantsContainers.GraphicConstants.GraphicGrabConstants;
-import Game.ConstantsContainers.GraphicConstants.GraphicProjectileConstants;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -77,7 +76,9 @@ public class Character extends Entity {
 	private transient int rangeProjectile;
 	/** Degats des projectiles */
 	private transient int damageProjectile;
-	/** Couleur des projectiles */
+	/** Rayon des projectiles*/
+	private transient int radiusProjectile;
+
 
 	/** Cool Down pour lancer un projectile (en milli secondes) */
 	private transient long coolDownProjectile;
@@ -620,15 +621,15 @@ public class Character extends Entity {
 
 
 	/**Verifie et Lance les actions a effectuer (grab shield shoot push) */
-	public void checkActions(Character otherCharacter, GraphicMainConstants MCReal, GraphicProjectileConstants PCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
-		checkShoot(MCReal, PCReal);
+	public void checkActions(Character otherCharacter, GraphicMainConstants MCReal, GraphicGrabConstants GCReal, GraphicCharacterConstants CCReal) {
+		checkShoot(MCReal);
 		checkPush(otherCharacter);
 		checkGrab(MCReal, GCReal, CCReal);
 	}
 
 
 	/** Creer une entite Projectile */
-	public void checkShoot(GraphicMainConstants MCReal, GraphicProjectileConstants PCReal) {
+	public void checkShoot(GraphicMainConstants MCReal) {
 
 		/**Si on appuie sur Shoot et qu'on peut shoot */
 		if (inputActions.getShootPushPressed() && actionBooleans.canShoot) {
@@ -636,11 +637,11 @@ public class Character extends Entity {
 			// Tire vers la droite
 			if (isOnLeftSide) {
 				projectiles.add(new Projectile(x + (this.width / 2), y + (this.height / 2), speedProjectile,
-									MCReal, PCReal, rangeProjectile, damageProjectile) );
+									MCReal, radiusProjectile, rangeProjectile, damageProjectile) );
 			// Tire vers la gauche
 			} else {
 				projectiles.add(new Projectile(x - (this.width) / 2, y + (this.height / 2), - speedProjectile,
-									MCReal, PCReal, rangeProjectile, damageProjectile) );
+									MCReal, radiusProjectile, rangeProjectile, damageProjectile) );
 			}
 
 			// On ne peut plus shoot tout de suite
@@ -877,6 +878,7 @@ public class Character extends Entity {
 		this.rangeProjectile = GameCC.getRangeProjectile();
 		this.damageProjectile = GameCC.getDamageProjectile();
 		this.coolDownProjectile = GameCC.getCoolDownProjectile();
+		this.radiusProjectile = GameCC.getRadiusProjectile();
 
 		// GameplayConstants pour le Push
 		this.pushStrength = GameCC.getPushStrength();
@@ -905,9 +907,9 @@ public class Character extends Entity {
 
 
 	/**Dessine les projectiles de ce personnage */
-	public void drawProjectiles(Graphics g, GraphicMainConstants MC, GraphicProjectileConstants PC) {
+	public void drawProjectiles(Graphics g, GraphicMainConstants MC) {
 		for (int i=0; i<projectiles.size(); i++) {
-			projectiles.get(i).drawProjectile(g, MC, PC);
+			projectiles.get(i).drawProjectile(g, MC);
 		}
 	}
 
@@ -942,6 +944,12 @@ public class Character extends Entity {
 	}
 	public void setSpeedProjectile(int speedProjectile) {
 		this.speedProjectile = speedProjectile;
+	}
+	public int getRadiusProjectile() {
+		return radiusProjectile;
+	}
+	public void setRadiusProjectile(int radiusProjectile) {
+		this.radiusProjectile = radiusProjectile;
 	}
 	public ArrayList<ItemBall> getCaughtItemBalls() {
 		return caughtItemBalls;

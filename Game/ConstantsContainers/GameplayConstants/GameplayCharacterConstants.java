@@ -45,6 +45,8 @@ public class GameplayCharacterConstants {
 	private int rangeProjectile = 12_000;
 	/** Degats des projectiles */
 	private int damageProjectile = 1;
+	/** Rayon des projectiles */
+	private int radiusProjectile = 1_000;
 	/** Cool Down pour lancer un projectile (en milli secondes) */
 	private transient long coolDownProjectile = 1_500;
 
@@ -112,6 +114,9 @@ public class GameplayCharacterConstants {
 	}
 	public int getDamageProjectile() {
 		return damageProjectile;
+	}
+	public int getRadiusProjectile() {
+		return radiusProjectile;
 	}
 	public long getCoolDownProjectile() {
 		return coolDownProjectile;
