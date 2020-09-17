@@ -19,4 +19,9 @@ public class PlusOneBall extends ItemBall {
 	@Override
 	public void effects(Character character) {}
 
+
+	@Override
+	public void resetEffects(Character character) {}
+
+
 }

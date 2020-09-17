@@ -12,7 +12,7 @@ import java.awt.Image;
 /** Class ItemBall <p>
  * Item du jeu <p>
  * La position (x,y) de ItemBall est au centre du cercle */
-public class ItemBall extends Entity {
+public abstract class ItemBall extends Entity {
 	private static final long serialVersionUID = 4045767608716809819L;
 
 	/** Couleur de l'Item, chaque item a une couleur par defaut */
@@ -34,10 +34,10 @@ public class ItemBall extends Entity {
 
 
 	/** Effets qu'applique cet Item, cette methode sera Override pour chaque Item */
-	public void effects(Character character) {}
+	public abstract void effects(Character character);
 
 	/** Reinitialise les stats modifiees par les effets, cette methode sera Override pour chaque Item */
-	public void resetEffects(Character character) {}
+	public abstract void resetEffects(Character character);
 
 
 	/** Verifie si le cooldown de l'effet est termine, true si le coolDown est finit */

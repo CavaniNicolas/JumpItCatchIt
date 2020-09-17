@@ -824,7 +824,7 @@ public class Character extends Entity {
 			// le perso a deja cet effet
 			if (cib.getClass() == itemBall.getClass()) {
 				isFound = true;
-				itemBall = cib;
+				itemBall = cib; // important pour modifier le cooldown de l'effet deja en cours et non d'un item que l'on ajoute pas en double a la liste
 			}
 
 			i++;
@@ -931,8 +931,17 @@ public class Character extends Entity {
 	public int getLivesMax() {
 		return GameCC.getLivesMax();
 	}
+	public GameplayCharacterConstants getGameCC() {
+		return GameCC;
+	}
 	public void setLives(int lives) {
 		this.lives = lives;
+	}
+	public int getSpeedProjectile() {
+		return speedProjectile;
+	}
+	public void setSpeedProjectile(int speedProjectile) {
+		this.speedProjectile = speedProjectile;
 	}
 	public ArrayList<ItemBall> getCaughtItemBalls() {
 		return caughtItemBalls;
