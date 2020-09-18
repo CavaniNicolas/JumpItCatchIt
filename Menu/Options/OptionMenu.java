@@ -87,8 +87,10 @@ public class OptionMenu extends Menu {
 		/** go back to the main menu */
 		buttonPanel.addNewButton("CANCEL AND QUIT", new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { 
-				menuInteraction(menu);
+				backgroundPanel.removeMenu(saveQuitOptionsPanel);
+				//menuInteraction(menu);
 				setOptions();
+				//moveToBackground(false);
 			}
 		});
 
@@ -123,6 +125,7 @@ public class OptionMenu extends Menu {
 	public void backInteraction() {
 		if (!optionContentMenu.checkChanges()) {
 			backgroundPanel.addMenu(saveQuitOptionsPanel, true);
+			this.moveToBackground(true);
 		} else {
 			backgroundPanel.addMenu(menu, false);
 		}
@@ -136,8 +139,12 @@ public class OptionMenu extends Menu {
 			if (quit) {
 				backgroundPanel.addMenu(menu, false);
 			}
+			this.moveToBackground(false);
+			saveQuitOptionsPanel.moveToBackground(false);
 		} else {
 			backgroundPanel.addMenu(saveFailedPanel, true);
+			this.moveToBackground(true);
+			saveQuitOptionsPanel.moveToBackground(true);
 		}
 	}
 

@@ -14,9 +14,9 @@ public class GeneralPanel extends JPanel {
 		this.frame = frame;
 
 		menuPanel = new JPanel();
-		menuPanel.setOpaque(false);
 		menuPanel.setLayout(new OverlayLayout(menuPanel));
-		menuPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//menuPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		menuPanel.setOpaque(false);
 
 		this.add(Box.createVerticalGlue());
 		this.add(menuPanel);
@@ -27,14 +27,22 @@ public class GeneralPanel extends JPanel {
 	public void addMenu(Menu menu, Boolean overlaying) {
 		//on top of the others 
 		if (overlaying) {
-			Component[] components = menuPanel.getComponents();
-			menuPanel.removeAll();
+			/*Component[] components = menuPanel.getComponents();
+			for (Component component : components) {
+				component.setFocusable(false);
+			}*/
+
+			menuPanel.add(menu);
+			menu.setVisible(true);
 			menu.setFocusable(true);
+
+			/*Component[] components = menuPanel.getComponents();
+			menuPanel.removeAll();
 			menuPanel.add(menu);
 			for (Component component : components) {
 				component.setFocusable(false);
 				menuPanel.add(component);
-			}
+			}*/
 		//replacing the others
 		} else {
 			menuPanel.removeAll();
@@ -45,11 +53,6 @@ public class GeneralPanel extends JPanel {
 
 	public void removeMenu(Menu menu) {
 		menuPanel.remove(menu);
-		Component[] components = menuPanel.getComponents();
-		menuPanel.removeAll();
-		for (Component component : components) {
-			menuPanel.add(component);
-		}
 		frame.setVisible(true);
 	}
 

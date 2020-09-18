@@ -22,6 +22,7 @@ public class Menu extends JPanel {
 	protected BackgroundPanel backgroundPanel;
 	protected Boolean removesAllPanel = false;
 	protected Menu menu;
+	private MouseInputAdapter noActionMouseListener = new MouseInputAdapter() {};
 
 	protected BackMenuInteraction backMenuInteraction;
 
@@ -108,14 +109,16 @@ public class Menu extends JPanel {
 		}
 	}
 
-	/*
+	/** removes the mouse listeners so that the background panel can't be clicked
+	 * <p> moves to background if true, foreground if false
+	 */
 	public void moveToBackground(Boolean toBackground) {
 		if (toBackground) {
-			this.addMouseListener(new MouseInputAdapter() {});
+			this.addMouseListener(noActionMouseListener);
 		} else {
-			this.removeKeyListener(this);
+			this.removeMouseListener(noActionMouseListener);
 		}
-	} */
+	} 
 
 	/** orders the JPanel vertically (true) or horizontally */
 	public void setOrder(Boolean vertical) {
