@@ -115,7 +115,10 @@ public class ItemBalls implements Serializable {
 
 		} else if (newItemInit.getName() == "RadiusProjectileBall") {
 			newItem = new RadiusProjectileBall(x, y, width, height);
-			
+
+		} else if (newItemInit.getName() == "CoolDownProjectileBall") {
+			newItem = new CoolDownProjectileBall(x, y, width, height);
+
 		} else if (newItemInit.getName() == "HealBall") {
 			newItem = new HealBall(x, y, width, height);
 			
@@ -201,6 +204,11 @@ public class ItemBalls implements Serializable {
 		proba = 30;
 		addedProbas += proba;
 		allExistingBalls.add(new ItemBallInit("RadiusProjectileBall", 2, proba, addedProbas, null));
+
+		// CoolDownProjectileBall
+		proba = 40;
+		addedProbas += proba;
+		allExistingBalls.add(new ItemBallInit("CoolDownProjectileBall", 2, proba, addedProbas, null));
 
 		// HealBall
 		proba = 60;

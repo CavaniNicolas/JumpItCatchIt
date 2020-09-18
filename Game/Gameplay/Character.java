@@ -951,6 +951,12 @@ public class Character extends Entity {
 	public void setRadiusProjectile(int radiusProjectile) {
 		this.radiusProjectile = radiusProjectile;
 	}
+	public long getCoolDownProjectile() {
+		return coolDownProjectile;
+	}
+	public void setCoolDownProjectile(long coolDownProjectile) {
+		this.coolDownProjectile = coolDownProjectile;
+	}
 	public ArrayList<ItemBall> getCaughtItemBalls() {
 		return caughtItemBalls;
 	}
