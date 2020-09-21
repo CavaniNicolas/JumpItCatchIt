@@ -65,8 +65,8 @@ public class Character extends Entity {
 	/** Booleen, true si on est en train detre pousse vers la gauche, false vers la droite
 	 * Attention, a remplacer par un int code ou une enum, (peut etre le meme de direction que ceux des projectiles) */
 	private transient boolean isBeingPushedLeft = true; // A REVOIR
-	/** Booleen, true si on est invulnerable au Push */
-	private transient boolean immuneToPush = false;
+	/** Booleen, true si on est invulnerable (au Shoot, au Push) */
+	private transient boolean isImmuned = false;
 
 	/** Projectiles du joueur */
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
@@ -298,7 +298,7 @@ public class Character extends Entity {
 		// On peut le pousser (si le coolDown et la distance entre les persos l'autorisent et si l'adversaire n'est pas immunise)
 		if (actionBooleans.canCanPush &&
 			(Math.abs(x - otherCharacter.x) <= GameCC.getRangePush()) && areOnSameY &&
-			otherCharacter.immuneToPush == false) {
+			otherCharacter.isImmuned == false) {
 			actionBooleans.canPush = true;
 		} else {
 			actionBooleans.canPush = false;
@@ -738,6 +738,10 @@ public class Character extends Entity {
 
 			// Si les projectiles de ce personnage touchent l'adversaire
 			if (proj.checkCharacterCollision(otherCharacter)) {
+				// Si on est pas immunise, on est blesse
+				if (isImmuned == false) {
+					lives -= proj.getDamage();
+				}
 				// Il faut supprimer ce projectile
 				projectiles.remove(i);
 			}
@@ -956,6 +960,9 @@ public class Character extends Entity {
 	}
 	public void setCoolDownProjectile(long coolDownProjectile) {
 		this.coolDownProjectile = coolDownProjectile;
+	}
+	public void setImmune(Boolean isImmuned) {
+		this.isImmuned = isImmuned;
 	}
 	public ArrayList<ItemBall> getCaughtItemBalls() {
 		return caughtItemBalls;

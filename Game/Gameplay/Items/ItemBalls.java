@@ -124,9 +124,13 @@ public class ItemBalls implements Serializable {
 			
 		} else if (newItemInit.getName() == "ShieldBreakBall") {
 			newItem = new ShieldBreakBall(x, y, width, height);
+		
+		} else if (newItemInit.getName() == "ImmuneBall") {
+			newItem = new ImmuneBall(x, y, width, height);
+		}
 
 		// Si aucun type ne correspond, aucun Item n'est cree, il faut enlever 1 au nombre d'instances en jeu du type d'item
-		} else {
+		else {
 			System.out.println("ItemBalls.createNewItemBall() : Erreur, le nom du type de l'Item cree ne correspond a aucune Class d'Item lors de la creation de : '" + newItemInit.getName() + "'");
 			newItemInit.removeOneNbItem();
 		}
@@ -219,6 +223,11 @@ public class ItemBalls implements Serializable {
 		proba = 30;
 		addedProbas += proba;
 		allExistingBalls.add(new ItemBallInit("ShieldBreakBall", 2, proba, addedProbas, null));
+
+		// ImmuneBall
+		proba = 20;
+		addedProbas += proba;
+		allExistingBalls.add(new ItemBallInit("ImmuneBall", 1, proba, addedProbas, null));
 
 		sumAllProbas = addedProbas;
 	}
