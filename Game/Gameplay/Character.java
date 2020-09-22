@@ -739,8 +739,8 @@ public class Character extends Entity {
 			// Si les projectiles de ce personnage touchent l'adversaire
 			if (proj.checkCharacterCollision(otherCharacter)) {
 				// Si on est pas immunise, on est blesse
-				if (isImmuned == false) {
-					lives -= proj.getDamage();
+				if (otherCharacter.isImmuned == false) {
+					otherCharacter.lives -= proj.getDamage();
 				}
 				// Il faut supprimer ce projectile
 				projectiles.remove(i);
