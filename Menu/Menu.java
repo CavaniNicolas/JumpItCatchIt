@@ -2,7 +2,9 @@ package Menu;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -75,6 +77,23 @@ public class Menu extends JPanel {
 			}
 		});
 		this.add(button);
+	}
+
+	public void addWaitingLabel(String label) {
+		JLabel waiting = new JLabel(label + " " + "...");
+
+		//timer to display moving dots
+		Timer timer = new Timer(500, new ActionListener() {
+			String baseString = "...   ";
+			int beginning = 0;
+			public void actionPerformed(ActionEvent arg0) {
+				waiting.setText(label + " " + (baseString + baseString).substring(beginning, beginning + 3));
+				beginning = (baseString.length() + beginning - 1)% baseString.length();
+			}
+		});
+		timer.start();
+
+		this.add(waiting);
 	}
 
 	/** changes the default backing interaction */

@@ -5,14 +5,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.ArrayList;
 
 public class ExtendedSocketUDP {
-	private int ID;
-	private Boolean ready = false;
-	private DatagramSocket socket;
-	private InetAddress destAddress;
-	private int destPort;
+	private Boolean acceptingConnection;
+	private int currentPlayerNumber = 0;
+	private int maxPlayerNumber;
 
+	private DatagramSocket socket;
+	private ArrayList<DestinationMachine> destMachine = new ArrayList<DestinationMachine>();
+	private ArrayList<PlayerState> playerStates;
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream oos;
 
@@ -20,66 +22,97 @@ public class ExtendedSocketUDP {
 	private ObjectInputStream ois;
 
 	private final int bufferSize = 1000;
+	byte[] buffer = new byte[bufferSize];
 
 	private final int port = 5000;
 
-	public ExtendedSocketUDP(int ID, boolean isServer) {
-		this.ID = ID;
+	/** server side socket */
+	public ExtendedSocketUDP(int maxPlayerNumber, ArrayList<PlayerState> playerStates) {
+		this.maxPlayerNumber = maxPlayerNumber;
+		this.playerStates = playerStates;
+		acceptingConnection = true;
+		initializeStreams(true);
+	}
 
+	/** client side socket */
+	public ExtendedSocketUDP() {
+		acceptingConnection = false;
+	}
+
+	public Boolean initializeConnection(String destAddress, int destPort) {
 		try {
-			if (isServer) {
-				this.socket = new DatagramSocket(port);
-			} else {
-				this.socket = new DatagramSocket();
-			}
+			this.destMachine.add(new DestinationMachine(InetAddress.getByName(destAddress), destPort, 0));
+			return true;
 		} catch (Exception e) {
-
+			return false;
 		}
-		
-		this.destAddress = this.socket.getInetAddress();
-		this.destPort = this.socket.getPort();
-		initializeStreams();
-
-		System.out.println(this.socket.getInetAddress().getHostAddress());
 	}
 
 	/** creates the output and input streams */
-	public void initializeStreams() {
-		try {
-			baos = new ByteArrayOutputStream();
-			oos = new ObjectOutputStream(baos);
-			ready = true;
+	public Boolean initializeStreams(Boolean isServer) {
+		try { 
+			if (isServer) {
+				socket = new DatagramSocket(port);
+			} else {
+				socket = new DatagramSocket();
+			}
+
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
 	/** reads object from the stream, returns null if an exception occurs */
-	public Object readObject() {
+	public IdentifiedObject readObject() {
 		try {
-			byte[] buffer = new byte[bufferSize];
-			DatagramPacket packetReceived = new DatagramPacket(buffer,bufferSize); 
+			DatagramPacket packetReceived = new DatagramPacket(buffer, bufferSize); 
 			socket.receive(packetReceived); 
 
 			bais = new ByteArrayInputStream(buffer);
 			ois = new ObjectInputStream(bais);
+
+			if (acceptingConnection) {
+			 	if (currentPlayerNumber < maxPlayerNumber) {
+					DestinationMachine newDestMachine = new DestinationMachine(socket.getInetAddress(), socket.getPort(), currentPlayerNumber);
+					if (!destMachine.contains(newDestMachine)) {
+						destMachine.add(newDestMachine);
+						playerStates.add(new PlayerState(currentPlayerNumber));
+						currentPlayerNumber++;
+					} 
+				} else {
+					acceptingConnection = false;
+				}
+			}
 			
-			return (Object)ois.readObject();
+			for (DestinationMachine destinationMachine : destMachine) {
+				if (destinationMachine.equals(new DestinationMachine(socket.getInetAddress(), socket.getPort(), 0))) {
+					return new IdentifiedObject(destinationMachine.getId(), (Object)ois.readObject());
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
+	}
+
+	public Boolean outputObject(Object obj) {
+		return outputObject(obj, 0);
 	}
 
 	/** return true if the object has been sent */
-	public Boolean outputObject(Object obj) {
+	public Boolean outputObject(Object obj, int id) {
 		try {
-			oos.writeObject(obj);
+			baos = new ByteArrayOutputStream();
+			oos = new ObjectOutputStream(baos);
+
+			oos.writeUnshared(obj);
 			oos.flush();
 			// get the byte array of the object
 			byte[] buf = baos.toByteArray();
-            DatagramPacket packetSent = new DatagramPacket(buf, buf.length , destAddress, destPort);
-            socket.send(packetSent);
+			DatagramPacket packetSent = new DatagramPacket(buf, buf.length , destMachine.get(id).getDestAddress(), destMachine.get(id).getDestPort());
+			socket.send(packetSent);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,21 +121,22 @@ public class ExtendedSocketUDP {
 		}
 	}
 
-	/** ends the connection, closes the socket */
+	/** return true if the object has been sent */
+	public void outputObjectToAll(Object obj) {
+		for (DestinationMachine dMachine : destMachine) {
+			outputObject(obj, dMachine.getId());
+		}
+	}
+
+	/**closes the socket */
 	public void endConnection() {
 		try {
 			socket.close(); 
+			destMachine.clear();
+			playerStates.clear();
+			currentPlayerNumber = 0;
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
 	}
-
-	public int getID() {
-		return ID;
-	}
-
-	public Boolean getReady() {
-		return ready;
-	}
 }
-

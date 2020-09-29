@@ -32,7 +32,7 @@ public class BoardServer implements Runnable {
 	public void run() {		
 		board = new Board();
 		board.setBoardGraphism(new BoardGraphism(board));
-		gameLoop = new GameLoop(this.board, this);
+		//gameLoop = new GameLoop(this.board, this);
 
 		//start online server"
         try { 

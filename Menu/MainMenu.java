@@ -3,9 +3,10 @@ package Menu;
 import Game.Board;
 import Game.BoardGraphism;
 import Game.Network.BoardClient;
+import Game.Network.BoardClientUDP;
 import Game.Network.BoardIO;
 import Game.Network.BoardLocal;
-import Game.Network.BoardServer;
+import Game.Network.BoardServerUDP;
 import Menu.Options.KeyOptionMenu;
 import Menu.Options.OptionMenu;
 
@@ -21,7 +22,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 
 public class MainMenu {
 	private static final long serialVersionUID = -3619542431333472213L;
@@ -29,7 +29,7 @@ public class MainMenu {
 	/** Contient le jeu */
 	private Board board;
 	private BoardIO boardIO;
-	private BoardServer boardServer;
+	private BoardServerUDP boardServerUDP;
 	
 	//main menu panels
 	private Menu mainMenuPanel;
@@ -99,20 +99,9 @@ public class MainMenu {
 		displayGame();
 	}
 
-	/** starts the online board and sets the frame to display it */
+	/** creates a server and joins it */
 	public void startOnlineGame() {
-		boardServer = new BoardServer();
-		Thread threadServer = new Thread(boardServer);
-		threadServer.start();
-
-		//sleep to avoid joining a game before the server was started
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			e.printStackTrace();
-		}
-
+		boardServerUDP = new BoardServerUDP();
 		joinOnlineGame("127.0.0.1");
 	}
 
@@ -125,9 +114,7 @@ public class MainMenu {
 		boardGraphism.setTypeOfGame(BoardGraphism.ONLINE_GAME);
 
 		//start a client on a thread
-		boardIO = new BoardClient(boardGraphism, address, this, frame);
-		Thread threadClient = new Thread(boardIO);
-		threadClient.start();
+		boardIO = new BoardClientUDP(boardGraphism, address, this, frame);
 
 		//add the key listeners
 		boardIO.handleKeyListeners(true);
@@ -287,22 +274,7 @@ public class MainMenu {
 		});
 
 		createMultiplayerGamePanel.add(addressPanel);
-
-		//join an existing game
-		JLabel waiting = new JLabel("Waiting for your great enemy ...");
-	
-		//timer to display moving dots
-		Timer timer = new Timer(500, new ActionListener() {
-			String baseString = "...   ";
-			int beginning = 0;
-			public void actionPerformed(ActionEvent arg0) {
-				waiting.setText("Waiting for your great enemy " + (baseString + baseString).substring(beginning, beginning + 3));
-				beginning = (baseString.length() + beginning - 1)% baseString.length();
-			}
-		});
-		timer.start();
-
-		createMultiplayerGamePanel.add(waiting);
+		createMultiplayerGamePanel.addWaitingLabel("Waiting for your great enemy");
 
 		Menu buttonPanel = new Menu(backgroundPanel, multiplayerPanel);
 
@@ -311,8 +283,7 @@ public class MainMenu {
 
 		buttonPanel.setBackInteraction(new BackMenuInteraction(){
 			public void backInteraction() {
-				timer.stop();
-				boardServer.stopServer();
+				boardServerUDP.stopServer();
 			}
 		});
 
@@ -408,20 +379,7 @@ public class MainMenu {
 
 	public void createConnectingPanel() {
 		connectingPanel.displayBorder("CONNECTION");
-		JLabel info = new JLabel(" Connecting ... ");
-
-		//timer to display moving dots
-		Timer timer = new Timer(500, new ActionListener() {
-			String baseString = "...   ";
-			int beginning = 0;
-			public void actionPerformed(ActionEvent arg0) {
-				info.setText(" Connecting " + (baseString + baseString).substring(beginning, beginning + 3) + " ");
-				beginning = (baseString.length() + beginning - 1)% baseString.length();
-			}
-		});
-		timer.start();
-
-		connectingPanel.add(info);
+		connectingPanel.addWaitingLabel("Connecting");
 		connectingPanel.addNewButton("BACK");
 
 		connectingPanel.setBackInteraction(new BackMenuInteraction(){
@@ -516,7 +474,5 @@ public class MainMenu {
 				}
 			}
 		}
-
 	}
-
 }

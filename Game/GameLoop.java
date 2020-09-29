@@ -4,25 +4,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-import Game.Network.BoardServer;
+import Game.Network.BoardServerUDP;
 
 /** the main loop of the game */
 public class GameLoop {
 	private final int updateEveryDt = 12;
 	protected Board board;
 	private Timer gamePlayTimer;
-	private BoardServer boardServer;
+	private BoardServerUDP boardServerUDP;
 	private GamePlayTimerListener gamePlayTimerListener = new GamePlayTimerListener();
 	private Boolean running = false;
 
 	public GameLoop(Board board) {
 		this.board = board;
-		this.boardServer = null;
+		this.boardServerUDP = null;
 	}
 
-	public GameLoop(Board board, BoardServer boardServer) {
+	public GameLoop(Board board, BoardServerUDP boardServerUDP) {
 		this.board = board;
-		this.boardServer = boardServer;
+		this.boardServerUDP = boardServerUDP;
 	}
 
 	/** changes the pause state (true = pausing) */
@@ -47,8 +47,8 @@ public class GameLoop {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			board.updateAll();
-			if (boardServer != null) {
-				boardServer.outputObjectToAll(board);
+			if (boardServerUDP != null) {
+				boardServerUDP.getExtendedSocketUDP().outputObjectToAll(board);
 			}
 		}
 	}
