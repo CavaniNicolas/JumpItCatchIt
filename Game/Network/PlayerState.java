@@ -1,7 +1,5 @@
 package Game.Network;
 
-import Game.InputActions;
-
 public class PlayerState {
 	private Boolean connected;
 	private Boolean restartGame;
@@ -29,5 +27,9 @@ public class PlayerState {
 		if (str.equals("RESTART GAME")) {
 			restartGame = true;
 		}
+	}
+
+	public void setRestartGame(Boolean bool) {
+		restartGame = bool;
 	}
 }

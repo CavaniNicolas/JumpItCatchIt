@@ -28,13 +28,12 @@ public class BoardServerUDP {
 	public BoardServerUDP() {		
 		board = new Board();
 		board.setBoardGraphism(new BoardGraphism(board));
-		//gameLoop = new GameLoop(this.board, this);
+		gameLoop = new GameLoop(this.board, this);
 
 		//start online server"
-		extendedSocketUDP = new ExtendedSocketUDP(playerNumber, playerStates);
+		extendedSocketUDP = new ExtendedSocketUDP(playerNumber, playerStates, this);
 		Thread handleServer = new Thread(new HandleServer());
 		handleServer.start();
-		System.out.println("done");
 	} 
 
 	/** checks if all streams are alive and want to restart */
@@ -50,6 +49,7 @@ public class BoardServerUDP {
 	/** handles every object received */
 	public void handlePlayerInput() {
 		IdentifiedObject obj = extendedSocketUDP.readObject();
+		System.out.println(obj.getObj().getClass());
 		if (obj.getObj() instanceof InputActions) {
 			if (obj.getId() == 0) {
 				board.getCharacterRed().setInputActions((InputActions)obj.getObj());
@@ -57,11 +57,12 @@ public class BoardServerUDP {
 				board.getCharacterBlue().setInputActions((InputActions)obj.getObj());
 			}
 		} else if (obj.getObj() instanceof String) {
+			System.out.println(obj.getObj());
 			if (((String)obj.getObj()).equals("PING")) {
 				extendedSocketUDP.outputObject("PING", obj.getId());
 			} else if (((String)obj.getObj()).equals("LEAVING")) {
 				extendedSocketUDP.outputObjectToAll("PLAYER LEFT");
-				stopServer();		
+				stopServer();	
 			} else {
 				playerStates.get(obj.getId()).handleInput((String)obj.getObj());
 			}
@@ -84,7 +85,7 @@ public class BoardServerUDP {
 	}
  
 	/** loop keeping the server alive*/
-	public class HandleServer implements Runnable {
+	public class HandleServer extends Thread {
 		public void run() {
 			while (isRunning){
 				if (currentPlayerNumber != playerNumber) {
@@ -93,7 +94,9 @@ public class BoardServerUDP {
 				} else {
 					if (testAllStreams()) {
 						restartGame();
-						//set all restartGame var back to false
+						for (PlayerState playerState : playerStates) {
+							playerState.setRestartGame(false);
+						}
 					}
 				}
 			}
@@ -102,5 +105,9 @@ public class BoardServerUDP {
 			}
 			extendedSocketUDP.endConnection();
 		}
+	}
+
+	public void setCurrentPlayerNumber(int i) {
+		currentPlayerNumber = i;
 	}
 }

@@ -2,7 +2,6 @@ package Menu;
 
 import Game.Board;
 import Game.BoardGraphism;
-import Game.Network.BoardClient;
 import Game.Network.BoardClientUDP;
 import Game.Network.BoardIO;
 import Game.Network.BoardLocal;
@@ -102,10 +101,7 @@ public class MainMenu {
 	/** creates a server and joins it */
 	public void startOnlineGame() {
 		boardServerUDP = new BoardServerUDP();
-		System.out.println("here1");
 		joinOnlineGame("127.0.0.1");
-		System.out.println("here2");
-
 	}
 
 	/** starts the online board and sets the frame to display it */

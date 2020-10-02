@@ -37,4 +37,10 @@ public class DestinationMachine {
 	public Boolean equals(DestinationMachine destMachine) {
 		return destMachine.getDestAddress().equals(destAddress) && destMachine.getDestPort() == destPort;
 	}
+
+	@Override
+	public String toString() {
+		return "DestinationMachine [destAddress=" + destAddress + ", destPort=" + destPort + ", id=" + id + ", ready="
+				+ ready + "]";
+	}
 }

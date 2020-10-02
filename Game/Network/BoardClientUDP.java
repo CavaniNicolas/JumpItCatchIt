@@ -61,10 +61,8 @@ public class BoardClientUDP extends BoardIO {
         if (socket.initializeConnection(address, portNumber) && socket.initializeStreams(false)) {
             connected = true;
             outputObject("RESTART GAME");
-            System.out.println("1");
-            new Thread(new HandleServerInput());
-            System.out.println("2");
-
+            Thread input = new Thread(new HandleServerInput());
+            input.start();
             //togglePinging(true);
         } else {
             mainMenu.displayConnectionErrorPanel();
@@ -73,7 +71,7 @@ public class BoardClientUDP extends BoardIO {
     
     /** handles every object received */
     public class HandleServerInput extends Thread {
-        public HandleServerInput() {
+        public void run() {
             while (connected) {
                 Object obj = socket.readObject().getObj();
                 if (obj == null) {
@@ -81,6 +79,7 @@ public class BoardClientUDP extends BoardIO {
                     closeClient();
                     mainMenu.displayServerStoppedPanel();
                 } else if (obj instanceof String) {
+                    System.out.println(obj);
                     if (((String)obj).equals("GAME STARTED")) {
                         mainMenu.displayGame();
                         // gameLoop.togglePause(false);
@@ -131,7 +130,7 @@ public class BoardClientUDP extends BoardIO {
 
     /** tries outputting an object to the server, if it fails it displays a connection error */
     public void outputObject(Object obj) {
-        if (socket.outputObject(obj)) {
+        if (!socket.outputObject(obj)) {
             closeClient();
             mainMenu.displayConnectionErrorPanel();
         }

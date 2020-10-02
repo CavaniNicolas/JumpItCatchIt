@@ -18,18 +18,21 @@ public class ExtendedSocketUDP {
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream oos;
 
+	private BoardServerUDP boardServer;
+
 	private ByteArrayInputStream bais;
 	private ObjectInputStream ois;
 
-	private final int bufferSize = 1000;
+	private final int bufferSize = 10000;
 	byte[] buffer = new byte[bufferSize];
 
 	private final int port = 5000;
 
 	/** server side socket */
-	public ExtendedSocketUDP(int maxPlayerNumber, ArrayList<PlayerState> playerStates) {
+	public ExtendedSocketUDP(int maxPlayerNumber, ArrayList<PlayerState> playerStates, BoardServerUDP boardServer) {
 		this.maxPlayerNumber = maxPlayerNumber;
 		this.playerStates = playerStates;
+		this.boardServer = boardServer;
 		acceptingConnection = true;
 		initializeStreams(true);
 	}
@@ -75,11 +78,12 @@ public class ExtendedSocketUDP {
 
 			if (acceptingConnection) {
 			 	if (currentPlayerNumber < maxPlayerNumber) {
-					DestinationMachine newDestMachine = new DestinationMachine(socket.getInetAddress(), socket.getPort(), currentPlayerNumber);
+					DestinationMachine newDestMachine = new DestinationMachine(packetReceived.getAddress(), packetReceived.getPort(), currentPlayerNumber);
 					if (!destMachine.contains(newDestMachine)) {
 						destMachine.add(newDestMachine);
 						playerStates.add(new PlayerState(currentPlayerNumber));
 						currentPlayerNumber++;
+						boardServer.setCurrentPlayerNumber(currentPlayerNumber);
 					} 
 				} else {
 					acceptingConnection = false;
@@ -87,7 +91,7 @@ public class ExtendedSocketUDP {
 			}
 			
 			for (DestinationMachine destinationMachine : destMachine) {
-				if (destinationMachine.equals(new DestinationMachine(socket.getInetAddress(), socket.getPort(), 0))) {
+				if (destinationMachine.equals(new DestinationMachine(packetReceived.getAddress(), packetReceived.getPort(), 0))) {
 					return new IdentifiedObject(destinationMachine.getId(), (Object)ois.readObject());
 				}
 			}
