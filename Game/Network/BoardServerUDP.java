@@ -7,7 +7,7 @@ import Game.InputActions;
 
 import java.util.ArrayList;
 
-public class BoardServerUDP implements Runnable {
+public class BoardServerUDP {
 	//gameLoop
 	private GameLoop gameLoop;
 
@@ -25,15 +25,16 @@ public class BoardServerUDP implements Runnable {
 	private ExtendedSocketUDP extendedSocketUDP;
 	private ArrayList<PlayerState> playerStates = new ArrayList<PlayerState>();
 
-	public void run() {		
+	public BoardServerUDP() {		
 		board = new Board();
 		board.setBoardGraphism(new BoardGraphism(board));
 		//gameLoop = new GameLoop(this.board, this);
 
 		//start online server"
 		extendedSocketUDP = new ExtendedSocketUDP(playerNumber, playerStates);
-		new Thread(new HandleServer());
-		new Thread(new HandlePlayerInput());
+		Thread handleServer = new Thread(new HandleServer());
+		handleServer.start();
+		System.out.println("done");
 	} 
 
 	/** checks if all streams are alive and want to restart */
@@ -44,6 +45,27 @@ public class BoardServerUDP implements Runnable {
 			}
 		}
 		return true;
+	}
+
+	/** handles every object received */
+	public void handlePlayerInput() {
+		IdentifiedObject obj = extendedSocketUDP.readObject();
+		if (obj.getObj() instanceof InputActions) {
+			if (obj.getId() == 0) {
+				board.getCharacterRed().setInputActions((InputActions)obj.getObj());
+			} else {
+				board.getCharacterBlue().setInputActions((InputActions)obj.getObj());
+			}
+		} else if (obj.getObj() instanceof String) {
+			if (((String)obj.getObj()).equals("PING")) {
+				extendedSocketUDP.outputObject("PING", obj.getId());
+			} else if (((String)obj.getObj()).equals("LEAVING")) {
+				extendedSocketUDP.outputObjectToAll("PLAYER LEFT");
+				stopServer();		
+			} else {
+				playerStates.get(obj.getId()).handleInput((String)obj.getObj());
+			}
+		}
 	}
 
 	/** start game */
@@ -62,43 +84,23 @@ public class BoardServerUDP implements Runnable {
 	}
  
 	/** loop keeping the server alive*/
-	public class HandleServer extends Thread {
-		public HandleServer() {
-			while (isRunning == true){
-				//if all players are connected and want to restart
-				if (currentPlayerNumber == playerNumber && testAllStreams()) {
-					restartGame();
+	public class HandleServer implements Runnable {
+		public void run() {
+			while (isRunning){
+				if (currentPlayerNumber != playerNumber) {
+					//this serves as a connection
+					handlePlayerInput();
+				} else {
+					if (testAllStreams()) {
+						restartGame();
+						//set all restartGame var back to false
+					}
 				}
 			}
 			if (gameLoop.isRunning()) {
 				gameLoop.togglePause(true);
 			}
 			extendedSocketUDP.endConnection();
-		}
-	}
-
-	/** handles every object received */
-	public class HandlePlayerInput extends Thread {
-		public HandlePlayerInput() {
-			while (isRunning) {
-				IdentifiedObject obj = extendedSocketUDP.readObject();
-				if (obj.getObj() instanceof InputActions) {
-					if (obj.getId() == 0) {
-						board.getCharacterRed().setInputActions((InputActions)obj.getObj());
-					} else {
-						board.getCharacterBlue().setInputActions((InputActions)obj.getObj());
-					}
-				} else if (obj.getObj() instanceof String) {
-					if (((String)obj.getObj()).equals("PING")) {
-						extendedSocketUDP.outputObject("PING", obj.getId());
-					} else if (((String)obj.getObj()).equals("LEAVING")) {
-						extendedSocketUDP.outputObjectToAll("PLAYER LEFT");
-						stopServer();		
-					} else {
-						playerStates.get(obj.getId()).handleInput((String)obj.getObj());
-					}
-				}
-			}
 		}
 	}
 }

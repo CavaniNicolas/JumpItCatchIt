@@ -61,7 +61,9 @@ public class BoardClientUDP extends BoardIO {
         if (socket.initializeConnection(address, portNumber) && socket.initializeStreams(false)) {
             connected = true;
             outputObject("RESTART GAME");
+            System.out.println("1");
             new Thread(new HandleServerInput());
+            System.out.println("2");
 
             //togglePinging(true);
         } else {
