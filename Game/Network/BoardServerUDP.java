@@ -53,6 +53,7 @@ public class BoardServerUDP {
 		gameLoop.togglePause(false);	
 	}
 
+	/** kills all thread loops, the game loop and the connections */
 	public void stopServer() {
 		isRunning = false;
 		if (gameLoop.isRunning()) {
@@ -65,6 +66,7 @@ public class BoardServerUDP {
 		return extendedSocketUDP;
 	}
 
+	/** checks if all players want to restart, if yes : restart and set the players restart state to false */
 	public void checkForRestart() {
 		if (currentPlayerNumber == playerNumber && testAllStreams()) {
 			restartGame();
@@ -86,7 +88,6 @@ public class BoardServerUDP {
 						board.getCharacterBlue().setInputActions((InputActions)obj.getObj());
 					}
 				} else if (obj.getObj() instanceof String) {
-					System.out.println(obj.getObj());
 					if (((String)obj.getObj()).equals("PING")) {
 						extendedSocketUDP.outputObject("PING", obj.getId());
 					} else if (((String)obj.getObj()).equals("LEAVING")) {

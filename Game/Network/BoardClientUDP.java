@@ -80,7 +80,6 @@ public class BoardClientUDP extends BoardIO {
                     closeClient();
                     mainMenu.displayServerStoppedPanel();
                 } else if (obj instanceof String) {
-                    System.out.println(obj);
                     if (((String)obj).equals("GAME STARTED")) {
                         mainMenu.displayGame();
                         // gameLoop.togglePause(false);
@@ -95,6 +94,7 @@ public class BoardClientUDP extends BoardIO {
                     boardGraphism.setBoard((Board)obj);
                 }
             }
+            //togglePinging(false);
         }
     }
 
