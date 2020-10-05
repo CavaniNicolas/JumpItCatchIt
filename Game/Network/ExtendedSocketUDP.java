@@ -89,7 +89,7 @@ public class ExtendedSocketUDP {
 					acceptingConnection = false;
 				}
 			}
-			
+
 			for (DestinationMachine destinationMachine : destMachine) {
 				if (destinationMachine.equals(new DestinationMachine(packetReceived.getAddress(), packetReceived.getPort(), 0))) {
 					return new IdentifiedObject(destinationMachine.getId(), (Object)ois.readObject());

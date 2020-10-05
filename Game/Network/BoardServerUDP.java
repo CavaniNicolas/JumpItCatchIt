@@ -34,6 +34,8 @@ public class BoardServerUDP {
 		extendedSocketUDP = new ExtendedSocketUDP(playerNumber, playerStates, this);
 		Thread handleServer = new Thread(new HandleServer());
 		handleServer.start();
+		Thread handlePlayerInput = new Thread(new HandlePlayerInput());
+		handlePlayerInput.start();
 	} 
 
 	/** checks if all streams are alive and want to restart */
@@ -44,29 +46,6 @@ public class BoardServerUDP {
 			}
 		}
 		return true;
-	}
-
-	/** handles every object received */
-	public void handlePlayerInput() {
-		IdentifiedObject obj = extendedSocketUDP.readObject();
-		System.out.println(obj.getObj().getClass());
-		if (obj.getObj() instanceof InputActions) {
-			if (obj.getId() == 0) {
-				board.getCharacterRed().setInputActions((InputActions)obj.getObj());
-			} else {
-				board.getCharacterBlue().setInputActions((InputActions)obj.getObj());
-			}
-		} else if (obj.getObj() instanceof String) {
-			System.out.println(obj.getObj());
-			if (((String)obj.getObj()).equals("PING")) {
-				extendedSocketUDP.outputObject("PING", obj.getId());
-			} else if (((String)obj.getObj()).equals("LEAVING")) {
-				extendedSocketUDP.outputObjectToAll("PLAYER LEFT");
-				stopServer();	
-			} else {
-				playerStates.get(obj.getId()).handleInput((String)obj.getObj());
-			}
-		}
 	}
 
 	/** start game */
@@ -88,15 +67,12 @@ public class BoardServerUDP {
 	public class HandleServer extends Thread {
 		public void run() {
 			while (isRunning){
-				if (currentPlayerNumber != playerNumber) {
-					//this serves as a connection
-					handlePlayerInput();
-				} else {
-					if (testAllStreams()) {
-						restartGame();
-						for (PlayerState playerState : playerStates) {
-							playerState.setRestartGame(false);
-						}
+				//this line is necessary to exe the thread
+				System.out.println(currentPlayerNumber == playerNumber && testAllStreams());
+				if (currentPlayerNumber == playerNumber && testAllStreams()) {
+					restartGame();
+					for (PlayerState playerState : playerStates) {
+						playerState.setRestartGame(false);
 					}
 				}
 			}
@@ -104,6 +80,32 @@ public class BoardServerUDP {
 				gameLoop.togglePause(true);
 			}
 			extendedSocketUDP.endConnection();
+		}
+	}
+
+	/** handles every object received */
+	public class HandlePlayerInput extends Thread {
+		public void run() {
+			while (isRunning) {
+				IdentifiedObject obj = extendedSocketUDP.readObject();
+				if (obj.getObj() instanceof InputActions) {
+					if (obj.getId() == 0) {
+						board.getCharacterRed().setInputActions((InputActions)obj.getObj());
+					} else {
+						board.getCharacterBlue().setInputActions((InputActions)obj.getObj());
+					}
+				} else if (obj.getObj() instanceof String) {
+					System.out.println(obj.getObj());
+					if (((String)obj.getObj()).equals("PING")) {
+						extendedSocketUDP.outputObject("PING", obj.getId());
+					} else if (((String)obj.getObj()).equals("LEAVING")) {
+						extendedSocketUDP.outputObjectToAll("PLAYER LEFT");
+						stopServer();	
+					} else {
+						playerStates.get(obj.getId()).handleInput((String)obj.getObj());
+					}
+				}
+			}
 		}
 	}
 
