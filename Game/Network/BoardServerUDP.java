@@ -32,8 +32,6 @@ public class BoardServerUDP {
 
 		//start online server"
 		extendedSocketUDP = new ExtendedSocketUDP(playerNumber, playerStates, this);
-		Thread handleServer = new Thread(new HandleServer());
-		handleServer.start();
 		Thread handlePlayerInput = new Thread(new HandlePlayerInput());
 		handlePlayerInput.start();
 	} 
@@ -57,22 +55,14 @@ public class BoardServerUDP {
 
 	public void stopServer() {
 		isRunning = false;
+		if (gameLoop.isRunning()) {
+			gameLoop.togglePause(true);
+		}
+		extendedSocketUDP.endConnection();
 	}
 
 	public ExtendedSocketUDP getExtendedSocketUDP() {
 		return extendedSocketUDP;
-	}
- 
-	/** loop keeping the server alive*/
-	public class HandleServer extends Thread {
-		public void run() {
-			while (isRunning){
-			}
-			if (gameLoop.isRunning()) {
-				gameLoop.togglePause(true);
-			}
-			extendedSocketUDP.endConnection();
-		}
 	}
 
 	public void checkForRestart() {
