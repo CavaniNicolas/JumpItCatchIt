@@ -67,19 +67,20 @@ public class BoardServerUDP {
 	public class HandleServer extends Thread {
 		public void run() {
 			while (isRunning){
-				//this line is necessary to exe the thread
-				System.out.println(currentPlayerNumber == playerNumber && testAllStreams());
-				if (currentPlayerNumber == playerNumber && testAllStreams()) {
-					restartGame();
-					for (PlayerState playerState : playerStates) {
-						playerState.setRestartGame(false);
-					}
-				}
 			}
 			if (gameLoop.isRunning()) {
 				gameLoop.togglePause(true);
 			}
 			extendedSocketUDP.endConnection();
+		}
+	}
+
+	public void checkForRestart() {
+		if (currentPlayerNumber == playerNumber && testAllStreams()) {
+			restartGame();
+			for (PlayerState playerState : playerStates) {
+				playerState.setRestartGame(false);
+			}
 		}
 	}
 
@@ -103,6 +104,7 @@ public class BoardServerUDP {
 						stopServer();	
 					} else {
 						playerStates.get(obj.getId()).handleInput((String)obj.getObj());
+						checkForRestart();
 					}
 				}
 			}

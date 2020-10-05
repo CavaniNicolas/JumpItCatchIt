@@ -37,7 +37,8 @@ public class BoardClientUDP extends BoardIO {
     private long startTime;
 
     //port number
-    private final int portNumber = 5000; 
+    private final int portNumberUDP = 5000; 
+    private final int portNumberTCP = 5001;
 
     //game loop
 	// private GameLoop gameLoop;
@@ -58,7 +59,7 @@ public class BoardClientUDP extends BoardIO {
     /** connect to the server represented by its address */
     public void connect(String address) {
         socket = new ExtendedSocketUDP();
-        if (socket.initializeConnection(address, portNumber) && socket.initializeStreams(false)) {
+        if (socket.initializeConnection(address, portNumberUDP) && socket.initializeStreams(false)) {
             connected = true;
             outputObject("RESTART GAME");
             Thread input = new Thread(new HandleServerInput());
