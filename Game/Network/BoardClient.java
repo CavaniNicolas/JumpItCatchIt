@@ -73,38 +73,19 @@ public class BoardClient extends BoardIO {
             mainMenu.displayConnectionErrorPanel();
         }
     }
-    
-    /** handles every object received */
-    public class HandleServerInput extends Thread {
-        public void run() {
-            while (connected) {
-                try {
-                    Object obj = dest.getQueue().take();
-                    if (obj instanceof String) {
-                        System.out.println(obj);
-                        if (((String)obj).equals("GAME STARTED")) {
-                            mainMenu.displayGame();
-                            // gameLoop.togglePause(false);
-                        } else if (((String)obj).equals("PLAYER LEFT")) {
-                            closeClient();
-                            mainMenu.displayPlayerLeftPanel();
-                        } else if (((String)obj).equals("PING")) {
-                            System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
-                        } else if (((String)obj).equals("SERVER STOPPED")){
-                            closeClient();
-                            mainMenu.displayServerStoppedPanel();
-                        }
-                    } else if (obj instanceof Board) {
-                        // System.out.println("RECEIVED BOARD");
-                        // this.board = (Board)obj;
-                        boardGraphism.setBoard((Board)obj);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            //togglePinging(false);
-        }
+
+    /** closes the client and displays connection error */
+    public void closeClient() {
+        //togglePinging(false);
+        socket.endConnection();
+        handleKeyListeners(false);
+        // gameLoop.togglePause(true);  
+    }
+
+    /** knows what to do when someone returns to the main menu */
+    public void exitGame() {
+        closeClient();
+        mainMenu.displayMainMenu();
     }
 
     /** send a ping request every second, computes the ping */
@@ -146,17 +127,36 @@ public class BoardClient extends BoardIO {
         }
     }
 
-    /** closes the client and displays connection error */
-    public void closeClient() {
-        //togglePinging(false);
-        socket.endConnection();
-        handleKeyListeners(false);
-        // gameLoop.togglePause(true);  
-    }
-
-    /** knows what to do when someone returns to the main menu */
-	public void exitGame() {
-        closeClient();
-        mainMenu.displayMainMenu();
+    /** handles every object received */
+    public class HandleServerInput extends Thread {
+        public void run() {
+            while (connected) {
+                try {
+                    Object obj = dest.getQueue().take();
+                    if (obj instanceof String) {
+                        System.out.println(obj);
+                        if (((String)obj).equals("GAME STARTED")) {
+                            mainMenu.displayGame();
+                            // gameLoop.togglePause(false);
+                        } else if (((String)obj).equals("PLAYER LEFT")) {
+                            closeClient();
+                            mainMenu.displayPlayerLeftPanel();
+                        } else if (((String)obj).equals("PING")) {
+                            System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
+                        } else if (((String)obj).equals("SERVER STOPPED")){
+                            closeClient();
+                            mainMenu.displayServerStoppedPanel();
+                        }
+                    } else if (obj instanceof Board) {
+                        // System.out.println("RECEIVED BOARD");
+                        // this.board = (Board)obj;
+                        boardGraphism.setBoard((Board)obj);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            //togglePinging(false);
+        }
     }
 }

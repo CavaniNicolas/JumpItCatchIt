@@ -22,16 +22,16 @@ public class DestinationMachine {
 		this.destAddress = socketTCP.getInetAddress();
 	}
 
-	public InetAddress getDestAddress() {
-		return destAddress;
-	}
-
 	public void setDestPortUDP(int destPortUDP) {
 		this.destPortUDP = destPortUDP;
 	}
 
 	public int getDestPortUDP() {
 		return destPortUDP;
+	}
+
+	public InetAddress getDestAddress() {
+		return destAddress;
 	}
 
 	public BlockingQueue<Object> getQueue() {
@@ -80,8 +80,8 @@ public class DestinationMachine {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
 		}
+		return false;
 	}
 
 	/** reads object from the stream, returns null if an exception occurs */
@@ -90,8 +90,8 @@ public class DestinationMachine {
 			return inputTCP.readUnshared();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 	/** ends the connection, closes the socket */
@@ -101,7 +101,7 @@ public class DestinationMachine {
 			inputTCP.close(); 
 			socketTCP.close(); 
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 }

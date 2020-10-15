@@ -1,17 +1,13 @@
 package Game.Network;
 
+/** memory state of what each client is doing */
 public class PlayerState {
 	private Boolean connected;
 	private Boolean restartGame;
-	private int id;
 
 	public PlayerState() {
 		connected = true;
 		restartGame = true;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public Boolean getConnected() {

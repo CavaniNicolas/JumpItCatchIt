@@ -80,27 +80,15 @@ public class ConnectionHandler {
 		return false;
 	}
 
-	/** handles every object received */
-	public class HandleUDPReading extends Thread {
-		public void run() {
-			while (isRunning) {
-				try {
-					DatagramPacket packetReceived = new DatagramPacket(buffer, bufferSize); 
-					socketUDP.receive(packetReceived); 
-
-					bais = new ByteArrayInputStream(buffer);
-					ois = new ObjectInputStream(bais);
-
-					for (DestinationMachine destinationMachine : destMachine) {
-						if (destinationMachine.refersTo(packetReceived.getAddress(), packetReceived.getPort())) {
-							destinationMachine.getQueue().offer((Object)ois.readObject());
-							break;
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+	/**closes the sockets */
+	public void endConnection() {
+		try {
+			isRunning = false;
+			socketUDP.close(); 
+			socketServerTCP.close();
+			destMachine.clear();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -142,15 +130,27 @@ public class ConnectionHandler {
 		return result;
 	}
 
-	/**closes the sockets */
-	public void endConnection() {
-		try {
-			isRunning = false;
-			socketUDP.close(); 
-			socketServerTCP.close();
-			destMachine.clear();
-		} catch (Exception e) {
-			e.printStackTrace();
+	/** handles every object received */
+	public class HandleUDPReading extends Thread {
+		public void run() {
+			while (isRunning) {
+				try {
+					DatagramPacket packetReceived = new DatagramPacket(buffer, bufferSize); 
+					socketUDP.receive(packetReceived); 
+
+					bais = new ByteArrayInputStream(buffer);
+					ois = new ObjectInputStream(bais);
+
+					for (DestinationMachine destinationMachine : destMachine) {
+						if (destinationMachine.refersTo(packetReceived.getAddress(), packetReceived.getPort())) {
+							destinationMachine.getQueue().offer((Object)ois.readObject());
+							break;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }
