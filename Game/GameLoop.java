@@ -48,7 +48,7 @@ public class GameLoop {
 		public void actionPerformed(ActionEvent event) {
 			board.updateAll();
 			if (boardServerUDP != null) {
-				boardServerUDP.getExtendedSocketUDP().outputObjectToAll(board);
+				boardServerUDP.getExtendedSocketUDP().outputObjectToAll(board, true);
 			}
 		}
 	}

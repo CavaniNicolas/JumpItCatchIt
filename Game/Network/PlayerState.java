@@ -5,8 +5,7 @@ public class PlayerState {
 	private Boolean restartGame;
 	private int id;
 
-	public PlayerState(int id) {
-		this.id = id;
+	public PlayerState() {
 		connected = true;
 		restartGame = true;
 	}

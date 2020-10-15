@@ -28,6 +28,7 @@ public class BoardClientUDP extends BoardIO {
 	
 	//client socket
     private ExtendedSocketUDP socket;
+    private DestinationMachine dest;
 
     //mainmenu to start displaying the game when everyone has joined
     private MainMenu mainMenu;
@@ -37,8 +38,9 @@ public class BoardClientUDP extends BoardIO {
     private long startTime;
 
     //port number
-    private final int portNumberUDP = 5000; 
-    private final int portNumberTCP = 5001;
+    private final int portServerTCP = 5000; 
+    private final int portServerUDP = 5001;
+    private final int portClientUDP = 6001;
 
     //game loop
 	// private GameLoop gameLoop;
@@ -58,12 +60,14 @@ public class BoardClientUDP extends BoardIO {
 
     /** connect to the server represented by its address */
     public void connect(String address) {
-        socket = new ExtendedSocketUDP();
-        if (socket.initializeConnection(address, portNumberUDP) && socket.initializeStreams(false)) {
+        socket = new ExtendedSocketUDP(portClientUDP);
+        dest = socket.initializeConnection(address, portServerTCP, portServerUDP);
+        if (socket.initializeStreams() && dest != null) {
             connected = true;
-            outputObject("RESTART GAME");
-            Thread input = new Thread(new HandleServerInput());
-            input.start();
+            new Thread(new HandleServerInput()).start();
+
+            dest.outputObject("PORTDATA " + portClientUDP);
+            dest.outputObject("RESTART GAME");
             //togglePinging(true);
         } else {
             mainMenu.displayConnectionErrorPanel();
@@ -74,25 +78,28 @@ public class BoardClientUDP extends BoardIO {
     public class HandleServerInput extends Thread {
         public void run() {
             while (connected) {
-                Object obj = socket.readObject().getObj();
-                if (obj == null) {
-                    //server closed unexpectedly
-                    closeClient();
-                    mainMenu.displayServerStoppedPanel();
-                } else if (obj instanceof String) {
-                    if (((String)obj).equals("GAME STARTED")) {
-                        mainMenu.displayGame();
-                        // gameLoop.togglePause(false);
-                    } else if (((String)obj).equals("PLAYER LEFT")) {
-                        closeClient();
-                        mainMenu.displayPlayerLeftPanel();
-                    } else if (((String)obj).equals("PING")) {
-                        System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
+                try {
+                    Object obj = dest.getQueue().take();
+                    if (obj instanceof String) {
+                        System.out.println(obj);
+                        if (((String)obj).equals("GAME STARTED")) {
+                            mainMenu.displayGame();
+                            // gameLoop.togglePause(false);
+                        } else if (((String)obj).equals("PLAYER LEFT")) {
+                            closeClient();
+                            mainMenu.displayPlayerLeftPanel();
+                        } else if (((String)obj).equals("PING")) {
+                            System.out.println("PING " + (System.currentTimeMillis() - startTime) + "ms");
+                        } else if (((String)obj).equals("SERVER STOPPED")){
+                            closeClient();
+                            mainMenu.displayServerStoppedPanel();
+                        }
+                    } else if (obj instanceof Board) {
+                        System.out.println("RECEIVED BOARD");
+                        // this.board = (Board)obj;
+                        boardGraphism.setBoard((Board)obj);
                     }
-                } else if (obj instanceof Board) {
-                    // this.board = (Board)obj;
-                    boardGraphism.setBoard((Board)obj);
-                }
+                } catch (Exception e) {}
             }
             //togglePinging(false);
         }
@@ -103,7 +110,7 @@ public class BoardClientUDP extends BoardIO {
         if (start) {
             ping = new Timer(1000, new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
-                    outputObject("PING");
+                    outputObject("PING", false);
                     startTime = System.currentTimeMillis();
                 }
             });
@@ -115,7 +122,7 @@ public class BoardClientUDP extends BoardIO {
 
     /** send the input action object to the server */
 	public void handleAction(InputActions inputActions) {
-		outputObject(inputActions);
+		outputObject(inputActions, true);
 	}
 
     public void escapePanelInteraction() {}
@@ -130,8 +137,8 @@ public class BoardClientUDP extends BoardIO {
     }
 
     /** tries outputting an object to the server, if it fails it displays a connection error */
-    public void outputObject(Object obj) {
-        if (!socket.outputObject(obj)) {
+    public void outputObject(Object obj, Boolean protocolUDP) {
+        if (!socket.outputObjectToAll(obj, protocolUDP)) {
             closeClient();
             mainMenu.displayConnectionErrorPanel();
         }
@@ -140,13 +147,13 @@ public class BoardClientUDP extends BoardIO {
     /** closes the client and displays connection error */
     public void closeClient() {
         //togglePinging(false);
+        socket.endConnection();
         handleKeyListeners(false);
         // gameLoop.togglePause(true);  
     }
 
     /** knows what to do when someone returns to the main menu */
 	public void exitGame() {
-        socket.endConnection();
         closeClient();
         mainMenu.displayMainMenu();
     }
