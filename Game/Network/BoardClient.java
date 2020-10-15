@@ -61,8 +61,8 @@ public class BoardClient extends BoardIO {
     /** connect to the server represented by its address */
     public void connect(String address) {
         socket = new ConnectionHandler(portClientUDP);
-        dest = socket.initializeConnection(address, portServerTCP, portServerUDP);
-        if (socket.initializeStreams() && dest != null) {
+        dest = socket.createClient(address, portServerTCP, portServerUDP);
+        if (dest != null) {
             connected = true;
             new Thread(new HandleServerInput()).start();
 

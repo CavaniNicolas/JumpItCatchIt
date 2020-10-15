@@ -35,7 +35,7 @@ public class BoardServer {
 
 		//start online server"
 		extendedSocketUDP = new ConnectionHandler(portNumberUDP);
-		if (extendedSocketUDP.createServer(portNumberTCP) && extendedSocketUDP.initializeStreams()) {
+		if (extendedSocketUDP.createServer(portNumberTCP)) {
 			isRunning = true;
 			new Thread(new HandleServer()).start();
 		}

@@ -61,12 +61,13 @@ public class DestinationMachine {
 		public void run() {
 			Boolean isRunning = true;
 			while (isRunning) {
-				Object obj = (Object)readObject();
-				if (obj == null) {
+				try {
+					Object obj = (Object)inputTCP.readUnshared();
+					queue.offer(obj);
+				} catch (Exception e) {
+					e.printStackTrace();
 					isRunning = false;
 					queue.offer(new String("PLAYER DISCONNECTION"));
-				} else {
-					queue.offer(obj);
 				}
 			}
 		}
@@ -82,16 +83,6 @@ public class DestinationMachine {
 			e.printStackTrace();
 		}
 		return false;
-	}
-
-	/** reads object from the stream, returns null if an exception occurs */
-	public Object readObject() {
-		try {
-			return inputTCP.readUnshared();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	/** ends the connection, closes the socket */

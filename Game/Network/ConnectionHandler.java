@@ -28,9 +28,13 @@ public class ConnectionHandler {
 	}
 
 	/** initializes tcp connection to a given address + port, returns the associated DestinationMachine in case of success */
-	public DestinationMachine initializeConnection(String destAddress, int destPortTCP, int destPortUDP) {
+	public DestinationMachine createClient(String destAddress, int destPortTCP, int destPortUDP) {
 		try {
+			socketUDP = new DatagramSocket(portNumberUDP);
+			new Thread(new HandleUDPReading()).start();
+
 			DestinationMachine dest = new DestinationMachine(new Socket(destAddress, destPortTCP));
+
 			if (dest.initializeStreams()) {
 				destMachine.add(dest);
 				dest.setDestPortUDP(destPortUDP);
@@ -40,6 +44,20 @@ public class ConnectionHandler {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/** creates a tcp server listening on the given port*/
+	public Boolean createServer(int portNumber) {
+		try {
+			socketUDP = new DatagramSocket(portNumberUDP);
+			new Thread(new HandleUDPReading()).start();
+			socketServerTCP = new ServerSocket(portNumber);
+
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	/** waits for tcp connections and returns a DestinationMachine obj of the client in case of success */
@@ -54,30 +72,6 @@ public class ConnectionHandler {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	/** creates a tcp server listening on the given port*/
-	public Boolean createServer(int portNumber) {
-		try {
-			socketServerTCP = new ServerSocket(portNumber);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-
-	}
-
-	/** creates the output and input streams */
-	public Boolean initializeStreams() {
-		try { 
-			socketUDP = new DatagramSocket(portNumberUDP);
-			new Thread(new HandleUDPReading()).start();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 	/**closes the sockets */
