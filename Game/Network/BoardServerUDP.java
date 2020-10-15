@@ -35,13 +35,37 @@ public class BoardServerUDP {
 
 		//start online server"
 		extendedSocketUDP = new ExtendedSocketUDP(portNumberUDP);
-		if (extendedSocketUDP.initializeStreams()) {
+		if (extendedSocketUDP.createServer(portNumberTCP) && extendedSocketUDP.initializeStreams()) {
+			isRunning = true;
 			new Thread(new HandleServer()).start();
 		}
 	} 
 
-	/** checks if all streams are alive and want to restart */
-	public Boolean testAllStreams() {
+	/** kills all thread loops, the game loop and the connections */
+	public void stopServer() {
+		if (gameLoop.isRunning()) {
+			gameLoop.togglePause(true);
+		}
+		extendedSocketUDP.endConnection();
+	}
+
+	public ExtendedSocketUDP getExtendedSocketUDP() {
+		return extendedSocketUDP;
+	}
+
+	/** checks if all players want to restart, if yes : restart and set the players restart state to false */
+	public void tryToRestart() {
+		if (currentPlayerNumber == playerNumber && checkForRestart()) {
+			restartGame();
+			for (PlayerState playerState : playerStates) {
+				playerState.setRestartGame(false);
+			}
+			currentPlayerNumber = 0;
+		}
+	}
+
+	/** checks if all players want to restart */
+	public Boolean checkForRestart() {
 		for (PlayerState playerState : playerStates) {
 			if (!playerState.getRestartGame()) {
 				return false;
@@ -57,52 +81,25 @@ public class BoardServerUDP {
 		gameLoop.togglePause(false);	
 	}
 
-	/** kills all thread loops, the game loop and the connections */
-	public void stopServer() {
-		isRunning = false;
-		if (gameLoop.isRunning()) {
-			gameLoop.togglePause(true);
-		}
-		extendedSocketUDP.endConnection();
-	}
-
-	public ExtendedSocketUDP getExtendedSocketUDP() {
-		return extendedSocketUDP;
-	}
-
-	/** checks if all players want to restart, if yes : restart and set the players restart state to false */
-	public void checkForRestart() {
-		if (currentPlayerNumber == playerNumber && testAllStreams()) {
-			restartGame();
-			for (PlayerState playerState : playerStates) {
-				playerState.setRestartGame(false);
-			}
+	/** waits for all players to be connected and handles them */
+	public void acceptConnections() {
+		while (currentPlayerNumber < playerNumber) {
+			DestinationMachine dest = extendedSocketUDP.awaitConnection();
+			PlayerState playerState = new PlayerState();
+			playerStates.add(playerState);
+			new Thread(new HandlePlayerInput(dest, currentPlayerNumber, playerState)).start();
+			currentPlayerNumber++;
 		}
 	}
-
 	
 	/** handles every object received */
 	public class HandleServer extends Thread {
 		public void run() {
-			if (extendedSocketUDP.createServer(portNumberTCP)) {
-				isRunning = true;
-			}
-
 			while (isRunning) {
-				while (currentPlayerNumber < playerNumber) {
-					DestinationMachine dest = extendedSocketUDP.awaitConnection();
-					PlayerState playerState = new PlayerState();
-					playerStates.add(playerState);
-					new Thread(new HandlePlayerInput(dest, currentPlayerNumber, playerState)).start();
-					currentPlayerNumber++;
-				}
-				//when all players have connected
-				if (testAllStreams()) {
-					restartGame();
-					//to avoid starting games again and prepare for restarting when over
-					currentPlayerNumber = 0;
-				}
+				acceptConnections();
+				tryToRestart();
 			}
+			stopServer();
 		}
 	}
 
@@ -123,7 +120,7 @@ public class BoardServerUDP {
 				try {
 					Object obj = dest.getQueue().take();
 					if (obj instanceof InputActions) {
-						System.out.println("RECEIVED INPUT ACTIONS");
+						// System.out.println("RECEIVED INPUT ACTIONS");
 						if (characterRed == 0) {
 							board.getCharacterRed().setInputActions((InputActions)obj);
 						} else {
@@ -135,15 +132,17 @@ public class BoardServerUDP {
 							dest.setDestPortUDP(Integer.parseInt(((String)obj).split(" ")[1]));
 						} else if (((String)obj).equals("PING")) {
 							dest.outputObject("PING");
-						} else if (((String)obj).equals("LEAVING")) {
+						} else if (((String)obj).equals("PLAYER DISCONNECTION")) {
 							extendedSocketUDP.outputObjectToAll("PLAYER LEFT", false);
-							stopServer();	
+							isRunning = false;
 						} else {
 							playerState.handleInput((String)obj);
-							checkForRestart();
+							tryToRestart();
 						}
 					}
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

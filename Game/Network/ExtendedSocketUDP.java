@@ -130,6 +130,7 @@ public class ExtendedSocketUDP {
 	public void endConnection() {
 		try {
 			socketUDP.close(); 
+			socketServerTCP.close();
 			destMachine.clear();
 		} catch (Exception e) {
 			e.printStackTrace();

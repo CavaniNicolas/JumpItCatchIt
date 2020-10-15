@@ -95,11 +95,13 @@ public class BoardClientUDP extends BoardIO {
                             mainMenu.displayServerStoppedPanel();
                         }
                     } else if (obj instanceof Board) {
-                        System.out.println("RECEIVED BOARD");
+                        // System.out.println("RECEIVED BOARD");
                         // this.board = (Board)obj;
                         boardGraphism.setBoard((Board)obj);
                     }
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             //togglePinging(false);
         }
