@@ -5,10 +5,9 @@ import Game.BoardGraphism;
 import Game.GameLoop;
 import Game.InputActions;
 
-import java.net.*;
 import java.util.ArrayList;
 
-public class BoardServer implements Runnable {
+public class BoardServer {
 	//gameLoop
 	private GameLoop gameLoop;
 
@@ -16,157 +15,135 @@ public class BoardServer implements Runnable {
 	private Board board;
 
 	//is the server running or not
-	private Boolean isRunning = true;
-	private Boolean isStarting = true;
+	private Boolean isRunning = false;
 
 	//player number management
 	private int playerNumber = 2;
 	private int currentPlayerNumber = 0;
 
-	//server socket and address
-	private ServerSocket serverSocket = null;
-
 	//object streams
-	private ArrayList<ExtendedSocket> extendedSockets;
-	
-	public void run() {		
+	private ConnectionHandler extendedSocketUDP;
+	private ArrayList<PlayerState> playerStates = new ArrayList<PlayerState>();
+
+	private final int portNumberTCP = 5000;
+	private final int portNumberUDP = 5001;
+
+	public BoardServer() {		
 		board = new Board();
 		board.setBoardGraphism(new BoardGraphism(board));
-		//gameLoop = new GameLoop(this.board, this);
+		gameLoop = new GameLoop(this.board, this);
 
 		//start online server"
-        try { 
-            int portNumber = 5000;
-			serverSocket = new ServerSocket(portNumber);
-			new Thread(new HandleServer());
-        }  catch (Exception e) { 
-			e.printStackTrace();
-			isRunning = false;
-        } 
+		extendedSocketUDP = new ConnectionHandler(portNumberUDP);
+		if (extendedSocketUDP.createServer(portNumberTCP) && extendedSocketUDP.initializeStreams()) {
+			isRunning = true;
+			new Thread(new HandleServer()).start();
+		}
 	} 
-	
- 	/**Le server tourne dans un thread a part*/
-	 public class HandleServer extends Thread {
-		public HandleServer() {
-			extendedSockets = new ArrayList<ExtendedSocket>();
 
-			//loop keeping the server alive
-			while (isRunning == true){
-				//this loop happens only when server starts and waits for connections
-				if (isStarting) {
-					while (currentPlayerNumber < playerNumber) {
-						createConnections();
-					}
-					isStarting = false;
-				}
-				//when all players have connected
-				if (currentPlayerNumber == playerNumber && testAllStreams()) {
-					restartGame();
-					//to avoid starting games again and prepare for restarting when over
-					currentPlayerNumber = 0;
-				}
-			}
+	/** kills all thread loops, the game loop and the connections */
+	public void stopServer() {
+		if (gameLoop.isRunning()) {
+			gameLoop.togglePause(true);
+		}
+		extendedSocketUDP.endConnection();
+	}
 
-			//close the server
-			try {
-				serverSocket.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				serverSocket = null;
+	public ConnectionHandler getExtendedSocketUDP() {
+		return extendedSocketUDP;
+	}
+
+	/** checks if all players want to restart, if yes : restart and set the players restart state to false */
+	public void tryToRestart() {
+		if (currentPlayerNumber == playerNumber && checkForRestart()) {
+			restartGame();
+			for (PlayerState playerState : playerStates) {
+				playerState.setRestartGame(false);
 			}
+			currentPlayerNumber = 0;
 		}
 	}
 
-	/** checks if all streams are alive */
-	public Boolean testAllStreams() {
-		for (ExtendedSocket extendedSocket : extendedSockets) {
-			if (!extendedSocket.getReady()) {
+	/** checks if all players want to restart */
+	public Boolean checkForRestart() {
+		for (PlayerState playerState : playerStates) {
+			if (!playerState.getRestartGame()) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	/** waits for a new connection and creates its socket */
-	public void createConnections() {
-		try {
-			//On attend une connexion d'un client
-			ExtendedSocket extendedSocket = new ExtendedSocket(currentPlayerNumber, serverSocket.accept(), true);
-			extendedSockets.add(extendedSocket);
-
-			//Une fois reçue, on la traite dans un thread séparé
-			Thread thread = new Thread(new ClientProcessor(extendedSocket));
-			thread.start();
-			currentPlayerNumber++;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/** start game */
 	public void restartGame() {
 		board.initGame();
-		outputObjectToAll("GAME STARTED");
+		extendedSocketUDP.outputObjectToAll("GAME STARTED", false);
 		gameLoop.togglePause(false);	
 	}
- 
-	/** handles client connections */
-    public class ClientProcessor implements Runnable {
-        ExtendedSocket clientSocket; 
-        ClientProcessor(ExtendedSocket clientSocket){
-			this.clientSocket = clientSocket;
-        }
 
-		/** handles every object received */
+	/** waits for all players to be connected and handles them */
+	public void acceptConnections() {
+		while (currentPlayerNumber < playerNumber) {
+			DestinationMachine dest = extendedSocketUDP.awaitConnection();
+			PlayerState playerState = new PlayerState();
+			playerStates.add(playerState);
+			new Thread(new HandlePlayerInput(dest, currentPlayerNumber, playerState)).start();
+			currentPlayerNumber++;
+		}
+	}
+	
+	/** handles every object received */
+	public class HandleServer extends Thread {
 		public void run() {
 			while (isRunning) {
-				Object obj = clientSocket.readObject();
-				if (obj == null) {
-					extendedSockets.remove(clientSocket);
-					outputObjectToAll("PLAYER LEFT");
-					stopServer();
-				} else if (obj instanceof InputActions) {
-					if (clientSocket.getID() == 0) {
-						board.getCharacterRed().setInputActions((InputActions)obj);;
-					} else {
-						board.getCharacterBlue().setInputActions((InputActions)obj);;
+				acceptConnections();
+				tryToRestart();
+			}
+			stopServer();
+		}
+	}
+
+	/** handles every object received */
+	public class HandlePlayerInput extends Thread {
+		private DestinationMachine dest;
+		private int characterRed;
+		private PlayerState playerState;
+
+		public HandlePlayerInput(DestinationMachine dest, int characterRed, PlayerState playerState) { 
+			this.dest = dest;
+			this.characterRed = characterRed;
+			this.playerState = playerState;
+		}
+
+		public void run() {
+			while (isRunning) {
+				try {
+					Object obj = dest.getQueue().take();
+					if (obj instanceof InputActions) {
+						// System.out.println("RECEIVED INPUT ACTIONS");
+						if (characterRed == 0) {
+							board.getCharacterRed().setInputActions((InputActions)obj);
+						} else {
+							board.getCharacterBlue().setInputActions((InputActions)obj);
+						}
+					} else if (obj instanceof String) {
+						System.out.println(obj);
+						if (((String)obj).split(" ")[0].equals("PORTDATA")) {
+							dest.setDestPortUDP(Integer.parseInt(((String)obj).split(" ")[1]));
+						} else if (((String)obj).equals("PING")) {
+							dest.outputObject("PING");
+						} else if (((String)obj).equals("PLAYER DISCONNECTION")) {
+							extendedSocketUDP.outputObjectToAll("PLAYER LEFT", false);
+							isRunning = false;
+						} else {
+							playerState.handleInput((String)obj);
+							tryToRestart();
+						}
 					}
-				} else if (obj instanceof String) {
-					if (((String)obj).equals("RESTART GAME")) {
-						currentPlayerNumber++;
-					} else if (((String)obj).equals("PING")) {
-						clientSocket.outputObject("PING");
-					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-		}
-	}
-
-	/** stops server */
-	public void stopServer() {
-		isRunning = false;
-		if (gameLoop.isRunning()) {
-			gameLoop.togglePause(true);
-		}
-		endAllConnections();
-		try {
-			serverSocket.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/** output an object to every connected client */
-	public void outputObjectToAll(Object obj) {
-		for (ExtendedSocket extendedSocket : extendedSockets) {
-			extendedSocket.outputObject(obj);
-		}
-	}
-
-	/** disconnects all connected clients */
-	public void endAllConnections() {
-		for (ExtendedSocket extendedSocket : extendedSockets) {
-			extendedSocket.endConnection();
 		}
 	}
 }

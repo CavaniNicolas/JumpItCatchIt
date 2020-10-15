@@ -2,10 +2,10 @@ package Menu;
 
 import Game.Board;
 import Game.BoardGraphism;
-import Game.Network.BoardClientUDP;
+import Game.Network.BoardClient;
 import Game.Network.BoardIO;
 import Game.Network.BoardLocal;
-import Game.Network.BoardServerUDP;
+import Game.Network.BoardServer;
 import Menu.Options.KeyOptionMenu;
 import Menu.Options.OptionMenu;
 
@@ -28,7 +28,7 @@ public class MainMenu {
 	/** Contient le jeu */
 	private Board board;
 	private BoardIO boardIO;
-	private BoardServerUDP boardServerUDP;
+	private BoardServer boardServerUDP;
 	
 	//main menu panels
 	private Menu mainMenuPanel;
@@ -100,7 +100,7 @@ public class MainMenu {
 
 	/** creates a server and joins it */
 	public void startOnlineGame() {
-		boardServerUDP = new BoardServerUDP();
+		boardServerUDP = new BoardServer();
 		joinOnlineGame("127.0.0.1");
 	}
 
@@ -113,7 +113,7 @@ public class MainMenu {
 		boardGraphism.setTypeOfGame(BoardGraphism.ONLINE_GAME);
 
 		//start a client on a thread
-		boardIO = new BoardClientUDP(boardGraphism, address, this, frame);
+		boardIO = new BoardClient(boardGraphism, address, this, frame);
 
 		//add the key listeners
 		boardIO.handleKeyListeners(true);

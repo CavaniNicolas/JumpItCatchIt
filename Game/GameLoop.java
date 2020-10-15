@@ -4,14 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-import Game.Network.BoardServerUDP;
+import Game.Network.BoardServer;
 
 /** the main loop of the game */
 public class GameLoop {
 	private final int updateEveryDt = 12;
 	protected Board board;
 	private Timer gamePlayTimer;
-	private BoardServerUDP boardServerUDP;
+	private BoardServer boardServerUDP;
 	private GamePlayTimerListener gamePlayTimerListener = new GamePlayTimerListener();
 	private Boolean running = false;
 
@@ -20,7 +20,7 @@ public class GameLoop {
 		this.boardServerUDP = null;
 	}
 
-	public GameLoop(Board board, BoardServerUDP boardServerUDP) {
+	public GameLoop(Board board, BoardServer boardServerUDP) {
 		this.board = board;
 		this.boardServerUDP = boardServerUDP;
 	}

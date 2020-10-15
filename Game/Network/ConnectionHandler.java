@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
 
-public class ExtendedSocketUDP {
+public class ConnectionHandler {
 	private DatagramSocket socketUDP;
 	private ServerSocket socketServerTCP;
 	private ArrayList<DestinationMachine> destMachine = new ArrayList<DestinationMachine>();
@@ -18,14 +18,16 @@ public class ExtendedSocketUDP {
 	private ObjectInputStream ois;
 
 	private int portNumberUDP;
+	private Boolean isRunning = true;
 
 	private final int bufferSize = 10000;
 	byte[] buffer = new byte[bufferSize];
 
-	public ExtendedSocketUDP(int portNumberUDP) {
+	public ConnectionHandler(int portNumberUDP) {
 		this.portNumberUDP = portNumberUDP;
 	}
 
+	/** initializes tcp connection to a given address + port, returns the associated DestinationMachine in case of success */
 	public DestinationMachine initializeConnection(String destAddress, int destPortTCP, int destPortUDP) {
 		try {
 			DestinationMachine dest = new DestinationMachine(new Socket(destAddress, destPortTCP));
@@ -40,6 +42,21 @@ public class ExtendedSocketUDP {
 		return null;
 	}
 
+	/** waits for tcp connections and returns a DestinationMachine obj of the client in case of success */
+	public DestinationMachine awaitConnection() {
+		try {
+			DestinationMachine dest = new DestinationMachine(socketServerTCP.accept());
+			dest.initializeStreams();
+			
+			destMachine.add(dest);
+			return dest;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/** creates a tcp server listening on the given port*/
 	public Boolean createServer(int portNumber) {
 		try {
 			socketServerTCP = new ServerSocket(portNumber);
@@ -66,7 +83,6 @@ public class ExtendedSocketUDP {
 	/** handles every object received */
 	public class HandleUDPReading extends Thread {
 		public void run() {
-			Boolean isRunning = true;
 			while (isRunning) {
 				try {
 					DatagramPacket packetReceived = new DatagramPacket(buffer, bufferSize); 
@@ -126,27 +142,15 @@ public class ExtendedSocketUDP {
 		return result;
 	}
 
-	/**closes the socket */
+	/**closes the sockets */
 	public void endConnection() {
 		try {
+			isRunning = false;
 			socketUDP.close(); 
 			socketServerTCP.close();
 			destMachine.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public DestinationMachine awaitConnection() {
-		try {
-			DestinationMachine dest = new DestinationMachine(socketServerTCP.accept());
-			dest.initializeStreams();
-			
-			destMachine.add(dest);
-			return dest;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 }
