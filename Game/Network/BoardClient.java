@@ -40,7 +40,7 @@ public class BoardClient extends BoardIO {
     //port number
     private final int portServerTCP = 5000; 
     private final int portServerUDP = 5001;
-    private final int portClientUDP = 6001;
+    private final int portClientUDP = 6000;
 
     //game loop
 	// private GameLoop gameLoop;
